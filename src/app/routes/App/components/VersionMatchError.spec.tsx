@@ -28,10 +28,12 @@ import * as config from '~/config';
 
 describe('<VersionMatchError />', () => {
   let getConfig: sinon.SinonStub;
+  let getVersion: sinon.SinonStub;
   let component: (props?: any) => enzyme.ShallowWrapper<any, any>;
 
   beforeEach(() => {
     getConfig = sinon.stub(config, 'getConfig').returns({});
+    getVersion = sinon.stub(config, 'getVersion').returns('');
 
     component = (props) => {
       const defaults = {};
@@ -43,6 +45,7 @@ describe('<VersionMatchError />', () => {
 
   afterEach(() => {
     getConfig.restore();
+    getVersion.restore();
   });
 
   it('should display an error message if the Cyclops version is not ' +
@@ -54,7 +57,7 @@ describe('<VersionMatchError />', () => {
 
   it('should display an error message if the Cyphon version is not ' +
     'found', () => {
-    getConfig.returns({ CYCLOPS_VERSION: '0.3' });
+    getVersion.returns('0.3');
 
     const element = component().find('div').first();
 
@@ -63,7 +66,9 @@ describe('<VersionMatchError />', () => {
 
   it('should display an error message if the Cyphon version range is not ' +
     'found', () => {
-    getConfig.returns({ CYCLOPS_VERSION: '-1.0.0', CYPHON_VERSION: '1.2.0' });
+    getVersion.returns('-1.0.0');
+    getConfig.returns({ CYPHON_VERSION: '1.2.0' });
+
     const element = component().find('div').first();
 
     expect(element.text()).to.equal(
@@ -73,7 +78,8 @@ describe('<VersionMatchError />', () => {
 
   it('should display an error message explaining that the versions ' +
     'are not compatible', () => {
-    getConfig.returns({ CYCLOPS_VERSION: '0.5.0', CYPHON_VERSION: '1.2.0' });
+    getVersion.returns('0.5.0');
+    getConfig.returns({ CYPHON_VERSION: '1.2.0' });
     const element = component().find('div').first();
 
     expect(element.text()).to.equal(

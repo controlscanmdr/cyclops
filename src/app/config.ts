@@ -46,8 +46,6 @@ interface AppConfig {
   ADMIN_URL: string;
   /** Current version of Cyphon this instance of Cyclops is running on. */
   CYPHON_VERSION: string | undefined;
-  /** Current version of Cyclops. Injected through webpack. */
-  CYCLOPS_VERSION: string | undefined;
 }
 
 /**
@@ -59,12 +57,24 @@ interface ExtendedWindow extends Window {
 }
 
 /**
+ * Current Cyclops version.
+ * @type {string}
+ */
+const CYCLOPS_VERSION = '0.4.2';
+
+/**
+ * Returns the current Cyclops version. Created for mocking purposes.
+ * @returns {string}
+ */
+export function getVersion(): string {
+  return CYCLOPS_VERSION;
+}
+
+/**
  * Injected application configuration object from the parent template.
  * @type {AppConfig}
  */
 const CONFIG = (window as ExtendedWindow).CONFIG || {};
-
-const DEFAULT_VERSION = '1.0.0';
 
 /**
  * Function that returns the current application configuration. Stub this
@@ -72,13 +82,5 @@ const DEFAULT_VERSION = '1.0.0';
  * @returns {AppConfig}
  */
 export function getConfig(): AppConfig {
-  let cyclopsVersion;
-
-  try {
-    cyclopsVersion = CYCLOPS_VERSION;
-  } catch (ReferenceError) {
-    cyclopsVersion = undefined;
-  }
-
-  return { ...CONFIG, CYCLOPS_VERSION: cyclopsVersion };
+  return CONFIG;
 }

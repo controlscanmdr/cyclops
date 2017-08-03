@@ -16,7 +16,7 @@
  * are made]
  */
 
-import { getConfig } from '~/config';
+import { getConfig, getVersion } from '~/config';
 import { Dictionary } from '~/types/object';
 
 export type SemanticVersion = [number, number, number];
@@ -138,22 +138,23 @@ export function getCyphonVersionRange(
  */
 export function cyclopsVersionMatchesCyphonVersion(): boolean {
   const configuration = getConfig();
+  const version = getVersion();
 
-  if (!configuration.CYCLOPS_VERSION) {
-    throw TypeError('Missing Cyclops version from configuration object.');
+  if (!version) {
+    throw TypeError('Missing Cyclops version from configuration.');
   }
 
   if (!configuration.CYPHON_VERSION) {
     throw TypeError('Missing Cyphon version from configuration object.');
   }
 
-  const cyclopsVersion = parseVersion(configuration.CYCLOPS_VERSION);
+  const cyclopsVersion = parseVersion(version);
   const cyphonVersionRange = getCyphonVersionRange(cyclopsVersion);
 
   if (!cyphonVersionRange) {
     throw new TypeError(
       `Could not find matching Cyphon version for Cyclops ` +
-      `version ${configuration.CYCLOPS_VERSION}.`,
+      `version ${version}.`,
     );
   }
 

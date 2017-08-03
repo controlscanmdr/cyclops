@@ -27,7 +27,7 @@ import {
   SemanticVersionRange,
   versionToString,
 } from '~/services/cyphon/utils/version';
-import { getConfig } from '~/config';
+import { getConfig, getVersion } from '~/config';
 
 // --------------------------------------------------------------------------
 // Interfaces/Types
@@ -53,7 +53,7 @@ export class VersionMatchError extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
 
-    this.cyclopsVersion = getConfig().CYCLOPS_VERSION;
+    this.cyclopsVersion = getVersion();
     this.cyphonVersion = getConfig().CYPHON_VERSION;
     try {
       this.versionsMatch = cyclopsVersionMatchesCyphonVersion();

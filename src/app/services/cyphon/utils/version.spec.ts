@@ -23,6 +23,7 @@ import * as sinon from 'sinon';
 import * as version from './version';
 import * as config from '~/config';
 import { versionToString } from '~/services/cyphon/utils/version';
+import { getVersion } from '~/config';
 
 describe('version', () => {
   describe('parseVersion()', () => {
@@ -81,19 +82,26 @@ describe('version', () => {
 
   describe('cyclopsVersionMatchesCyphonVersion()', () => {
     let getConfig: sinon.SinonStub;
+    let getVersion: sinon.SinonStub;
 
     beforeEach(() => {
       getConfig = sinon.stub(config, 'getConfig').returns({});
+      getVersion = sinon.stub(config, 'getVersion').returns('');
     });
 
-    it('should throw a TypeError if the Cyclops version isnt set', () => {
+    afterEach(() => {
+      getConfig.restore();
+      getVersion.restore();
+    });
+
+    it('should throw a TypeError if the Cyclops version isn\'t set', () => {
       expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).to.throw(
-        TypeError, 'Missing Cyclops version from configuration object',
+        TypeError, 'Missing Cyclops version from configuration.',
       );
     });
 
     it('should throw a TypeError if the Cyphon version isnt set', () => {
-      getConfig.returns({ CYCLOPS_VERSION: '0.3.2' });
+      getVersion.returns('0.3.2');
 
       expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).to.throw(
         TypeError, 'Missing Cyphon version from configuration object',
@@ -102,10 +110,8 @@ describe('version', () => {
 
     it('should throw a TypeError if the matching Cyphon version isnt ' +
       'present', () => {
-      getConfig.returns({
-        CYCLOPS_VERSION: '-1.0.0',
-        CYPHON_VERSION: '1.0.0',
-      });
+      getVersion.returns('-1.0.0');
+      getConfig.returns({ CYPHON_VERSION: '1.0.0' });
 
       expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).to.throw(
         TypeError, 'Could not find matching Cyphon version for Cyclops' +
@@ -114,23 +120,22 @@ describe('version', () => {
     });
 
     it('should return false if the two versions dont match', () => {
-      getConfig.returns({ CYCLOPS_VERSION: '0.1.0', CYPHON_VERSION: '1.6' });
+      getVersion.returns('0.1.0');
+      getConfig.returns({ CYPHON_VERSION: '1.6' });
 
       expect(version.cyclopsVersionMatchesCyphonVersion()).to.be.false;
     });
 
     it('should return true of the two versions match', () => {
-      getConfig.returns({ CYCLOPS_VERSION: '0.1.0', CYPHON_VERSION: '1.2.0'});
+      getVersion.returns('0.1.0');
+      getConfig.returns({ CYPHON_VERSION: '1.2.0'});
 
       expect(version.cyclopsVersionMatchesCyphonVersion()).to.be.true;
 
-      getConfig.returns({ CYCLOPS_VERSION: '0.4.1', CYPHON_VERSION: '1.3.0'});
+      getVersion.returns('0.4.1');
+      getConfig.returns({ CYPHON_VERSION: '1.3.0'});
 
       expect(version.cyclopsVersionMatchesCyphonVersion()).to.be.true;
-    });
-
-    afterEach(() => {
-      getConfig.restore();
     });
   });
 
