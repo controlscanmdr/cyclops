@@ -19,32 +19,36 @@
 // Vendor
 import * as _ from 'lodash';
 
-import { Container } from './types';
+import { Container } from '../types';
 import { Result } from '~/types/result';
-import { Field } from '../cyphon/types';
+
+export interface FieldValue<T> {
+  field: string;
+  value: T;
+}
 
 /**
  * Gets the fields of a certain field type and returns them in an object.
  * @param type Field type to search for.
  * @param container Container object related to the result object.
  * @param result Result to pull fields from.
- * @returns {{}} Returned fiels that match the given type.
+ * @returns {Map<string, T>} Returned fields that match the given type.
  */
 export function getFieldsOfType<T>(
   type: string,
   container: Container,
   result: Result,
-): { [field: string]: T } | undefined {
-  const fields: Field[] = container.fields;
-  const fieldValues: { [key: string]: any } = {};
+): Array<FieldValue<T>> {
+  return container.fields
+    .filter((field) => field.field_type === type)
+    .map((field) => {
+      if (!_.has(result, field.field_name)) {
+        throw new Error(`Result does not have field '${field.field_name}'.`);
+      }
 
-  fields.forEach((field: Field) => {
-    if (field.field_type === type) {
-      const fieldName = field.field_name;
-
-      fieldValues[fieldName] = _.get(result, fieldName);
-    }
-  });
-
-  return _.isEmpty(fieldValues) ? undefined : fieldValues;
+      return {
+        field: field.field_name,
+        value: _.get<T>(result, field.field_name),
+      };
+    });
 }

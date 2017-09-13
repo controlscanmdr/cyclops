@@ -33,6 +33,10 @@ export function reverseLookup(
   coordinates: [number, number],
   cancelToken?: CancelToken,
 ): Promise<string | undefined> {
+  if (!coordinates || coordinates.length !== 2) {
+    return Promise.resolve(undefined);
+  }
+
   const coordinatesString = coordinates.join(',');
   const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/` +
     `${coordinatesString}.json?access_token=${getConfig().MAPBOX_ACCESS_TOKEN}`;

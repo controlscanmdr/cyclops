@@ -23,9 +23,13 @@ import { CancelToken } from 'axios';
 // Local
 import { Result } from '~/types/result';
 import { Container } from '../../containers/types';
-import { getFieldsOfType } from '../../containers/utils';
+import { getFieldsOfType } from '../../containers/utils/containerUtils';
 import { CONTAINER_FIELDS } from '../../containers/constants';
-import { LocationFieldAddress, LocationField } from '../types';
+import {
+  LocationFieldAddress,
+  LocationField,
+  Coordinates
+} from '../types';
 import { reverseLookup } from './reverseLookup';
 
 /**
@@ -42,31 +46,29 @@ export function getLocationsWithAddress(
   result: Result,
   cancelToken?: CancelToken,
 ): Promise<LocationFieldAddress[]> {
-  const locationFields = getFieldsOfType(
-    CONTAINER_FIELDS.POINT_FIELD, container, result,
+  const pointFields = getFieldsOfType<Coordinates>(
+    CONTAINER_FIELDS.POINT_FIELD,
+    container,
+    result,
   );
 
   // If there aren't any location fields, return an empty array.
-  if (!locationFields) { return Promise.resolve([]); }
+  if (!pointFields.length) { return Promise.resolve([]); }
 
-  const locationFieldArray: LocationField[] = [];
-
-  _.forEach(
-    locationFields,
-    (coordinates: [number, number] | null, field: string) => {
-      // Only add a location field object if the coordinates value is not
-      // null or undefined.
-      if (coordinates) { locationFieldArray.push({ field, coordinates }); }
-    },
-  );
+  const locationFields: LocationField[] = pointFields
+    .filter((pointField) => pointField.value && pointField.value.length)
+    .map((pointField) => ({
+      field: pointField.field,
+      coordinates: pointField.value,
+    }));
 
   // If the location coordinates were blank, return an empty array
-  if (!locationFieldArray.length) { return Promise.resolve([]); }
+  if (!locationFields.length) { return Promise.resolve([]); }
 
   const reverseLookupPromises: Array<Promise<string>> = [];
 
   // Lookup the address for each location.
-  locationFieldArray.forEach((locationField: LocationField) => {
+  locationFields.forEach((locationField: LocationField) => {
     reverseLookupPromises.push(reverseLookup(locationField.coordinates, cancelToken));
   });
 
@@ -74,7 +76,7 @@ export function getLocationsWithAddress(
     .then((addresses: string[]) => {
       return addresses.map<LocationFieldAddress>
         ((address: string, index: number) => {
-          return _.assign({}, locationFieldArray[index], { address });
+          return _.assign({}, locationFields[index], { address });
         });
     });
 }

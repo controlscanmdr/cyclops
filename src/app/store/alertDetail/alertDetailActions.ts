@@ -51,7 +51,7 @@ import {
   ResultIPAdresses,
 } from '~/types/result';
 import { Container } from '~/services/containers/types';
-import { getFieldsOfType } from '~/services/containers/utils';
+import { getFieldsOfType } from '~/services/containers/utils/containerUtils';
 import { CONTAINER_FIELDS } from '~/services/containers/constants';
 import { Dictionary } from '~/types/object';
 import { checkAlertUpdate } from '~/services/alerts/utils/checkAlertUpdate';
@@ -357,21 +357,22 @@ export function openDataModal(
   data: Result,
   container: Container,
 ): OpenDataModalAction {
-  const ipAddresses = getFieldsOfType<string>(
+  const IPAddresses = getFieldsOfType<string | null>(
     CONTAINER_FIELDS.IP_ADDRESS, container, data,
   );
 
-  if (!ipAddresses) { return createAction(OPEN_DATA_MODAL, null); }
+  if (!IPAddresses.length) { return createAction(OPEN_DATA_MODAL, null); }
 
   const nonNullIPS: Dictionary<string> = {};
 
-  _.forEach(ipAddresses, (value: string | null, key: string) => {
-    if (value !== null) { nonNullIPS[key] = value; }
-  });
+  IPAddresses.filter((IPAddress) => IPAddress !== null)
+    .forEach((IPAddress) => {
+      nonNullIPS[IPAddress.field] = IPAddress.value as string;
+    });
 
   if (_.isEmpty(nonNullIPS)) { return createAction(OPEN_DATA_MODAL, null); }
 
-  return createAction(OPEN_DATA_MODAL, ipAddresses || null);
+  return createAction(OPEN_DATA_MODAL, nonNullIPS);
 }
 
 // --------------------------------------------------------------------------
