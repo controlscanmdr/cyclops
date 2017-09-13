@@ -41,14 +41,8 @@ export function getFieldsOfType<T>(
 ): Array<FieldValue<T>> {
   return container.fields
     .filter((field) => field.field_type === type)
-    .map((field) => {
-      if (!_.has(result, field.field_name)) {
-        throw new Error(`Result does not have field '${field.field_name}'.`);
-      }
-
-      return {
-        field: field.field_name,
-        value: _.get<T>(result, field.field_name),
-      };
-    });
+    .map((field) => ({
+      field: field.field_name,
+      value: _.get<T>(result, field.field_name),
+    }));
 }
