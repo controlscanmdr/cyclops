@@ -33,7 +33,7 @@ export interface Dispatch {
   /** Short description of the dispatch. */
   title: string;
   /** User who issued to the dispatch. */
-  issued_by: User | number;
+  issued_by?: User | number;
 }
 
 /**
@@ -41,7 +41,7 @@ export interface Dispatch {
  */
 export interface DispatchNested extends Dispatch {
   /** User object who issued the dispatch. */
-  issued_by: User;
+  issued_by?: User;
 }
 
 /**
@@ -49,5 +49,5 @@ export interface DispatchNested extends Dispatch {
  */
 export interface DispatchFlat extends Dispatch {
   /** ID of the user who issued the dispatch. */
-  issued_by: number;
+  issued_by?: number;
 }
