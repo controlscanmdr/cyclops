@@ -4,7 +4,7 @@
 
 ### Added
 
-- Ability to add and remove tags from an alert detail.
+- Ability to add and remove tags from an alert detail. ([5626fd9](https://github.com/dunbarcyber/cyclops/commit/5626fd90ad8352ab6aab03808f3990a4ef9d6d72))
 
 ### Changed
 
