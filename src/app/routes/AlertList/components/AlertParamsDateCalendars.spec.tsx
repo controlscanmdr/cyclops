@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 import * as moment from 'moment';
 
@@ -51,7 +51,7 @@ describe('<AlertParamsDateCalendars />', () => {
   it('should set the after and before props as dates on the state', () => {
     const wrapper = component({ after, before });
 
-    chai.expect(wrapper.state()).to.deep.equal({
+    expect(wrapper.state()).toEqual({
       after: afterDate,
       before: beforeDate,
     });
@@ -60,7 +60,7 @@ describe('<AlertParamsDateCalendars />', () => {
   it('should set after and before on the state as undefined if the props are', () => {
     const wrapper = component();
 
-    chai.expect(wrapper.state()).to.deep.equal({
+    expect(wrapper.state()).toEqual({
       after: undefined,
       before: undefined,
     });
@@ -69,14 +69,14 @@ describe('<AlertParamsDateCalendars />', () => {
   it('should update the state variables with the dates', () => {
     const wrapper = component();
 
-    chai.expect(wrapper.state()).to.deep.equal({
+    expect(wrapper.state()).toEqual({
       after: undefined,
       before: undefined,
     });
 
     wrapper.setProps({ after, before });
 
-    chai.expect(wrapper.state()).to.deep.equal({
+    expect(wrapper.state()).toEqual({
       after: afterDate,
       before: beforeDate,
     });
@@ -86,7 +86,7 @@ describe('<AlertParamsDateCalendars />', () => {
     const wrapper = component({ after, before });
     const state = wrapper.state();
 
-    chai.expect(state).to.deep.equal({
+    expect(state).toEqual({
       after: afterDate,
       before: beforeDate,
     });
@@ -95,8 +95,8 @@ describe('<AlertParamsDateCalendars />', () => {
 
     const newState = wrapper.state();
 
-    chai.expect(newState.after).to.equal(state.after);
-    chai.expect(newState.before).to.equal(state.before);
+    expect(newState.after).toEqual(state.after);
+    expect(newState.before).toEqual(state.before);
   });
 
   describe('handleAfterChange()', () => {
@@ -111,13 +111,13 @@ describe('<AlertParamsDateCalendars />', () => {
     it('should ignore any string values', () => {
       instance.handleAfterChange('');
 
-      chai.expect(selectDate.called).to.be.false;
+      expect(selectDate.called).toBe(false);
     });
 
     it('should set the after variable to the moment date', () => {
       instance.handleAfterChange(afterMoment);
 
-      chai.expect(wrapper.state()).to.deep.equal({
+      expect(wrapper.state()).toEqual({
         after: afterMoment.toDate(),
         before: undefined,
       });
@@ -126,8 +126,8 @@ describe('<AlertParamsDateCalendars />', () => {
     it('should call selectDate with the new values', () => {
       instance.handleAfterChange(afterMoment);
 
-      chai.expect(selectDate.called).to.be.true;
-      chai.expect(selectDate.args[0][0]).to.deep.equal({
+      expect(selectDate.called).toBe(true);
+      expect(selectDate.args[0][0]).toEqual({
         after: afterMoment.format(),
         before: undefined,
       });
@@ -140,8 +140,8 @@ describe('<AlertParamsDateCalendars />', () => {
       instance = wrapper.instance();
 
       instance.handleAfterChange(afterMoment);
-      chai.expect(selectDate.called).to.be.true;
-      chai.expect(selectDate.args[0][0]).to.deep.equal({
+      expect(selectDate.called).toBe(true);
+      expect(selectDate.args[0][0]).toEqual({
         after: afterMoment.format(),
         before: beforeFormat,
       });
@@ -160,13 +160,13 @@ describe('<AlertParamsDateCalendars />', () => {
     it('should ignore any string values', () => {
       instance.handleBeforeChange('');
 
-      chai.expect(selectDate.called).to.be.false;
+      expect(selectDate.called).toBe(false);
     });
 
     it('should set the after variable to the moment date', () => {
       instance.handleBeforeChange(beforeMoment);
 
-      chai.expect(wrapper.state()).to.deep.equal({
+      expect(wrapper.state()).toEqual({
         after: undefined,
         before: beforeMoment.toDate(),
       });
@@ -175,8 +175,8 @@ describe('<AlertParamsDateCalendars />', () => {
     it('should call selectDate with the new values', () => {
       instance.handleBeforeChange(beforeMoment);
 
-      chai.expect(selectDate.called).to.be.true;
-      chai.expect(selectDate.args[0][0]).to.deep.equal({
+      expect(selectDate.called).toBe(true);
+      expect(selectDate.args[0][0]).toEqual({
         after: undefined,
         before: beforeMoment.format(),
       });
@@ -189,8 +189,8 @@ describe('<AlertParamsDateCalendars />', () => {
       instance = wrapper.instance();
 
       instance.handleBeforeChange(beforeMoment);
-      chai.expect(selectDate.called).to.be.true;
-      chai.expect(selectDate.args[0][0]).to.deep.equal({
+      expect(selectDate.called).toBe(true);
+      expect(selectDate.args[0][0]).toEqual({
         after: afterFormat,
         before: beforeMoment.format(),
       });

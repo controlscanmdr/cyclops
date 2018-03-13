@@ -1,5 +1,25 @@
 # Change log
 
+## Unreleased
+
+### Added
+
+- Ability to add and remove tags from an alert detail. ([5626fd9](https://github.com/dunbarcyber/cyclops/commit/5626fd90ad8352ab6aab03808f3990a4ef9d6d72))
+
+### Changed
+
+- Test suite from Karma/Webpack/Mocha/Chai to Jest. ([24271f4](https://github.com/dunbarcyber/cyclops/commit/24271f4a50813b89d22369df0e00496eb5401067))
+- Updated enzyme to version 3.3.0 ([cabcb5c](https://github.com/dunbarcyber/cyclops/commit/cabcb5c3dd5f8adbdd35f2a4a74f249329867ecf))
+
+### Removed
+
+- Removed test specs.ts file. ([03d5051](https://github.com/dunbarcyber/cyclops/commit/03d5051693fd47b47611a449ee0d0d454b965dfd))
+- Removed unused dependencies. ([30ff3f0](https://github.com/dunbarcyber/cyclops/commit/30ff3f0eb012818f37906e22fad9f2bc488fe4d3))
+
+### Fixed
+
+- getUserFullName to render 'None' if there is no user object. ([3bc0bdd](https://github.com/dunbarcyber/cyclops/commit/3bc0bdd4fed4ffa67c47db87a941fd6795ae3c12))
+
 ## [0.5.4](https://github.com/dunbarcyber/cyclops/compare/0.5.2...0.5.3) (2018-01-09)
 
 ### Changed

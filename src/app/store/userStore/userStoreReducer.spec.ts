@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import * as actions from './userStoreActions';
@@ -39,7 +39,7 @@ describe('userStore', () => {
     const action = actions.storeUsers(users);
     const state = test.userStore(initial, action);
 
-    chai.expect(state).to.deep.equal({
+    expect(state).toEqual({
       result: [1, 2],
       entities: {
         users: {

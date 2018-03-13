@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -52,7 +52,7 @@ describe('<VersionMatchError />', () => {
     'found', () => {
     const element = component().find('div').first();
 
-    expect(element.text()).to.equal('Could not find Cyclops version number.');
+    expect(element.text()).toEqual('Could not find Cyclops version number.');
   });
 
   it('should display an error message if the Cyphon version is not ' +
@@ -61,7 +61,7 @@ describe('<VersionMatchError />', () => {
 
     const element = component().find('div').first();
 
-    expect(element.text()).to.equal('Could not find Cyphon version number.');
+    expect(element.text()).toEqual('Could not find Cyphon version number.');
   });
 
   it('should display an error message if the Cyphon version range is not ' +
@@ -71,7 +71,7 @@ describe('<VersionMatchError />', () => {
 
     const element = component().find('div').first();
 
-    expect(element.text()).to.equal(
+    expect(element.text()).toEqual(
       'Could not find matching Cyphon version range.',
     );
   });
@@ -82,7 +82,7 @@ describe('<VersionMatchError />', () => {
     getConfig.returns({ CYPHON_VERSION: '1.2.0' });
     const element = component().find('div').first();
 
-    expect(element.text()).to.equal(
+    expect(element.text()).toEqual(
       'You\'re running Cyclops version 0.5.0 with Cyphon version 1.2.0, ' +
       'which are not compatible. This version of Cyclops is compatible with' +
       ' Cyphon versions 1.4.0 to *.',

@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import { denormalizeUser } from './denormalizeUser';
@@ -56,16 +56,16 @@ describe('denormalizeUser()', () => {
   it('should return a user object from a list of normalized users', () => {
     let user = denormalizeUser(normalizedUsers, 1);
 
-    chai.expect(user).to.deep.equal(user1);
+    expect(user).toEqual(user1);
 
     user = denormalizeUser(normalizedUsers, 2);
 
-    chai.expect(user).to.deep.equal(user2);
+    expect(user).toEqual(user2);
   });
 
   it('should return undefined if it cannot find the user object', () => {
     const user = denormalizeUser(normalizedUsers, 3);
 
-    chai.expect(user).to.be.undefined;
+    expect(user).toBeUndefined();
   });
 });

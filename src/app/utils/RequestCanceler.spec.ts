@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import { RequestCanceler } from './RequestCanceler';
@@ -36,7 +36,7 @@ describe('RequestCanceler', () => {
     it('should set the canceler function', () => {
       requestCanceler.set(canceler);
 
-      chai.expect(requestCanceler.canceler).to.equal(canceler);
+      expect(requestCanceler.canceler).toEqual(canceler);
     });
   });
 
@@ -45,7 +45,7 @@ describe('RequestCanceler', () => {
       requestCanceler.set(canceler);
       requestCanceler.cancel();
 
-      chai.expect(canceler.called).to.be.true;
+      expect(canceler.called).toBe(true);
     });
   });
 });

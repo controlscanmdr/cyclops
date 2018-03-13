@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -43,7 +43,7 @@ describe('<CollapsibleHeader />', () => {
   it('should display the title in a header', () => {
     const text = component().find('button').first().text();
 
-    expect(text).to.include(title);
+    expect(text).toContain(title);
   });
 
   it('should toggle the state between open and closed with the header ' +
@@ -51,15 +51,15 @@ describe('<CollapsibleHeader />', () => {
     const wrapper = component();
     const button = wrapper.find('button').first();
 
-    expect(wrapper.state('open')).to.be.true;
+    expect(wrapper.state('open')).toBe(true);
 
     button.simulate('click');
 
-    expect(wrapper.state('open')).to.be.false;
+    expect(wrapper.state('open')).toBe(false);
 
     button.simulate('click');
 
-    expect(wrapper.state('open')).to.be.true;
+    expect(wrapper.state('open')).toBe(true);
   });
 
   it('should display an action button if one is given', () => {
@@ -67,12 +67,12 @@ describe('<CollapsibleHeader />', () => {
     const wrapper = component({ action, actionName: name });
     const button = wrapper.find('.collapsible__action');
 
-    expect(button.length).to.equal(1);
+    expect(button.length).toEqual(1);
 
-    expect(button.text()).to.equal(name);
+    expect(button.text()).toEqual(name);
 
     button.simulate('click');
 
-    expect(action.called).to.be.true;
+    expect(action.called).toBe(true);
   });
 });

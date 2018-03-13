@@ -31,25 +31,25 @@ describe('version', () => {
       'string that contains major, minor, and patch info', () => {
       const semantic = version.parseVersion('1.2.3');
 
-      expect(semantic[0]).to.equal(1);
-      expect(semantic[1]).to.equal(2);
-      expect(semantic[2]).to.equal(3);
+      expect(semantic[0]).toEqual(1);
+      expect(semantic[1]).toEqual(2);
+      expect(semantic[2]).toEqual(3);
     });
 
     it('should use Infinity when no version number is given', () => {
       const semantic = version.parseVersion('1.2');
 
-      expect(semantic[0]).to.equal(1);
-      expect(semantic[1]).to.equal(2);
-      expect(semantic[2]).to.equal(Infinity);
+      expect(semantic[0]).toEqual(1);
+      expect(semantic[1]).toEqual(2);
+      expect(semantic[2]).toEqual(Infinity);
     });
 
     it('should use Infinity if a wildcard is used', () => {
       const semantic = version.parseVersion('*');
 
-      expect(semantic[0]).to.equal(Infinity);
-      expect(semantic[1]).to.equal(Infinity);
-      expect(semantic[2]).to.equal(Infinity);
+      expect(semantic[0]).toEqual(Infinity);
+      expect(semantic[1]).toEqual(Infinity);
+      expect(semantic[2]).toEqual(Infinity);
     });
   });
   describe('getCyphonVersionRange()', () => {
@@ -58,12 +58,12 @@ describe('version', () => {
       const cyclopsVersion = version.parseVersion('0.1.0');
       const range = version.getCyphonVersionRange(cyclopsVersion);
 
-      expect((range as version.SemanticVersionRange)[0][0]).to.equal(1);
-      expect((range as version.SemanticVersionRange)[0][1]).to.equal(0);
-      expect((range as version.SemanticVersionRange)[0][2]).to.equal(0);
-      expect((range as version.SemanticVersionRange)[1][0]).to.equal(1);
-      expect((range as version.SemanticVersionRange)[1][1]).to.equal(1);
-      expect((range as version.SemanticVersionRange)[1][2]).to.equal(3);
+      expect((range as version.SemanticVersionRange)[0][0]).toEqual(1);
+      expect((range as version.SemanticVersionRange)[0][1]).toEqual(0);
+      expect((range as version.SemanticVersionRange)[0][2]).toEqual(0);
+      expect((range as version.SemanticVersionRange)[1][0]).toEqual(1);
+      expect((range as version.SemanticVersionRange)[1][1]).toEqual(1);
+      expect((range as version.SemanticVersionRange)[1][2]).toEqual(3);
     });
 
     it('should return the range that matches a specified start and ' +
@@ -71,12 +71,12 @@ describe('version', () => {
       const cyclopsVersion = version.parseVersion('0.5');
       const range = version.getCyphonVersionRange(cyclopsVersion);
 
-      expect((range as version.SemanticVersionRange)[0][0]).to.equal(1);
-      expect((range as version.SemanticVersionRange)[0][1]).to.equal(4);
-      expect((range as version.SemanticVersionRange)[0][2]).to.equal(0);
-      expect((range as version.SemanticVersionRange)[1][0]).to.equal(Infinity);
-      expect((range as version.SemanticVersionRange)[1][1]).to.equal(Infinity);
-      expect((range as version.SemanticVersionRange)[1][2]).to.equal(Infinity);
+      expect((range as version.SemanticVersionRange)[0][0]).toEqual(1);
+      expect((range as version.SemanticVersionRange)[0][1]).toEqual(4);
+      expect((range as version.SemanticVersionRange)[0][2]).toEqual(0);
+      expect((range as version.SemanticVersionRange)[1][0]).toEqual(Infinity);
+      expect((range as version.SemanticVersionRange)[1][1]).toEqual(Infinity);
+      expect((range as version.SemanticVersionRange)[1][2]).toEqual(Infinity);
     });
   });
 
@@ -95,16 +95,16 @@ describe('version', () => {
     });
 
     it('should throw a TypeError if the Cyclops version isn\'t set', () => {
-      expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).to.throw(
-        TypeError, 'Missing Cyclops version from configuration.',
+      expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).toThrowError(
+        'Missing Cyclops version from configuration.',
       );
     });
 
     it('should throw a TypeError if the Cyphon version isnt set', () => {
       getVersion.returns('0.3.2');
 
-      expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).to.throw(
-        TypeError, 'Missing Cyphon version from configuration object',
+      expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).toThrowError(
+        'Missing Cyphon version from configuration object',
       );
     });
 
@@ -113,8 +113,8 @@ describe('version', () => {
       getVersion.returns('-1.0.0');
       getConfig.returns({ CYPHON_VERSION: '1.0.0' });
 
-      expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).to.throw(
-        TypeError, 'Could not find matching Cyphon version for Cyclops' +
+      expect(() => { version.cyclopsVersionMatchesCyphonVersion(); }).toThrowError(
+        'Could not find matching Cyphon version for Cyclops' +
         ' version -1.0.0.',
       );
     });
@@ -123,19 +123,19 @@ describe('version', () => {
       getVersion.returns('0.1.0');
       getConfig.returns({ CYPHON_VERSION: '1.6' });
 
-      expect(version.cyclopsVersionMatchesCyphonVersion()).to.be.false;
+      expect(version.cyclopsVersionMatchesCyphonVersion()).toBe(false);
     });
 
     it('should return true of the two versions match', () => {
       getVersion.returns('0.1.0');
       getConfig.returns({ CYPHON_VERSION: '1.1.3'});
 
-      expect(version.cyclopsVersionMatchesCyphonVersion()).to.be.true;
+      expect(version.cyclopsVersionMatchesCyphonVersion()).toBe(true);
 
       getVersion.returns('0.4.1');
       getConfig.returns({ CYPHON_VERSION: '1.3.0'});
 
-      expect(version.cyclopsVersionMatchesCyphonVersion()).to.be.true;
+      expect(version.cyclopsVersionMatchesCyphonVersion()).toBe(true);
     });
   });
 
@@ -143,27 +143,27 @@ describe('version', () => {
     it('should return a wildcard for a major version that equals Infinity', () => {
       const versionNumber = versionToString([Infinity, Infinity, Infinity]);
 
-      expect(versionNumber).to.equal('*');
+      expect(versionNumber).toEqual('*');
     });
 
     it('should return a wildcard for the minor version if it equals ' +
       'infinity', () => {
       const versionNumber = versionToString([2, Infinity, Infinity]);
 
-      expect(versionNumber).to.equal('2.*');
+      expect(versionNumber).toEqual('2.*');
     });
 
     it('should return a wildcard for the patch version if it equals ' +
       'infinity', () => {
       const versionNumber = versionToString([2, 5, Infinity]);
 
-      expect(versionNumber).to.equal('2.5.*');
+      expect(versionNumber).toEqual('2.5.*');
     });
 
     it('should return the full version number', () => {
       const versionNumber = versionToString([2, 5, 12]);
 
-      expect(versionNumber).to.equal('2.5.12');
+      expect(versionNumber).toEqual('2.5.12');
     });
   });
 });

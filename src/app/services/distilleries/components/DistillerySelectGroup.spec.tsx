@@ -18,8 +18,7 @@
 
 // Vendor
 import * as React from 'react';
-import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -41,20 +40,20 @@ describe('<DistillerySelectGroup />', () => {
   it('should create an option group', () => {
     const optGroup = wrapper.find('optgroup');
 
-    chai.expect(optGroup).to.have.length(1);
-    chai.expect(optGroup.first().prop('label')).to.equal(title);
+    expect(optGroup).toHaveLength(1);
+    expect(optGroup.first().prop('label')).toEqual(title);
   });
 
   it('should create an option for each distillery', () => {
     const options = wrapper.find('option');
 
-    chai.expect(options).to.have.length(2);
+    expect(options).toHaveLength(2);
 
     options.forEach((option, index) => {
       const distillery = distilleries[index];
 
-      chai.expect(option.prop('value')).to.equal(distillery.id);
-      chai.expect(option.text()).to.equal(distillery.name);
+      expect(option.prop('value')).toEqual(distillery.id);
+      expect(option.text()).toEqual(distillery.name);
     });
   });
 });

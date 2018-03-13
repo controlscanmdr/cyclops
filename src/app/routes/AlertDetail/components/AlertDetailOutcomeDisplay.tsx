@@ -21,100 +21,98 @@ import * as React from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 
 // Local
-import { AlertOutcomeChoices } from '../../../services/alerts/types';
-import { createRandomId } from '../../../utils/stringUtils';
+import { AlertOutcomeChoices } from '~/services/alerts/types';
+import { createRandomId } from '~/utils/stringUtils';
 import { getOutcomeDisplayName } from '~/services/alerts/utils/getOutcomeDisplayName';
 import { currentUserIsStaff } from '~/services/users/utils/currentUserIsStaff';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Properties of the AlertDetailOutcomeDisplay component. */
 interface Props {
-  /** Current alert notes. */
+  // Current alert notes.
   notes: string;
-  /** Current alert outcome. */
+
+  // Current alert outcome.
   outcome: AlertOutcomeChoices;
-  /** Opens the alert outcome form. */
-  editOutcome(): any;
-  /** Removes the current alert outcome. */
-  showRemovePanel(): any;
+
+  // Opens the alert outcome form.
+  onEditClick(): any;
+
+  // Removes the current alert outcome.
+  onRemoveClick(): any;
 }
 
-// --------------------------------------------------------------------------
+interface State {}
+
 // Component
 // --------------------------------------------------------------------------
 
-/**
- * Displays information about an alert detail outcome and it's analysis.
- */
-export class AlertDetailOutcomeDisplay extends React.Component<Props, {}> {
+// Information about an alert detail outcome and it's analysis
+export class AlertDetailOutcomeDisplay extends React.Component<Props, State> {
   /**
    * Popover explaining that a button triggers the ability for the user
    * to edit the outcome.
-   * @type {any}
    */
-  public editPopover: JSX.Element = (
+  editPopover: JSX.Element = (
     <Popover id={createRandomId()}>Edit</Popover>
   );
 
   /**
    * Popover explaining that a button triggers the ability for the user
    * to remove the current outcome.
-   * @type {any}
    */
-  public removePopover: JSX.Element = (
+  removePopover: JSX.Element = (
     <Popover id={createRandomId()}>Remove</Popover>
   );
 
-  public render() {
-    const outcome =
-      getOutcomeDisplayName(this.props.outcome) ||
-      <i>No outcome selected</i>;
-    const notes = this.props.notes || <i>No analysis written</i>;
-    const isStaff = currentUserIsStaff();
-    const removeOutcomeButton = this.props.outcome && isStaff
-      ? (
-        <OverlayTrigger
-          overlay={this.removePopover}
-          placement="top"
-          animation={false}
+  /**
+   * Renders the button that allows outcome edits.
+   * @returns {JSX.Element | null}
+   */
+  renderEditButton = (): JSX.Element | null => {
+    return currentUserIsStaff() ? (
+      <OverlayTrigger overlay={this.editPopover} placement="top" animation={false}>
+        <button
+          id="alert-edit-outcome"
+          className="btn-basic pull-right"
+          onClick={this.props.onEditClick}
         >
-          <button
-            id="alert-remove-outcome"
-            className="btn-basic pull-right alert-detail-outcome__remove"
-            onClick={this.props.showRemovePanel}
-          >
-            <i className="fa fa-close" />
-          </button>
-        </OverlayTrigger>
-      ) : null;
-    const editOutcome = isStaff
-      ? (
-        <OverlayTrigger
-          overlay={this.editPopover}
-          placement="top"
-          animation={false}
-        >
-          <button
-            id="alert-edit-outcome"
-            className="btn-basic pull-right"
-            onClick={this.props.editOutcome}
-          >
-            <i className="fa fa-pencil" />
-          </button>
-        </OverlayTrigger>
-      ) : null;
+          <i className="fa fa-pencil" />
+        </button>
+      </OverlayTrigger>
+    ) : null;
+  };
 
+  /**
+   * Renders the button that allows outcome removal.
+   * @returns {JSX.Element | null}
+   */
+  renderRemoveButton = (): JSX.Element | null => {
+    return this.props.outcome && currentUserIsStaff() ? (
+      <OverlayTrigger overlay={this.removePopover} placement="top" animation={false}>
+        <button
+          id="alert-remove-outcome"
+          className="btn-basic pull-right alert-detail-outcome__remove"
+          onClick={this.props.onRemoveClick}
+        >
+          <i className="fa fa-close" />
+        </button>
+      </OverlayTrigger>
+    ) : null;
+  };
+
+  render() {
     return (
       <div className="well alert-detail-outcome__well">
         <div className="well__header">
-          {outcome}
-          {removeOutcomeButton}
-          {editOutcome}
+          {getOutcomeDisplayName(this.props.outcome) || <i>No outcome selected</i>}
+          {this.renderRemoveButton()}
+          {this.renderEditButton()}
         </div>
-        <p className="well__content text--pre-line">{notes}</p>
+        <p className="well__content text--pre-line">
+          {this.props.notes || <i>No analysis written</i>}
+        </p>
       </div>
     );
   }

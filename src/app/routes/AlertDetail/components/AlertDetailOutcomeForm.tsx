@@ -18,55 +18,51 @@
 
 // Vendor
 import * as React from 'react';
-import {
-  Select,
-  SelectOption,
-} from '../../../components/Select';
-import { TextAreaPlain } from '../../../components/TextAreaPlain';
-import { AlertDetail } from '../../../services/alerts/types';
 
-// --------------------------------------------------------------------------
+// Local
+import { Select, SelectOption } from '~/components/Select';
+import { TextAreaPlain } from '~/components/TextAreaPlain';
+import { AlertOutcomeChoices } from '~/services/alerts/types';
+
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Properties of the AlertDetailOutcomeForm component. */
 interface Props {
-  /** Current alert outcome. */
-  outcome: string;
-  /** Current alert notes. */
+  // Current alert outcome.
+  outcome: AlertOutcomeChoices;
+
+  // Current alert notes.
   notes: string;
-  /** Alert to modify. */
-  alert: AlertDetail;
+
   /**
-   * Function that runs whenever the outcome is changed.
-   * @param outcome Selected outcome.
+   * Submits the alert changes.
+   * @param {AlertOutcomeChoices} outcome
+   * @param {string} notes
+   * @returns {any}
    */
-  changeOutcome(outcome: string): any;
-  /**
-   * Function that runs whenever the alert analysis changes.
-   * @param notes Written notes.
-   */
-  changeNotes(notes: string): any;
-  /**
-   * Submits the changes to the alert outcome and notes.
-   */
-  submit(): any;
-  cancel(): any;
+  onSubmit(outcome: AlertOutcomeChoices, notes: string): any;
+
+  // Cancels the current form.
+  onCancelClick(): any;
 }
 
-// --------------------------------------------------------------------------
+interface State {
+  notes: string;
+  outcome: AlertOutcomeChoices;
+}
+
 // Component
 // --------------------------------------------------------------------------
 
-/**
- * Displays a form to change an alert's outcome and notes.
- */
-export class AlertDetailOutcomeForm extends React.Component<Props, {}> {
-  /**
-   * Outcome options for the select drop down.
-   * @type {SelectOption[]}
-   */
-  public static OUTCOME_OPTIONS: SelectOption[] = [{
+// Form that changes an alert outcome or notes.
+export class AlertDetailOutcomeForm extends React.Component<Props, State> {
+  state: State = {
+    notes: this.props.notes,
+    outcome: this.props.outcome,
+  };
+
+  // Outcome options for the select dropdown.
+  static OUTCOME_OPTIONS: SelectOption[] = [{
     name: 'Select Outcome',
     value: '',
   }, {
@@ -83,35 +79,51 @@ export class AlertDetailOutcomeForm extends React.Component<Props, {}> {
     value: 'N/A',
   }];
 
-  public render() {
+  /**
+   * Changes the currently selected outcome.
+   * @param {string} value
+   */
+  handleOutcomeChange = (value: string) => {
+    const outcome = value ? value as AlertOutcomeChoices : null;
+
+    this.setState({ outcome });
+  };
+
+  /**
+   * Changes the current notes.
+   * @param {string} notes
+   */
+  handleNotesChange = (notes: string) => {
+    this.setState({ notes });
+  };
+
+  // Submits the outcome and note changes.
+  handleSubmit = () => {
+    this.props.onSubmit(this.state.outcome, this.state.notes);
+  };
+
+  render() {
     return (
       <div>
         <Select
           options={AlertDetailOutcomeForm.OUTCOME_OPTIONS}
-          value={String(this.props.outcome)}
-          onChange={this.props.changeOutcome}
+          value={String(this.state.outcome)}
+          onChange={this.handleOutcomeChange}
         />
-        <TextAreaPlain
-          value={this.props.notes}
-          onChange={this.props.changeNotes}
-        />
+        <TextAreaPlain value={this.state.notes} onChange={this.handleNotesChange} />
         <div className="btn-group btn-group-justified">
           <div className="btn-group">
             <button
               type="button"
               className="btn btn-default"
-              disabled={!this.props.notes || !this.props.outcome}
-              onClick={this.props.submit}
+              disabled={!this.state.notes || !this.state.outcome}
+              onClick={this.handleSubmit}
             >
               Submit
             </button>
           </div>
           <div className="btn-group">
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={this.props.cancel}
-            >
+            <button type="button" className="btn btn-danger" onClick={this.props.onCancelClick}>
               Cancel
             </button>
           </div>

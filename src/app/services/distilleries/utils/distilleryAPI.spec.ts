@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as api from '../../cyphon/utils/cyphonAPI';
@@ -31,8 +31,8 @@ describe('distilleryAPI', () => {
 
       distilleryAPI.fetchAllAlertDistilleries();
 
-      chai.expect(getAll.called).to.be.true;
-      chai.expect(getAll.args[0][0]).to.equal('/alerts/distilleries/');
+      expect(getAll.called).toBe(true);
+      expect(getAll.args[0][0]).toEqual('/alerts/distilleries/');
 
       getAll.restore();
     });

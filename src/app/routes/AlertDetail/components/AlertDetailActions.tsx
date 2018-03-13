@@ -19,43 +19,36 @@
 // Vendor
 import * as _ from 'lodash';
 import * as React from 'react';
-import { Button, FormControl } from 'react-bootstrap';
 
 // Local
-import { SubTitle } from '../../../components/SubTitle';
-import { SpacedSection } from '../../../components/SpacedSection';
+import { SubTitle } from '~/components/SubTitle';
+import { SpacedSection } from '~/components/SpacedSection';
 import { AlertDetailDispatch } from './AlertDetailDispatch';
-import { DispatchNested } from '../../../types/dispatches';
-import { Action } from '../../../services/actions/types';
+import { DispatchNested } from '~/types/dispatches';
+import { Action } from '~/services/actions/types';
 import { currentUserIsStaff } from '~/services/users/utils/currentUserIsStaff';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Properties of AlertDetailActions component. */
 interface Props {
-  /** ID of the alert to display actinons for. */
-  alertId: number;
-  /** Actions that can be performed on the alerts. */
+  // Actions that can be performed on the alerts. */
   actions: Action[];
-  /** Previous actions performed on the alerts. */
+  // Previous actions performed on the alerts. */
   dispatches: DispatchNested[];
   /**
    * Performs an action on the given alert.
    * @param alertId ID of the alert to perform the action on.
    * @param actionId ID of the action to perform.
    */
-  performAction(alertId: number, actionId: number): any;
+  onSubmit(actionId: number): any;
 }
 
-/** Internal state of AlertDetailActions component. */
 interface State {
-  /** Stores the id of the currently selected action. */
+  // Stores the id of the currently selected action.
   actionId: number | null;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
@@ -74,9 +67,7 @@ export class AlertDetailActions extends React.Component<Props, State> {
    * Selects an action.
    * @param event Event given off by the select element.
    */
-  public handleChange = (
-    event: React.FormEvent<HTMLSelectElement>,
-  ): void => {
+  handleChange = (event: React.FormEvent<HTMLSelectElement>): void => {
     const value = parseInt(event.currentTarget.value, 10);
     const actionId = _.isEqual(value, 0) ? null : value;
 
@@ -86,56 +77,62 @@ export class AlertDetailActions extends React.Component<Props, State> {
   /**
    * Performs the currently selected action.
    */
-  public handleClick = (): void => {
-    const { performAction, alertId } = this.props;
-    const { actionId } = this.state;
-
-    if (actionId) { performAction(alertId, actionId); }
+  handleClick = (): void => {
+    if (this.state.actionId) this.props.onSubmit(this.state.actionId);
   };
 
-  public render(): JSX.Element {
-    const { actions, dispatches } = this.props;
-    const dispatchList = dispatches.length
-      ? dispatches.map((dispatch) => (
+  renderDispatchList = (): JSX.Element[] | JSX.Element => {
+    if (this.props.dispatches.length) {
+      return this.props.dispatches.map(dispatch => (
         <AlertDetailDispatch dispatch={dispatch} />
-      )) : (
-        <div className="well">
-          <i>No previous actions performed</i>
-        </div>
-      );
-    const actionOptions = actions.map((action) => (
+      ));
+    }
+
+    return (
+      <div className="well">
+        <i>No previous actions performed</i>
+      </div>
+    );
+  };
+
+  renderSelectButton = (): JSX.Element | null => {
+    if (!currentUserIsStaff()) return null;
+
+    const actionOptions = this.props.actions.map((action) => (
       <option value={action.id} key={action.id}>{action.name}</option>
     ));
-    const selectActionButton = currentUserIsStaff()
-      ? (
-        <div className="flex-box flex-box--spaced">
-          <div className="flex-item">
-            <select
-              onChange={this.handleChange}
-              className="form-control alert-action__select"
-            >
-              <option value={0}>Select Action</option>
-              {actionOptions}
-            </select>
-          </div>
-          <div className="flex-item flex--shrink">
-            <button
-              className="btn btn-alt"
-              disabled={!this.state.actionId}
-              onClick={this.handleClick}
-            >
-              <i className="fa fa-check" />
-            </button>
-          </div>
-        </div>
-      ) : null;
 
+    return (
+      <div className="flex-box flex-box--spaced">
+        <div className="flex-item">
+          <select
+            onChange={this.handleChange}
+            className="form-control alert-action__select"
+          >
+            <option value={0}>Select Action</option>
+            {actionOptions}
+          </select>
+        </div>
+        <div className="flex-item flex--shrink">
+          <button
+            className="btn btn-alt"
+            disabled={!this.state.actionId}
+            onClick={this.handleClick}
+          >
+            <i className="fa fa-check" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  render(): JSX.Element {
     return (
       <SpacedSection>
         <SubTitle>Actions</SubTitle>
         <div>
-          {dispatchList}
-          {selectActionButton}
+          {this.renderDispatchList()}
+          {this.renderSelectButton()}
         </div>
       </SpacedSection>
     );

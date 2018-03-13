@@ -39,7 +39,7 @@ describe('UserStoreActions', () => {
 
   describe('#storeUsers', () => {
     it('should return an action with the correct payload', () => {
-      chai.expect(actions.storeUsers(normalized)).to.deep.equal({
+      expect(actions.storeUsers(normalized)).toEqual({
         type: actions.STORE_USERS,
         payload: normalized,
         error: undefined,
@@ -69,7 +69,7 @@ describe('UserStoreActions', () => {
 
     it('should call getAllUsers', () => {
       return fetchAllUsers().then(() => {
-        chai.expect(getAllUsers.called).to.be.true;
+        expect(getAllUsers.called).toBe(true);
       });
     });
 
@@ -77,8 +77,8 @@ describe('UserStoreActions', () => {
       getAllUsers.resolves(users);
 
       return fetchAllUsers().then(() => {
-        chai.expect(dispatch.called).to.be.true;
-        chai.expect(dispatch.args[0][0]).to.deep.equal({
+        expect(dispatch.called).toBe(true);
+        expect(dispatch.args[0][0]).toEqual({
           type: actions.STORE_USERS,
           payload: normalized,
           error: undefined,

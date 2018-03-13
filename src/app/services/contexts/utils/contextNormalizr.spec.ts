@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import {
@@ -59,7 +59,7 @@ describe('api.contexts.utils', () => {
 
   describe('normalizeContexts', () => {
     it('should create a normalized list of contexts', () => {
-      chai.expect(utils.normalizeContexts(contexts)).to.deep.equal({
+      expect(utils.normalizeContexts(contexts)).toEqual({
         result: [1],
         entities: {
           contexts: {
@@ -84,7 +84,7 @@ describe('api.contexts.utils', () => {
     it('should denormalize a list of normalizedContexts', () => {
       const normalized = utils.normalizeContexts(contexts);
 
-      chai.expect(utils.denormalizeContexts(normalized)).to.deep.equal(contexts);
+      expect(utils.denormalizeContexts(normalized)).toEqual(contexts);
     });
   });
 
@@ -92,7 +92,7 @@ describe('api.contexts.utils', () => {
     it('should denormalize a single context from normalized contexts', () => {
       const normalized = utils.normalizeContexts(contexts);
 
-      chai.expect(utils.denormalizeContext(1, normalized)).to.deep.equal(context);
+      expect(utils.denormalizeContext(1, normalized)).toEqual(context);
     });
   });
 });

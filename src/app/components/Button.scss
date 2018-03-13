@@ -16,11 +16,46 @@
  * are made]
  */
 
+@import '../../styles/base/variables';
+
 .Button {
   &--plain {
     background-color: transparent;
     border: none;
     padding: 0;
     color: inherit;
+  }
+
+  &--danger {
+    //@extend .btn-danger;
+  }
+
+  &--unstyled {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+
+  }
+
+  &--tiny {
+    padding: 3px 5px 1px;
+    border-color: transparent;
+    background-color: lighten($color-dark, 6%);
+    border-width: 0;
+    border-radius: $border-radius-base;
+    color: lighten($color-dark, 40%);
+    font-size: 10px;
+    margin-left: 5px;
+
+    &:hover {
+      color: lighten($color-dark, 65%);
+      background-color: lighten($color-dark, 9%);
+    }
+
+    &:disabled:hover {
+      color: lighten($color-dark, 40%);
+      background-color: lighten($color-dark, 6%);
+    }
   }
 }

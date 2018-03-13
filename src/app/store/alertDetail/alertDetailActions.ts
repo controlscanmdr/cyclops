@@ -21,35 +21,15 @@ import axios, { Canceler } from 'axios';
 import * as _ from 'lodash';
 
 // Local
-import {
-  ReduxAction,
-  ThunkActionPromise,
-  ReduxDispatch,
-} from '~/store/types';
-import { createAction } from '~/utils/reduxUtils';
-import {
-  Alert,
-  AlertDetail,
-  AlertUpdateRequest,
-} from '~/services/alerts/types';
+import { ThunkActionPromise, ReduxDispatch, Action } from '~/store/types';
+import { AlertDetail, AlertUpdateRequest } from '~/services/alerts/types';
 import { getCancelTokenSource } from '~/services/cyphon/utils/cancelTokens';
-import {
-  fetchAlert,
-  updateAlert,
-  performAction,
-  addComment,
-} from '~/services/alerts/utils/alertsAPI';
+import * as alertAPI from '~/services/alerts/utils/alertsAPI';
 import { addError } from '../errorModal/errorModalActions';
 import { getLocationsWithAddress } from '~/services/map/utils/getLocationsWithAddress';
 import { createLocationGeoJSON } from '~/services/map/utils/createLocationGeoJSON';
-import {
-  LocationFieldAddress,
-  Markers,
-} from '~/services/map/types';
-import {
-  Result,
-  ResultIPAdresses,
-} from '~/types/result';
+import { LocationFieldAddress, Markers } from '~/services/map/types';
+import { Result, ResultIPAdresses } from '~/types/result';
 import { ContainerNested } from '~/services/containers/types';
 import { getFieldsOfType } from '~/services/containers/utils/containerUtils';
 import { CONTAINER_FIELDS } from '~/services/containers/constants';
@@ -57,10 +37,8 @@ import { Dictionary } from '~/types/object';
 import { checkAlertUpdate } from '~/services/alerts/utils/checkAlertUpdate';
 import { modifyAlertUpdate } from '~/services/alerts/utils/modifyAlertUpdate';
 import { createAlertUpdateComment } from '~/routes/AlertDetail/utils/createAlertUpdateComment';
-
-// --------------------------------------------------------------------------
-// Helper Functions/Variables
-// --------------------------------------------------------------------------
+import { action } from '~/utils/reduxUtils';
+import actions from 'history/lib/actions';
 
 /**
  * Creates a function that handles an error from an API request for alert
@@ -70,7 +48,7 @@ import { createAlertUpdateComment } from '~/routes/AlertDetail/utils/createAlert
  */
 function handleError(dispatch: ReduxDispatch) {
   return (error: any): void => {
-    if (axios.isCancel(error)) { return; }
+    if (axios.isCancel(error)) return;
 
     dispatch(requestFailed());
     dispatch(addError(error));
@@ -90,401 +68,211 @@ function updateAlertDetailObject(dispatch: ReduxDispatch) {
   };
 }
 
-/**
- * Prefix for all the action types in this module.
- * @type {string}
- */
-const ACTION_PREFIX = 'ALERT_DETAIL';
-
-/**
- * Alert fields that should include a comment whenever they are updated.
- * @type {string[]}
- */
-const UPDATE_COMMENT_FIELDS = ['outcome', 'level', 'assigned_user'];
-
-// --------------------------------------------------------------------------
 // CLOSE_ALERT
 // --------------------------------------------------------------------------
+// Close the alert detail panel.
 
-/**
- * Action Type: When the alerts detail is closed.
- * @type {string}
- */
-export const CLOSE_ALERT = `${ACTION_PREFIX}/CLOSE_ALERT`;
+export const CLOSE_ALERT = 'ALERT_DETAIL:CLOSE_ALERT';
+export type CloseAlertAction = Action<typeof CLOSE_ALERT, undefined>;
+export const closeAlert = (): CloseAlertAction => ({
+  type: CLOSE_ALERT,
+  payload: undefined,
+});
 
-/** CLOSE_ALERT payload type. */
-export type CloseAlertPayload = undefined;
-
-/** CLOSE_ALERT action type. */
-export type CloseAlertAction = ReduxAction<CloseAlertPayload>;
-
-/**
- * Creates a CLOSE_ALERT action.
- * @returns {ReduxAction<CloseAlertPayload>}
- */
-export function closeAlert(): CloseAlertAction {
-  return createAction(CLOSE_ALERT, undefined);
-}
-
+// FETCH_ALERT
 // --------------------------------------------------------------------------
-// FETCH_ALERT_PENDING
-// --------------------------------------------------------------------------
+// Request to fetch an alert detail was made.
 
-/**
- * Action Type: When a request for an alerts object for the alerts detail
- * is made.
- * @type {string}
- */
-export const FETCH_ALERT_PENDING = `${ACTION_PREFIX}/FETCH_ALERT_PENDING`;
+export const FETCH_ALERT = 'ALERT_DETAIL:FETCH_ALERT';
+export type FetchAlertPayload = { alertID: number; canceler?: Canceler };
+export type FetchAlertAction = Action<typeof FETCH_ALERT, FetchAlertPayload>;
+export const fetchAlert = (alertID: number, canceler?: Canceler): FetchAlertAction => ({
+  type: FETCH_ALERT,
+  payload: { alertID, canceler },
+});
 
-/** FETCH_ALERT_PENDING payload type. */
-export interface FetchAlertPendingPayload {
-  alertId: number;
-  canceler: Canceler;
-}
-
-/** FETCH_ALERT_PENDING action type. */
-export type FetchAlertPendingAction = ReduxAction<FetchAlertPendingPayload>;
-
-/**
- * Creates a FETCH_ALERT_PENDING action and cancels any other requests
- * that have been made prior to this action.
- * @param alertId ID of the alerts being fetched.
- * @param canceler Function that cancels the promise making the request.
- * @returns {ReduxAction<{alertId: number, canceler: Canceler}>}
- */
-export function fetchAlertPending(alertId: number, canceler: Canceler):
-  FetchAlertPendingAction {
-  return createAction(FETCH_ALERT_PENDING, { alertId, canceler });
-}
-
-// --------------------------------------------------------------------------
 // FETCH_ALERT_SUCCESS
 // --------------------------------------------------------------------------
+// Request to fetch an alert detail was successful.
 
-/**
- * Action Type: When a request for an alert object is successful.
- * @type {string}
- */
-export const FETCH_ALERT_SUCCESS = `${ACTION_PREFIX}/FETCH_ALERT_SUCCESS`;
-
-/** FETCH_ALERT_SUCCESS payload type. */
-export interface FetchAlertSuccessPayload {
+export const FETCH_ALERT_SUCCESS = 'ALERT_DETAIL:FETCH_ALERT_SUCCESS';
+export type FetchAlertSuccessAction = Action<typeof FETCH_ALERT_SUCCESS, {
   alert: AlertDetail;
   locations: LocationFieldAddress[] | null;
   markers: Markers | null;
-}
-
-/** FETCH_ALERT_SUCCESS action type. */
-export type FetchAlertSuccessAction = ReduxAction<FetchAlertSuccessPayload>;
-
-/**
- * Creates a FETCH_ALERT_SUCCESS action.
- * @returns {Action<FetchAlertSuccessPayload>;
- */
-export function fetchAlertSuccess(
+}>;
+export const fetchAlertSuccess = (
   alert: AlertDetail,
   locations: LocationFieldAddress[] | null,
   markers: Markers | null,
-): FetchAlertSuccessAction {
-  return createAction(FETCH_ALERT_SUCCESS, { alert, locations, markers });
-}
+): FetchAlertSuccessAction => ({
+  type: FETCH_ALERT_SUCCESS,
+  payload: { alert, locations, markers },
+});
 
+// FETCH_ALERT_FAILURE
 // --------------------------------------------------------------------------
+// Request to fetch an alert detail failed.
+
+export const FETCH_ALERT_FAILURE = 'ALERT_DETAIL:FETCH_ALERT_FAILURE';
+export type FetchAlertFailureAction = Action<typeof FETCH_ALERT_FAILURE, undefined>;
+export const fetchAlertFailure = (): FetchAlertFailureAction => ({
+  type: FETCH_ALERT_FAILURE,
+  payload: undefined,
+});
+
+// FETCH_ALERT_CANCELED
+// --------------------------------------------------------------------------
+// Request to fetch an alert detail was canceled.
+
+export const FETCH_ALERT_CANCELED = 'ALERT_DETAIL:FETCH_ALERT_CANCELED';
+export type FetchAlertCanceledAction = Action<typeof FETCH_ALERT_CANCELED, undefined>;
+export const fetchAlertCanceled = (): FetchAlertCanceledAction => ({
+  type: FETCH_ALERT_CANCELED,
+  payload: undefined,
+});
+
 // REQUEST_PENDING
 // --------------------------------------------------------------------------
 
-/**
- * Action Type: When a request to the alert detail API is sent.
- * @type {string}
- */
-export const REQUEST_PENDING = `${ACTION_PREFIX}/REQUEST_PENDING`;
+export const REQUEST_PENDING = 'ALERT_DETAIL:REQUEST_PENDING';
+export type RequestPendingAction = Action<typeof REQUEST_PENDING, Canceler>;
+export const requestPending = (canceler: Canceler): RequestPendingAction => ({
+  type: REQUEST_PENDING,
+  payload: canceler,
+});
 
-/**
- * REQUEST_PENDING payload type.
- */
-export type RequestPendingPayload = Canceler;
 
-/**
- * REQUEST_PENDING action type.
- */
-export type RequestPendingAction = ReduxAction<RequestPendingPayload>;
 
-/**
- * Creates a REQUEST_PENDING action.
- * @returns {Action<RequestPendingPayload>;
- */
-export function requestPending(canceler: Canceler): RequestPendingAction {
-  return createAction(REQUEST_PENDING, canceler);
-}
-
-// --------------------------------------------------------------------------
-// UPDATE_ALERT_SUCCESS
-// --------------------------------------------------------------------------
-
-/**
- * Action Type: When the alerts in the alerts detail is updated successfully.
- * @type {string}
- */
-export const UPDATE_ALERT_SUCCESS = `${ACTION_PREFIX}/UPDATE_ALERT_SUCCESS`;
-
-/**
- * UPDATE_ALERT_SUCCESS payload type.
- */
-export type UpdateAlertSuccessPayload = AlertDetail;
-
-/**
- * UPDATE_ALERT_SUCCESS action type.
- */
-export type UpdateAlertSuccessAction = ReduxAction<UpdateAlertSuccessPayload>;
-
-/**
- * Creates a UPDATE_ALERT_SUCCESS action.
- * @param alert
- * @returns {ReduxAction<AlertDetail>}
- */
-export function updateAlertSuccess(
-  alert: AlertDetail,
-): UpdateAlertSuccessAction {
-  return createAction(UPDATE_ALERT_SUCCESS, alert);
-}
-
-// --------------------------------------------------------------------------
 // ADD_ERROR_MESSAGE
 // --------------------------------------------------------------------------
+// Add error to the alert detail panel.
 
-/**
- * Action Type: When an error message should be displayed over the alert detail.
- * @type {string}
- */
-export const ADD_ERROR_MESSAGE = `${ACTION_PREFIX}/ADD_ERROR_MESSAGE`;
+export const ADD_ERROR_MESSAGE = 'ALERT_DETAIL:ADD_ERROR_MESSAGE';
+export type AddErrorMessageAction = Action<typeof ADD_ERROR_MESSAGE, string[]>;
+export const addErrorMessage = (message: string[]): AddErrorMessageAction => ({
+  type: ADD_ERROR_MESSAGE,
+  payload: message,
+});
 
-/** ADD_ERROR_MESSAGE payload type. */
-export type AddErrorMessagePayload = string[];
-
-/** ADD_ERROR_MESSAGE action type. */
-export type AddErrorMessageAction = ReduxAction<AddErrorMessagePayload>;
-
-/**
- * Creates a ADD_ERROR_MESSAGE action.
- * @returns {AddErrorMessageAction}
- */
-export function addErrorMessage(message: string[]): AddErrorMessageAction {
-  return createAction(ADD_ERROR_MESSAGE, message);
-}
-
-// --------------------------------------------------------------------------
 // CLOSE_ERROR_MESSAGE
 // --------------------------------------------------------------------------
+// Close the alert detail panel messages.
 
-/**
- * Action Type: When the alert detail error message is requested to be cleared.
- * @type {string}
- */
-export const CLOSE_ERROR_MESSAGE = `${ACTION_PREFIX}/CLOSE_ERROR_MESSAGE`;
+export const CLOSE_ERROR_MESSAGE = 'ALERT_DETAIL:CLOSE_ERROR_MESSAGE';
+export type CloseErrorMessageAction = Action<typeof CLOSE_ERROR_MESSAGE, undefined>;
+export const closeErrorMessage = (): CloseErrorMessageAction => ({
+  type: CLOSE_ERROR_MESSAGE,
+  payload: undefined,
+});
 
-/**
- * CLOSE_ERROR_MESSAGE payload type.
- */
-export type CloseErrorMessagePayload = undefined;
-
-/**
- * CLOSE_ERROR_MESSAGE action type.
- */
-export type CloseErrorMessageAction = ReduxAction<CloseErrorMessagePayload>;
-
-/**
- * Creates a CLOSE_ERROR_MESSAGE action.
- * @returns {CloseErrorMessageAction}
- */
-export function closeErrorMessage(): CloseErrorMessageAction {
-  return createAction(CLOSE_ERROR_MESSAGE, undefined);
-}
-
-// --------------------------------------------------------------------------
 // REQUEST_FAILED
 // --------------------------------------------------------------------------
+//
 
-/**
- * Action Type: When any request made to the alert detail api fails.
- * @type {string}
- */
-export const REQUEST_FAILED = `${ACTION_PREFIX}/REQUEST_FAILED`;
+export const REQUEST_FAILED = 'ALERT_DETAIL_REQUEST_FAILED';
+export type RequestFailedAction = Action<typeof REQUEST_FAILED, undefined>;
+export const requestFailed = (): RequestFailedAction => ({
+  type: REQUEST_FAILED,
+  payload: undefined,
+});
 
-/**
- * REQUEST_FAILED payload type.
- */
-export type RequestFailedPayload = undefined;
-
-/**
- * REQUEST_FAILED action type.
- */
-export type RequestFailedAction = ReduxAction<RequestFailedPayload>;
-
-/**
- * Creates a REQUEST_FAILED action.
- * @returns {Action<RequestFailedPayload>;
- */
-export function requestFailed(): RequestFailedAction {
-  return createAction(REQUEST_FAILED, undefined);
-}
-
+// UPDATE_ALERT
 // --------------------------------------------------------------------------
+// Request to update the alert was made.
+
+export const UPDATE_ALERT = 'ALERT_DETAIL:UPDATE_ALERT';
+export type UpdateAlertAction = Action<typeof UPDATE_ALERT, {
+  alert: AlertDetail;
+  update: AlertUpdateRequest;
+}>;
+export const updateAlert = (alert: AlertDetail, update: AlertUpdateRequest): UpdateAlertAction => ({
+  type: UPDATE_ALERT,
+  payload: { alert, update },
+});
+
+// UPDATE_ALERT_PARTIAL
+// --------------------------------------------------------------------------
+// Update to the alert detail was attempted, but not completed.
+
+export const UPDATE_ALERT_PARTIAL = 'ALERT_DETAIL:UPDATE_ALERT_PARTIAL';
+export type UpdateAlertPartialAction = Action<typeof UPDATE_ALERT_PARTIAL, AlertDetail>;
+export const updateAlertPartial = (alert: AlertDetail): UpdateAlertPartialAction => ({
+  type: UPDATE_ALERT_PARTIAL,
+  payload: alert,
+});
+
+
+
+// UPDATE_ALERT_SUCCESS
+// --------------------------------------------------------------------------
+// Request to update the alert was successful.
+
+export const UPDATE_ALERT_SUCCESS = 'ALERT_DETAIL:UPDATE_ALERT_SUCCESS';
+export type UpdateAlertSuccessAction = Action<typeof UPDATE_ALERT_SUCCESS, AlertDetail>;
+export const updateAlertSuccess = (alert: AlertDetail): UpdateAlertSuccessAction => ({
+  type: UPDATE_ALERT_SUCCESS,
+  payload: alert,
+});
+
+// UPDATE_ALERT_FAILED
+// --------------------------------------------------------------------------
+// Request to update the alert failed.
+
+export const UPDATE_ALERT_FAILED = 'ALERT_DETAIL:UPDATE_ALERT_FAILED';
+export type UpdateAlertFailedAction = Action<typeof UPDATE_ALERT_FAILED, AlertDetail | undefined>;
+export const updateAlertFailed = (alert?: AlertDetail): UpdateAlertFailedAction => ({
+  type: UPDATE_ALERT_FAILED,
+  payload: alert,
+});
+
+// UPDATE_ALERT_CANCELED
+// --------------------------------------------------------------------------
+// Request to update the alert was canceled.
+
+export const UPDATE_ALERT_CANCELED = 'ALERT_DETAIL:UPDATE_ALERT_CANCELED';
+export type UpdateAlertCanceldAction = Action<typeof UPDATE_ALERT_CANCELED, undefined>;
+export const updateAlertCanceled = (): UpdateAlertCanceldAction => ({
+  type: UPDATE_ALERT_CANCELED,
+  payload: undefined,
+});
+
 // OPEN_DATA_MODAL
 // --------------------------------------------------------------------------
 
-/**
- * Action Type: When a modal is opened to analyze the alert detail data.
- * @type {string}
- */
-export const OPEN_DATA_MODAL = `${ACTION_PREFIX}/OPEN_DATA_MODAL`;
+export const OPEN_DATA_MODAL = 'ALERT_DETAIL:OPEN_DATA_MODAL';
+export type OpenDataModalAction = Action<typeof OPEN_DATA_MODAL, ResultIPAdresses | null>;
+export const openDataModal = (data: Result, container: ContainerNested): OpenDataModalAction => {
+  const ipAddresses = getFieldsOfType<string | null>(CONTAINER_FIELDS.IP_ADDRESS, container, data);
 
-/**
- * OPEN_DATA_MODAL payload type.
- */
-export type OpenDataModalPayload = ResultIPAdresses | null;
-
-/**
- * OPEN_DATA_MODAL action type.
- */
-export type OpenDataModalAction = ReduxAction<OpenDataModalPayload>;
-
-/**
- * Creates a OPEN_DATA_MODAL action.
- * @returns {Action<OpenDataModalPayload>;
- */
-export function openDataModal(
-  data: Result,
-  container: ContainerNested,
-): OpenDataModalAction {
-  const IPAddresses = getFieldsOfType<string | null>(
-    CONTAINER_FIELDS.IP_ADDRESS, container, data,
-  );
-
-  if (!IPAddresses.length) { return createAction(OPEN_DATA_MODAL, null); }
+  if (!ipAddresses.length) return { type: OPEN_DATA_MODAL, payload: null };
 
   const nonNullIPS: Dictionary<string> = {};
 
-  IPAddresses.filter((IPAddress) => IPAddress !== null)
-    .forEach((IPAddress) => {
-      nonNullIPS[IPAddress.field] = IPAddress.value as string;
+  ipAddresses
+    .filter(ipAddress => ipAddress !== null)
+    .forEach((ipAddress) => {
+      nonNullIPS[ipAddress.field] = ipAddress.value as string;
     });
 
-  if (_.isEmpty(nonNullIPS)) { return createAction(OPEN_DATA_MODAL, null); }
+  if (_.isEmpty(nonNullIPS)) return { type: OPEN_DATA_MODAL, payload: null };
 
-  return createAction(OPEN_DATA_MODAL, nonNullIPS);
-}
+  return { type: OPEN_DATA_MODAL, payload: nonNullIPS };
+};
 
-// --------------------------------------------------------------------------
 // CLOSE_DATA_MODAL
 // --------------------------------------------------------------------------
 
-/**
- * Action Type: When a modal display the alert data is closed.
- * @type {string}
- */
-export const CLOSE_DATA_MODAL = `${ACTION_PREFIX}/CLOSE_DATA_MODAL`;
-
-/**
- * CLOSE_DATA_MODAL payload type.
- */
-export type CloseDataModalPayload = undefined;
-
-/**
- * CLOSE_DATA_MODAL action type.
- */
-export type CloseDataModalAction = ReduxAction<CloseDataModalPayload>;
-
-/**
- * Creates a CLOSE_DATA_MODAL action.
- * @returns {Action<CloseDataModalPayload>;
- */
-export function closeDataModal(): CloseDataModalAction {
-  return createAction(CLOSE_DATA_MODAL, undefined);
-}
+export const CLOSE_DATA_MODAL = 'ALERT_DETAIL:CLOSE_DATA_MODAL';
+export type CloseDataModalAction = Action<typeof CLOSE_DATA_MODAL, undefined>;
+export const closeDataModal = (): CloseDataModalAction => ({
+  type: CLOSE_DATA_MODAL,
+  payload: undefined,
+});
 
 // --------------------------------------------------------------------------
 // Thunk Actions
 // --------------------------------------------------------------------------
-
-/**
- * Fetchs an alert object for the alert detail view.
- * @returns {ThunkActionPromise}
- */
-export function fetchAlertDetail(alertId: number): ThunkActionPromise {
-  return (dispatch) => {
-    const source = getCancelTokenSource();
-    let nestedAlert: AlertDetail;
-
-    dispatch(fetchAlertPending(alertId, source.cancel));
-
-    return fetchAlert(alertId, source.token)
-      .then((alert) => {
-        nestedAlert = alert;
-
-        if (alert.distillery) {
-          const { container } = alert.distillery;
-          const { data } = alert;
-          const { token } = source;
-
-          return getLocationsWithAddress(container, data, token)
-            .then((locations) => {
-              const markers = locations.length
-                ? createLocationGeoJSON(locations)
-                : null;
-
-              dispatch(fetchAlertSuccess(nestedAlert, locations, markers));
-            });
-        }
-
-        dispatch(fetchAlertSuccess(nestedAlert, null, null));
-      })
-      .catch(handleError(dispatch));
-  };
-}
-
-/**
- * Updates the alert detail object with new fields.
- * @param alert Alert object to update.
- * @param fields Fields to update the alert with.
- * @returns {ThunkActionPromise}
- */
-export function updateAlertDetail(
-  alert: AlertDetail,
-  fields: AlertUpdateRequest,
-): ThunkActionPromise {
-  return (dispatch) => {
-    const request = checkAlertUpdate(alert, fields);
-
-    if (request.valid) {
-      const modifiedFields = modifyAlertUpdate(alert, fields);
-      const source = getCancelTokenSource();
-
-      dispatch(requestPending(source.cancel));
-
-      return updateAlert(alert.id, modifiedFields, source.token)
-        .then((update) => {
-          const comment = createAlertUpdateComment(alert, fields);
-
-          if (comment) {
-            return addComment(alert.id, comment, source.token)
-              .then(updateAlertDetailObject(dispatch))
-              .catch((error) => {
-                updateAlertDetailObject(dispatch)(update);
-                handleError(dispatch)(error);
-              });
-          }
-
-          updateAlertDetailObject(dispatch)(update);
-        })
-        .catch(handleError(dispatch));
-    }
-
-    dispatch(addErrorMessage(request.errors));
-
-    return Promise.reject('Alert update request invalid');
-  };
-}
 
 /**
  * Performs an action on the alert in the alert detail and then updates
@@ -502,7 +290,7 @@ export function performAlertDetailAction(
 
     dispatch(requestPending(source.cancel));
 
-    return performAction(actionId, alertId, source.token)
+    return alertAPI.performAction(actionId, alertId, source.token)
       .then(updateAlertDetailObject(dispatch))
       .catch(handleError(dispatch));
   };
@@ -523,7 +311,7 @@ export function addAlertDetailComment(
 
     dispatch(requestPending(source.cancel));
 
-    return addComment(alertId, comment, source.token)
+    return alertAPI.addComment(alertId, comment, source.token)
       .then(updateAlertDetailObject(dispatch))
       .catch(handleError(dispatch));
   };

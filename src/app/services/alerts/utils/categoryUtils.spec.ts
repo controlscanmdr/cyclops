@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import * as categories from './categoryUtils';
@@ -40,7 +40,7 @@ describe('categoryUtils', () => {
     it('should normalize a list of categories', () => {
       const result = categories.normalizeCategories(list);
 
-      chai.expect(result).to.deep.equal(normalized);
+      expect(result).toEqual(normalized);
     });
   });
 
@@ -48,7 +48,7 @@ describe('categoryUtils', () => {
     it('should denormalize a list of normalized categories', () => {
       const result = categories.denormalizeCategories(normalized);
 
-      chai.expect(result).to.deep.equal(list);
+      expect(result).toEqual(list);
     });
   });
 
@@ -57,13 +57,13 @@ describe('categoryUtils', () => {
       'normalized categories', () => {
       const result = categories.denormalizeCategory(category1.id, normalized);
 
-      chai.expect(result).to.deep.equal(category1);
+      expect(result).toEqual(category1);
     });
 
     it('should return undefined if the given category id is not found', () => {
       const result = categories.denormalizeCategory(4, normalized);
 
-      chai.expect(result).to.be.undefined;
+      expect(result).toBeUndefined();
     });
   });
 });

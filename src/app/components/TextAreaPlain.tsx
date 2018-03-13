@@ -19,7 +19,6 @@
 // Vendor
 import * as React from 'react';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
@@ -34,7 +33,6 @@ interface Props {
   onChange(value: string): any;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
@@ -46,9 +44,7 @@ export class TextAreaPlain extends React.Component<Props, {}> {
    * Handles the onChange event from a text area.
    * @param event Text area onChange event.
    */
-  public handleChange: React.FormEventHandler<HTMLTextAreaElement> = (
-    event,
-  ) => {
+  public handleChange: React.FormEventHandler<HTMLTextAreaElement> = (event) => {
     this.props.onChange(event.currentTarget.value);
   };
 

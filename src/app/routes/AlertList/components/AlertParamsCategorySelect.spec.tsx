@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -62,8 +62,8 @@ describe('<AlertParamsCategorySelect />', () => {
   it('should display the options of a normalized category list', () => {
     const select = render().find('Select');
 
-    chai.expect(select).to.have.length(1);
-    chai.expect(select.first().prop('options')).to.deep.equal([
+    expect(select).toHaveLength(1);
+    expect(select.first().prop('options')).toEqual([
       AlertParamsCategorySelect.ALL_CATEGORIES_OPTION,
       { name: category1.name, value: category1.id },
       { name: category2.name, value: category2.id },
@@ -73,16 +73,16 @@ describe('<AlertParamsCategorySelect />', () => {
   it('should pass 0 as the selected category if there is none', () => {
     const select = render().find('Select');
 
-    chai.expect(select).to.have.length(1);
-    chai.expect(select.first().prop('value')).to.equal(0);
+    expect(select).toHaveLength(1);
+    expect(select.first().prop('value')).toEqual(0);
   });
 
   it('should pass the currently selected category to the select element', () => {
     const selected = 1;
     const select = render({ currentCategory: selected }).find('Select');
 
-    chai.expect(select).to.have.length(1);
-    chai.expect(select.first().prop('value')).to.equal(1);
+    expect(select).toHaveLength(1);
+    expect(select.first().prop('value')).toEqual(1);
   });
 
   describe('onSelectChange', () => {
@@ -92,8 +92,8 @@ describe('<AlertParamsCategorySelect />', () => {
 
       component.onSelectChange('4');
 
-      chai.expect(selectCategory.called).to.be.true;
-      chai.expect(selectCategory.args[0][0]).to.equal(4);
+      expect(selectCategory.called).toBe(true);
+      expect(selectCategory.args[0][0]).toEqual(4);
     });
   });
 });

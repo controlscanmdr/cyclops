@@ -76,25 +76,19 @@ export function sendSubscriptionToServer(subscription: any): Promise<any> {
  * Checks if service workers are supported.
  * @returns {boolean} If service workers are supported.
  */
-export function serviceWorkersAreSupported(): boolean {
-  return 'serviceWorker' in navigator;
-}
+export const serviceWorkersAreSupported = (): boolean => 'serviceWorker' in navigator;
 
 /**
  * Checks if push messaging is supported.
  * @returns {boolean} If push messaging is supported.
  */
-export function pushMessagingIsSupported(): boolean {
-  return 'PushManager' in window;
-}
+export const pushMessagingIsSupported = (): boolean => 'PushManager' in window;
 
 /**
  * Checks if notifications are supported.
  * @returns {boolean}
  */
-export function notificationsAreSupported(): boolean {
-  return 'showNotification' in ServiceWorkerRegistration.prototype;
-}
+export const notificationsAreSupported = (): boolean => 'Notification' in window;
 
 /**
  * Gets the registration object associated with a service worker.
@@ -130,7 +124,9 @@ export function getRegistrationSubscription(registration: any): Promise<any> {
 export function setWorkerVariables(subscription: any): void {
   const registrationId = getRegistrationId(subscription);
 
-  (navigator as any).serviceWorker.controller.postMessage({
+  if (!navigator.serviceWorker.controller) { return; }
+
+  navigator.serviceWorker.controller.postMessage({
     notificationUrl:
       `${getConfig().API_URL}/notifications/` +
       `?registration_id=${registrationId}`,

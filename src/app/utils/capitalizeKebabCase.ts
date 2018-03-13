@@ -29,6 +29,6 @@ export function capitalizeKebabCase(value: string): string {
   return value
     .replace('-', ' ')
     .split(' ')
-    .map((word) => _.capitalize(word))
+    .map(word => _.capitalize(word))
     .join(' ');
 }

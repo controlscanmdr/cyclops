@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import { createAction } from './reduxUtils';
@@ -28,7 +28,7 @@ describe('createAction', () => {
     const payload = 'payload';
     const action = createAction(type, payload);
 
-    chai.expect(action).to.deep.equal({ type, payload, error: undefined });
+    expect(action).toEqual({ type, payload, error: undefined });
   });
 
   it('should create an action with an error', () => {
@@ -36,6 +36,6 @@ describe('createAction', () => {
     const payload = 'payload';
     const action = createAction(type, payload, true);
 
-    chai.expect(action).to.deep.equal({ type, payload, error: true });
+    expect(action).toEqual({ type, payload, error: true });
   });
 });

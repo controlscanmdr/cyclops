@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as AlertViewActions from './alertListActions';
@@ -35,7 +35,7 @@ describe('AlertViewActions', () => {
         promiseId,
       );
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.SEARCH_ALERTS_PENDING,
         error: undefined,
         payload: { params, promiseId, poll },
@@ -50,7 +50,7 @@ describe('AlertViewActions', () => {
       const polling = true;
       const action = AlertViewActions.searchAlertsSuccess(alerts, count, polling);
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.SEARCH_ALERTS_SUCCESS,
         error: undefined,
         payload: { alerts, count, polling },
@@ -62,7 +62,7 @@ describe('AlertViewActions', () => {
     it('should return an action with the correct type and payload', () => {
       const action = AlertViewActions.searchAlertsFailure();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.SEARCH_ALERTS_FAILURE,
         error: undefined,
         payload: undefined,
@@ -76,7 +76,7 @@ describe('AlertViewActions', () => {
       const promiseId = 'promise';
       const action = AlertViewActions.pollAlertsPending(params, promiseId);
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.POLL_ALERTS_PENDING,
         error: undefined,
         payload: { params, promiseId },
@@ -90,7 +90,7 @@ describe('AlertViewActions', () => {
       const count = 4;
       const action = AlertViewActions.pollAlertsSuccess(alerts, count);
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.POLL_ALERTS_SUCCESS,
         error: undefined,
         payload: { alerts, count },
@@ -102,7 +102,7 @@ describe('AlertViewActions', () => {
     it('should return an action with the correct type and payload', () => {
       const action = AlertViewActions.pollAlertsFailure();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.POLL_ALERTS_FAILURE,
         error: undefined,
         payload: undefined,
@@ -116,7 +116,7 @@ describe('AlertViewActions', () => {
       const interval = 49043904;
       const action = AlertViewActions.pollAlertsWait(timeoutId, interval);
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.POLL_ALERTS_WAIT,
         error: undefined,
         payload: { timeoutId, interval },
@@ -128,7 +128,7 @@ describe('AlertViewActions', () => {
     it('should return an action with the correct type and payload', () => {
       const action = AlertViewActions.stopPolling();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.STOP_POLLING,
         error: undefined,
         payload: undefined,
@@ -140,7 +140,7 @@ describe('AlertViewActions', () => {
     it('should return an action with the correct type and payload', () => {
       const action = AlertViewActions.disablePolling();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: AlertViewActions.DISABLE_POLLING,
         error: undefined,
         payload: undefined,

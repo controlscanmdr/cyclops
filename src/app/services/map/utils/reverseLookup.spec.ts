@@ -43,13 +43,13 @@ describe('reverseLookup()', () => {
 
   it('should return undefined if there are no coordinates', () => {
     return reverseLookup(undefined as any).then((value) => {
-      expect(value).to.be.undefined;
+      expect(value).toBeUndefined();
     });
   });
 
   it('should return undefined if there is an empty array', () => {
     return reverseLookup([] as any).then((value) => {
-      expect(value).to.be.undefined;
+      expect(value).toBeUndefined();
     });
   });
 });

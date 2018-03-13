@@ -1,7 +1,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -49,9 +49,9 @@ describe('<Map />', () => {
     const wrapper = enzyme.shallow(<Map />);
     const id = wrapper.prop('id');
 
-    chai.expect(wrapper.type()).to.equal('div');
-    chai.expect(id).to.be.a('string');
-    chai.expect(id.slice(0, 2)).to.equal('id');
+    expect(wrapper.type()).toEqual('div');
+    expect(typeof id).toBe('string');
+    expect(id.slice(0, 2)).toEqual('id');
   });
 
   it('should pass the markers to the map', () => {
@@ -59,7 +59,7 @@ describe('<Map />', () => {
 
     enzyme.mount(<Map markers={markers} />);
     return mapStoreItemPromise.then(() => {
-      chai.expect(setDataSpy.args[0][0]).to.equal(markers);
+      expect(setDataSpy.args[0][0]).toEqual(markers);
     });
   });
 
@@ -67,6 +67,6 @@ describe('<Map />', () => {
     const options: any = {};
 
     enzyme.mount(<Map options={options} />);
-    chai.expect(createMapItemStub.args[0][1]).to.equal(options);
+    expect(createMapItemStub.args[0][1]).toEqual(options);
   });
 });

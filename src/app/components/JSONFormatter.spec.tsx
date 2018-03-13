@@ -35,4 +35,10 @@ describe('<JSONFormatter />', () => {
       return enzyme.mount(<JSONFormatter {...passed} />);
     };
   });
+
+  it('should render', () => {
+    const component = render();
+
+    expect(component.find('div')).toHaveLength(1);
+  });
 });

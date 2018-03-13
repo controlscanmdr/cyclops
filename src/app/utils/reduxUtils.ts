@@ -17,7 +17,7 @@
  */
 
 // Local
-import { ReduxAction } from '~/store/types';
+import { ReduxAction, Action } from '~/store/types';
 
 /**
  * Creates a flux standard action with the given payload type.
@@ -33,3 +33,5 @@ export function createAction<Payload>(
 ): ReduxAction<Payload> {
   return { type, payload, error };
 }
+
+export const action = (type: any, payload: any): Action<any, any> => ({ type, payload });

@@ -39,7 +39,7 @@
 
 .alert-detail-header {
   padding: $padding-large-vertical $padding-large-horizontal;
-  //border-bottom: 5px solid transparent;
+  border-bottom: 5px solid transparent;
 
   &--critical { border-color: $alert-color-critical; }
   &--high { border-color: $alert-color-high; }

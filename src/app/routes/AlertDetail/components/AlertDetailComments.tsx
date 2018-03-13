@@ -26,13 +26,10 @@ import { CommentNested } from '~/types/comments';
 import { currentUserIsStaff } from '~/services/users/utils/currentUserIsStaff';
 
 // --------------------------------------------------------------------------
-// Interfaces/Types
+// Types
 // --------------------------------------------------------------------------
 
-/** Properties of the AlertDetailComments component. */
 interface Props {
-  /** ID of the alert the comments are related to. */
-  alertId: number;
   /** List of alerts comments. */
   comments: CommentNested[];
   /**
@@ -40,10 +37,9 @@ interface Props {
    * @param alertId ID of the alert to add the comment to.
    * @param comment Comment to add to the alert.
    */
-  addComment(alertId: number, comment: string): any;
+  onSubmit(comment: string): any;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
@@ -55,30 +51,27 @@ export class AlertDetailComments extends React.Component<Props, {}> {
    * Submits the current value on the hidden text area.
    * @param value
    */
-  public handleSubmit = (value: string): void => {
-    this.props.addComment(this.props.alertId, value);
+  handleSubmit = (value: string): void => {
+    this.props.onSubmit(value);
   };
 
-  public render(): JSX.Element {
-    const { comments } = this.props;
-    const { handleSubmit } = this;
-    const commentElements = comments.map((comment) => (
+  render(): JSX.Element {
+    const commentElements = this.props.comments.map(comment => (
       <AlertDetailComment key={comment.id} comment={comment} />
     ));
-    const addCommentButton = currentUserIsStaff()
-      ? (
-        <HiddenTextArea
-          buttonText="Comment"
-          onSubmit={handleSubmit}
-        />
-      ) : null;
+    const addCommentButton = currentUserIsStaff() ? (
+      <HiddenTextArea
+        buttonText="Comment"
+        onSubmit={this.handleSubmit}
+      />
+    ) : null;
 
     return (
       <div className="spacing-section">
         <h3 className="sub-title">
           Comments
           {' '}
-          <span className="badge">{comments.length}</span>
+          <span className="badge">{this.props.comments.length}</span>
         </h3>
         <div>
           {commentElements}

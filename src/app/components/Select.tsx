@@ -19,15 +19,13 @@
 // Vendor
 import * as React from 'react';
 
-// --------------------------------------------------------------------------
-// Interfaces/Types
+// Types
 // --------------------------------------------------------------------------
 
-/** Properties of the Select component. */
 interface Props {
-  /** Current value of the select element. */
+  // Current value of the select element.
   value?: string | number;
-  /** Options to display in the select drop down. */
+  // Options to display in the select drop down.
   options: SelectOption[];
   /**
    * Function that's run whenever the select element changes.
@@ -36,46 +34,43 @@ interface Props {
   onChange(value: string): any;
 }
 
-/** Object used to create a select option element. */
+// Object used to create a select option element.
 export interface SelectOption {
-  /** Display value of the option element. */
+  // Display value of the option element.
   name: string;
-  /** Value of the option element. */
+  // Value of the option element.
   value: string | number;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
-/**
- * Displays a select drop down that handles an onChange event.
- */
+// Select drop down that handles an onChange event.
 export class Select extends React.Component<Props, {}> {
   /**
    * Handles the onChange event from the select element by passing the
    * value to the onChange property function.
    * @param event Select onChange event.
    */
-  public handleChange: React.FormEventHandler<HTMLSelectElement> = (
-    event,
-  ): void => {
+  handleChange: React.FormEventHandler<HTMLSelectElement> = (event): void => {
     this.props.onChange(event.currentTarget.value);
   };
 
-  public render() {
-    const options = this.props.options.map((option) => (
+  /**
+   * Renders the current drop down list items.
+   * @returns {JSX.Element[]}
+   */
+  renderOptions = (): JSX.Element[] => {
+    return this.props.options.map(option => (
       <option key={option.value} value={option.value}>{option.name}</option>
     ));
+  };
 
+  render() {
     return (
       <div className="form-group">
-        <select
-          className="form-control"
-          onChange={this.handleChange}
-          value={this.props.value}
-        >
-          {options}
+        <select className="form-control" onChange={this.handleChange} value={this.props.value}>
+          {this.renderOptions()}
         </select>
       </div>
     );

@@ -16,8 +16,9 @@
  * are made]
  */
 
-require('core-js/shim');
+// Vendor
+const Enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-15.4');
 
-const testContext = require.context('./app', true, /\.tsx?$/);
-
-testContext.keys().forEach(testContext);
+// Configure enzyme to use the currently installed version of react.
+Enzyme.configure({ adapter: new Adapter() });

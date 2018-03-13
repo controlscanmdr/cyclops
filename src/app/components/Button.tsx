@@ -16,22 +16,30 @@
  * are made]
  */
 
+// Vendor
 import * as React from 'react';
+import * as classnames from 'classnames';
+
+// Local
+import './Button.scss';
+
+// Types
+// --------------------------------------------------------------------------
 
 interface Props extends React.HTMLProps<HTMLButtonElement> {
-  type: ButtonType;
+  type: 'plain' | 'tiny' | 'unstyled';
 }
 
-export enum ButtonType {
-  Plain = 'plain',
-}
+// Component
+// --------------------------------------------------------------------------
 
 export class Button extends React.Component<Props, {}> {
-  public render() {
-    const { type, ...props } = this.props;
+  render() {
+    const { type, className, ...props } = this.props;
+    const classes = classnames(`Button--${type}`, className);
 
     return (
-      <button className={`Button--${type}`} {...props} />
+      <button className={classes} {...props} />
     );
   }
 }

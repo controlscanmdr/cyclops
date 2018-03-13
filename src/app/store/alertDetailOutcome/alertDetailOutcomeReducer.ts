@@ -31,10 +31,6 @@ import { AlertOutcomeChoices } from '../../services/alerts/types';
 export interface AlertDetailOutcomeState {
   /** If the outcome form is shown. */
   active: boolean;
-  /** Outcome to change to. */
-  outcome: AlertOutcomeChoices;
-  /** Notes to change to. */
-  notes: string;
   /** If the remove outcome warning panel should be shown. */
   showRemovePanel: boolean;
 }
@@ -45,8 +41,6 @@ export interface AlertDetailOutcomeState {
  */
 export const INITIAL_STATE: AlertDetailOutcomeState = {
   active: false,
-  outcome: null,
-  notes: '',
   showRemovePanel: false,
 };
 
@@ -62,14 +56,12 @@ const reducers: ReducerMap<AlertDetailOutcomeState, any> = {};
  * @param action OPEN action.
  * @returns {State} Updated alertDetailOutcome state.
  */
-reducers[actions.OPEN] = (
+reducers[actions.OPEN_EDIT_PANEL] = (
   state: AlertDetailOutcomeState,
-  action: actions.OpenAction,
+  action: actions.OpenEditPanelAction,
 ): AlertDetailOutcomeState => {
   const update: Partial<AlertDetailOutcomeState> = {
     active: true,
-    outcome: action.payload.outcome,
-    notes: action.payload.notes,
   };
 
   return Object.assign({}, state, update);
@@ -81,45 +73,11 @@ reducers[actions.OPEN] = (
  * @param action CLOSE action.
  * @returns {State} Updated alertDetailOutcome state.
  */
-reducers[actions.CLOSE] = (
+reducers[actions.CLOSE_EDIT_PANEL] = (
   state: AlertDetailOutcomeState,
-  action: actions.CloseAction,
+  action: actions.CloseEditPanelAction,
 ): AlertDetailOutcomeState => {
   return Object.assign({}, state, INITIAL_STATE);
-};
-
-/**
- * Updates the alertDetailOutcome based on a(n) CHANGE_OUTCOME action.
- * @param state Current alertDetailOutcome state.
- * @param action CHANGE_OUTCOME action.
- * @returns {State} Updated alertDetailOutcome state.
- */
-reducers[actions.CHANGE_OUTCOME] = (
-  state: AlertDetailOutcomeState,
-  action: actions.ChangeOutcomeAction,
-): AlertDetailOutcomeState => {
-  const update: Partial<AlertDetailOutcomeState> = {
-    outcome: action.payload,
-  };
-
-  return Object.assign({}, state, update);
-};
-
-/**
- * Updates the alertDetailOutcome based on a(n) CHANGE_NOTES action.
- * @param state Current alertDetailOutcome state.
- * @param action CHANGE_NOTES action.
- * @returns {State} Updated alertDetailOutcome state.
- */
-reducers[actions.CHANGE_NOTES] = (
-  state: AlertDetailOutcomeState,
-  action: actions.ChangeNotesAction,
-): AlertDetailOutcomeState => {
-  const update: Partial<AlertDetailOutcomeState> = {
-    notes: action.payload,
-  };
-
-  return Object.assign({}, state, update);
 };
 
 /**

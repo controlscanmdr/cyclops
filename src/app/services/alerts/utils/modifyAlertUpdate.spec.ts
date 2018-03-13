@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as test from './modifyAlertUpdate';
@@ -29,21 +29,21 @@ describe('modifyAlertUpdate', () => {
     const update = {};
     const modification = test.modifyAlertUpdate({} as any, update);
 
-    chai.expect(modification).to.deep.equal(update);
+    expect(modification).toEqual(update);
   });
 
   it('should return the update if the status is not NEW', () => {
     const update = { assigned_user: { id: 2 } as any };
     const modification = test.modifyAlertUpdate({ status: 'BUSY' } as any, update);
 
-    chai.expect(modification).to.deep.equal(update);
+    expect(modification).toEqual(update);
   });
 
   it('should add a BUSY status to the update if the alert is NEW and ' +
     'there is a user on the update', () => {
     const update = { assigned_user: { id: 2 } as any };
     const modification = test.modifyAlertUpdate({ status: 'NEW' } as any, update);
-    chai.expect(modification).to.deep.equal({
+    expect(modification).toEqual({
       assigned_user: { id: 2 },
       status: 'BUSY',
     });

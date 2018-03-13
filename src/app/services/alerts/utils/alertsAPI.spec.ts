@@ -44,8 +44,8 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlert(alertId);
 
-      expect(get.called).to.be.true;
-      expect(get.args[0][0]).to.equal('/alerts/1/');
+      expect(get.called).toBe(true);
+      expect(get.args[0][0]).toEqual('/alerts/1/');
     });
 
     it('should pass the cancel token to the get options', () => {
@@ -54,8 +54,8 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlert(alertId, cancelToken);
 
-      expect(get.called).to.be.true;
-      expect(get.args[0][1]).to.deep.equal({ cancelToken });
+      expect(get.called).toBe(true);
+      expect(get.args[0][1]).toEqual({ cancelToken });
     });
   });
 
@@ -63,8 +63,8 @@ describe('alertsAPI', () => {
     it('should call get with the correct url', () => {
       alertsAPI.fetchAlertList({} as any);
 
-      expect(get.called).to.be.true;
-      expect(get.args[0][0]).to.equal('/alerts/');
+      expect(get.called).toBe(true);
+      expect(get.args[0][0]).toEqual('/alerts/');
     });
 
     it('should pass the parameters to the get options', () => {
@@ -72,8 +72,8 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlertList(params);
 
-      expect(get.called).to.be.true;
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.called).toBe(true);
+      expect(get.args[0][1]).toEqual({
         params,
         cancelToken: undefined,
       });
@@ -85,8 +85,8 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlertList(params, cancelToken);
 
-      expect(get.called).to.be.true;
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.called).toBe(true);
+      expect(get.args[0][1]).toEqual({
         params,
         cancelToken,
       });
@@ -104,15 +104,15 @@ describe('alertsAPI', () => {
 
     it('should post to the correct url', () => {
       return alertsAPI.performAction(actionId, alertId).then(() => {
-        expect(post.called).to.be.true;
-        expect(post.args[0][0]).to.equal('/actions/1/run/');
+        expect(post.called).toBe(true);
+        expect(post.args[0][0]).toEqual('/actions/1/run/');
       });
     });
 
     it('should post the alertId as the post data', () => {
       return alertsAPI.performAction(actionId, alertId).then(() => {
-        expect(post.called).to.be.true;
-        expect(post.args[0][1]).to.deep.equal({ alert: alertId });
+        expect(post.called).toBe(true);
+        expect(post.args[0][1]).toEqual({ alert: alertId });
       });
     });
 
@@ -120,15 +120,15 @@ describe('alertsAPI', () => {
       const cancelToken: any = {};
 
       return alertsAPI.performAction(actionId, alertId, cancelToken).then(() => {
-        expect(post.called).to.be.true;
-        expect(post.args[0][2]).to.deep.equal({ cancelToken });
+        expect(post.called).toBe(true);
+        expect(post.args[0][2]).toEqual({ cancelToken });
       });
     });
 
     it('should call fetchAlert on a successful call', () => {
       return alertsAPI.performAction(actionId, alertId).then(() => {
-        expect(get.called).to.be.true;
-        expect(get.args[0]).to.deep.equal(['/alerts/2/', { cancelToken: undefined }]);
+        expect(get.called).toBe(true);
+        expect(get.args[0]).toEqual(['/alerts/2/', { cancelToken: undefined }]);
       });
     });
   });
@@ -148,15 +148,15 @@ describe('alertsAPI', () => {
 
     it('should call the correct url', () => {
       return alertsAPI.updateAlert(alertId, fields).then(() => {
-        expect(patch.called).to.be.true;
-        expect(patch.args[0][0]).to.equal('/alerts/5/');
+        expect(patch.called).toBe(true);
+        expect(patch.args[0][0]).toEqual('/alerts/5/');
       });
     });
 
     it('should pass the fields to patch', () => {
       return alertsAPI.updateAlert(alertId, fields).then(() => {
-        expect(patch.called).to.be.true;
-        expect(patch.args[0][1]).to.deep.equal(fields);
+        expect(patch.called).toBe(true);
+        expect(patch.args[0][1]).toEqual(fields);
       });
     });
 
@@ -165,8 +165,8 @@ describe('alertsAPI', () => {
         assigned_user: { id: 3 },
       };
       return alertsAPI.updateAlert(alertId, userFields).then(() => {
-        expect(patch.called).to.be.true;
-        expect(patch.args[0][1]).to.deep.equal({
+        expect(patch.called).toBe(true);
+        expect(patch.args[0][1]).toEqual({
           assigned_user: 3,
         });
       });
@@ -176,8 +176,8 @@ describe('alertsAPI', () => {
       const cancelToken: any = {};
 
       return alertsAPI.updateAlert(alertId, fields, cancelToken).then(() => {
-        expect(patch.called).to.be.true;
-        expect(patch.args[0][2]).to.deep.equal({ cancelToken });
+        expect(patch.called).toBe(true);
+        expect(patch.args[0][2]).toEqual({ cancelToken });
       });
     });
   });
@@ -200,8 +200,8 @@ describe('alertsAPI', () => {
 
     it('should call the correct url', () => {
       return alertsAPI.addComment(alertId, comment).then(() => {
-        expect(post.called).to.be.true;
-        expect(post.args[0][0]).to.equal('/comments/');
+        expect(post.called).toBe(true);
+        expect(post.args[0][0]).toEqual('/comments/');
       });
     });
 
@@ -209,8 +209,8 @@ describe('alertsAPI', () => {
       const expected = { alert: alertId, user: userId, content: comment };
 
       return alertsAPI.addComment(alertId, comment).then(() => {
-        expect(post.called).to.be.true;
-        expect(post.args[0][1]).to.deep.equal(expected);
+        expect(post.called).toBe(true);
+        expect(post.args[0][1]).toEqual(expected);
       });
     });
 
@@ -218,17 +218,17 @@ describe('alertsAPI', () => {
       const cancelToken: any = {};
 
       return alertsAPI.addComment(alertId, comment, cancelToken).then(() => {
-        expect(post.called).to.be.true;
-        expect(post.args[0][2]).to.deep.equal({ cancelToken });
+        expect(post.called).toBe(true);
+        expect(post.args[0][2]).toEqual({ cancelToken });
       });
     });
 
     it('should call fetchAlert after a successfull call', () => {
       const cancelToken: any = {};
       return alertsAPI.addComment(alertId, comment, cancelToken).then(() => {
-        expect(get.called).to.be.true;
-        expect(get.args[0][0]).to.equal('/alerts/3/');
-        expect(get.args[0][1]).to.deep.equal({ cancelToken });
+        expect(get.called).toBe(true);
+        expect(get.args[0][0]).toEqual('/alerts/3/');
+        expect(get.args[0][1]).toEqual({ cancelToken });
       });
     });
   });
@@ -247,8 +247,8 @@ describe('alertsAPI', () => {
     it('should call the correct url', () => {
       alertsAPI.fetchAllCategories();
 
-      expect(getAll.called).to.be.true;
-      expect(getAll.args[0][0]).to.equal('/categories/');
+      expect(getAll.called).toBe(true);
+      expect(getAll.args[0][0]).toEqual('/categories/');
     });
   });
 
@@ -257,12 +257,12 @@ describe('alertsAPI', () => {
 
     it('should call the correct url', () => {
       alertsAPI.fetchAlertLevelDistribution(days);
-      expect(get.args[0][0]).to.equal('/alerts/levels/');
+      expect(get.args[0][0]).toEqual('/alerts/levels/');
     });
 
     it('should pass the days parameter to the get params', () => {
       alertsAPI.fetchAlertLevelDistribution(days);
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days },
         cancelToken: undefined,
       });
@@ -271,7 +271,7 @@ describe('alertsAPI', () => {
     it('should pass the cancelToken to the configuration', () => {
       const cancelToken: any = {};
       alertsAPI.fetchAlertLevelDistribution(days, cancelToken);
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days },
         cancelToken,
       });
@@ -284,13 +284,13 @@ describe('alertsAPI', () => {
     it('should call the correct url', () => {
       alertsAPI.fetchAlertStatusDistribution(days);
 
-      expect(get.args[0][0]).to.equal('/alerts/statuses/');
+      expect(get.args[0][0]).toEqual('/alerts/statuses/');
     });
 
     it('should pass the days parameter to the get params', () => {
       alertsAPI.fetchAlertStatusDistribution(days);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days: 6 },
         cancelToken: undefined,
       });
@@ -301,7 +301,7 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlertStatusDistribution(days, cancelToken);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days: 6 },
         cancelToken,
       });
@@ -314,13 +314,13 @@ describe('alertsAPI', () => {
     it('should call the correct url', () => {
       alertsAPI.fetchAlertCollectionDistribution(days);
 
-      expect(get.args[0][0]).to.equal('/alerts/collections/');
+      expect(get.args[0][0]).toEqual('/alerts/collections/');
     });
 
     it('should pass the days parameter to the get params', () => {
       alertsAPI.fetchAlertCollectionDistribution(days);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days: 9 },
         cancelToken: undefined,
       });
@@ -331,7 +331,7 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlertCollectionDistribution(days, cancelToken);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days: 9 },
         cancelToken,
       });
@@ -344,13 +344,13 @@ describe('alertsAPI', () => {
     it('should call the correct url', () => {
       alertsAPI.fetchAlertLevelTimeseries(days);
 
-      expect(get.args[0][0]).to.equal('/alerts/level-timeseries/');
+      expect(get.args[0][0]).toEqual('/alerts/level-timeseries/');
     });
 
     it('should pass the days parameter to the get params', () => {
       alertsAPI.fetchAlertLevelTimeseries(days);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days: 9 },
         cancelToken: undefined,
       });
@@ -361,7 +361,7 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlertLevelTimeseries(days, cancelToken);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days: 9 },
         cancelToken,
       });
@@ -374,13 +374,13 @@ describe('alertsAPI', () => {
     it('should call the correct url', () => {
       alertsAPI.fetchAlertLocations(days);
 
-      expect(get.args[0][0]).to.equal('/alerts/locations/');
+      expect(get.args[0][0]).toEqual('/alerts/locations/');
     });
 
     it('should pass the days parameter to the get params', () => {
       alertsAPI.fetchAlertLocations(days);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days },
         cancelToken: undefined,
       });
@@ -391,7 +391,7 @@ describe('alertsAPI', () => {
 
       alertsAPI.fetchAlertLocations(days, cancelToken);
 
-      expect(get.args[0][1]).to.deep.equal({
+      expect(get.args[0][1]).toEqual({
         params: { days },
         cancelToken,
       });

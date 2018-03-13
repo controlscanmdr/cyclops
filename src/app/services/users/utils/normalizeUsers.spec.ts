@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import { normalizeUsers } from './normalizeUsers';
@@ -45,7 +45,7 @@ describe('normalizeUsers()', () => {
     const users: User[] = [user1, user2];
     const normalized = normalizeUsers(users);
 
-    chai.expect(normalized).to.deep.equal({
+    expect(normalized).toEqual({
       result: [1, 2],
       entities: {
         users: {

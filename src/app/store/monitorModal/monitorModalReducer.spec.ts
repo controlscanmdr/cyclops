@@ -16,24 +16,20 @@
  * are made]
  */
 
-// Vendor
-import * as sinon from 'sinon';
-import * as chai from 'chai';
-
 // Local
 import { monitorModal, MonitorModalState, INITIAL_STATE } from './monitorModalReducer';
 import * as actions from './monitorModalActions';
 
-// describe('MonitorStatus reducer', () => {
-//   describe('FETCH_MONITORS_PENDING', () => {
-//     it('should set loading to true', () => {
-//       const action = actions.fetchMonitorsPending();
-//
-//       chai.expect(INITIAL_STATE.loading).to.be.false;
-//
-//       const state = reducer(INITIAL_STATE, action);
-//
-//       chai.expect(state.loading).to.be.true;
-//     });
-//   });
-// });
+describe('MonitorStatus reducer', () => {
+  describe('FETCH_MONITORS_PENDING', () => {
+    it('should set loading to true', () => {
+      const action = actions.fetchMonitorsPending(true);
+
+      expect(INITIAL_STATE.loading).toBe(false);
+
+      const state = monitorModal(INITIAL_STATE, action);
+
+      expect(state.loading).toBe(true);
+    });
+  });
+});

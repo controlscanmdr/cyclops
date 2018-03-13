@@ -18,160 +18,94 @@
 
 // Vendor
 import * as React from 'react';
-import { Router } from 'react-router';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { RouteComponentProps, Router, withRouter } from 'react-router';
 import * as classnames from 'classnames';
 
 // Local
 import {
-  Alert,
   AlertDetail as AlertDetailResponse,
-  AlertOutcomeChoices,
   AlertUpdateRequest,
-} from '../../../services/alerts/types';
-import { Loading } from '../../../components/Loading';
+} from '~/services/alerts/types';
+import { Loading } from '~/components/Loading';
 import { AlertDetailComments } from './AlertDetailComments';
 import { AlertDetailOverview } from './AlertDetailOverview';
 import { AlertDetailActions } from './AlertDetailActions';
-import { AlertDetailAnalysis } from './AlertDetailAnalysis';
 import { AlertDetailHeader } from './AlertDetailHeader';
-import { AlertDetailOutcomeContainer } from '../containers/AlertDetailOutcomeContainer';
+import AlertDetailOutcome from './AlertDetailOutcome';
 import {
   LocationFieldAddress,
   Markers,
   PopupGenerator,
   LocationAddressPoint,
-} from '../../../services/map/types';
-import { SpacedSection } from '../../../components/SpacedSection';
-import { SubTitle } from '../../../components/SubTitle';
-import { Map } from '../../../services/map/components/Map';
-import { JSONFormatter } from '../../../components/JSONFormatter';
-import {
-  StateToProps,
-  DispatchToProps,
-} from '../../../store/types';
-import { User } from '../../../services/users/types';
+} from '~/services/map/types';
+import { SpacedSection } from '~/components/SpacedSection';
+import { SubTitle } from '~/components/SubTitle';
+import { Map } from '~/services/map/components/Map';
+import { JSONFormatter } from '~/components/JSONFormatter';
+import { User } from '~/services/users/types';
 import { AlertDataModal } from './AlertDataModal';
-import { ResultIPAdresses, Result } from '../../../types/result';
-import {
-  addAlertDetailComment,
-  closeAlert,
-  openDataModal,
-  performAlertDetailAction,
-  updateAlertDetail,
-  fetchAlertDetail,
-  closeDataModal,
-  addErrorMessage,
-  closeErrorMessage,
-} from '../../../store/alertDetail/alertDetailActions';
-import { Action } from '../../../services/actions/types';
-import { ContainerNested } from '../../../services/containers/types';
-import { getConfig } from '~/config';
+import { ResultIPAdresses } from '~/types/result';
+import { Action } from '~/services/actions/types';
+import { ContainerNested } from '~/services/containers/types';
+import { currentUserIsStaff } from '~/services/users/utils/currentUserIsStaff';
+import { connect, Dispatch } from 'react-redux';
+import * as actions from '~/store/alertDetail/alertDetailActions';
+import { MapStateToProps } from '~/types/MapStateToProps';
+import { StoreState } from '~/store';
 
-/** Properties of the AlertDetail component that are values. */
-export interface ValueProps {
-  /** Alert to display detailed info on. */
-  alert: AlertDetailResponse | null;
-  /** Current list of actions to perform on the alert. */
-  actions: Action[];
-  /** List of current users. */
-  users: User[];
-  /** If the current alerts is being fetched or altered. */
-  loading: boolean;
-  /** GeoJSON markers of the current alerts location. */
-  markers: Markers | null;
-  /** Alert location, field the location was found on, and the address. */
-  locations: LocationFieldAddress[] | null;
-  /** IP addresses of the alert data. */
-  ipAddresses: ResultIPAdresses | null;
-  /** If the alert data modal is active. */
-  modalActive: boolean;
-  /** Error message related to the alert detail. */
-  error: string[];
-  /** React router location. */
-  location: Router.LocationDescriptor;
-  /** React router route parameters. */
-  routeParams: RouteParams;
-  /** React router object. */
-  router: Router.InjectedRouter;
-}
+// Types
+// --------------------------------------------------------------------------
 
-/** Properties of the AlertDetail component that are functions. */
-export interface FunctionProps {
-  /**
-   * Adds a comment to the alert.
-   * @param alertId ID of the alert to add the comment to.
-   * @param comment Comment to add to the alert.
-   */
-  addComment(alertId: number, comment: string): any;
-  /** Closes the alert detail. */
-  closeAlert(): any;
-  /** Closes the modal used to analyze the alert data. */
-  closeDataModal(): any;
-  /** Closes any alert update error messages. */
-  closeErrorMessage(): any;
-  /**
-   * Opens a modal used to analyze the alert data.
-   * @param data Data to analyze.
-   * @param container Related container to the data.
-   */
-  openDataModal(data: Result, container: ContainerNested): any;
-  /**
-   * Performs an action on the alert.
-   * @param alertId ID of the alert to perform the action on.
-   * @param actionId ID of the action to perform.
-   */
-  performAction(alertId: number, actionId: number): any;
-  /**
-   * Updates the fields of the alert.
-   * @param alert Alert object to update the files of.
-   * @param fields Fields to update.
-   */
-  updateAlert(alert: Alert, fields: AlertUpdateRequest): any;
-  /**
-   * Fetches the alerts from the API to display.
-   * @param alertId
-   */
-  viewAlert(alertId: number): any;
-}
-
-/**
- * Properties of the AlertDetail component that are passed in from the
- * wrapped container object.
- */
-interface OwnProps {
-  /** React router location. */
-  location: Router.LocationDescriptor;
-  /** React router route parameters. */
-  routeParams: RouteParams;
-  /** React router object. */
-  router: Router.InjectedRouter;
-}
-
-// Combined value and function properties of AlertDetail.
-type Props = ValueProps & FunctionProps;
-
-/**
- * URL parameters passed in from react-router
- */
 interface RouteParams {
-  /** ID of the alert to view. */
+  // ID of the alert to view.
   alertId: string;
 }
 
-/**
- * Displays detailed alert information in a sidebar.
- */
+export interface Props extends RouteComponentProps<{}, RouteParams>  {
+  // Alert to display detailed info on.
+  alert: AlertDetailResponse | null;
+
+  // Current list of actions to perform on the alert.
+  actions: Action[];
+
+  // List of current users.
+  users: User[];
+
+  // If the current alerts is being fetched or altered.
+  loading: boolean;
+
+  // GeoJSON markers of the current alerts location.
+  markers: Markers | null;
+
+  // Alert location, field the location was found on, and the address.
+  locations: LocationFieldAddress[] | null;
+
+  // IP addresses of the alert data.
+  ipAddresses: ResultIPAdresses | null;
+
+  // If the alert data modal is active.
+  modalActive: boolean;
+
+  // Error message related to the alert detail.
+  error: string[];
+
+  // React router object.
+  router: Router.InjectedRouter;
+
+  // Redux dispatch function.
+  dispatch: Dispatch<StoreState>;
+}
+
+// Component
+// --------------------------------------------------------------------------
+
+// Alert detail information contained in a right sidebar.
 export class AlertDetail extends React.Component<Props, {}> {
   /**
    * Popup generator for the map.
    * @param feature
    */
-  public static popupGenerator: PopupGenerator = (
-    feature: GeoJSON.Feature<LocationAddressPoint>,
-  ) => (
+  static popupGenerator: PopupGenerator = (feature: GeoJSON.Feature<LocationAddressPoint>) => (
     `<b>Field:</b> ${feature.properties.field}<br />` +
     `<b>Address:</b> ${feature.properties.address}`
   );
@@ -179,8 +113,8 @@ export class AlertDetail extends React.Component<Props, {}> {
   /**
    * Retrieves the alerts data of the currently selected alerts.
    */
-  public componentWillMount(): void {
-    this.props.viewAlert(this.getAlertId());
+  componentWillMount(): void {
+    this.fetchAlert(this.getAlertId());
   }
 
   /**
@@ -188,196 +122,284 @@ export class AlertDetail extends React.Component<Props, {}> {
    * elementId and fetches a new alert if the two don't match.
    * @param {Object} nextProps The next passed in properties.
    */
-  public componentWillReceiveProps(nextProps: Props) {
+  componentWillReceiveProps(nextProps: Props) {
     const currentAlertId = this.getAlertId();
-    const newAlertId = parseInt(nextProps.routeParams.alertId, 10);
+    const newAlertId = parseInt(nextProps.routeParams!.alertId, 10);
 
-    if (currentAlertId !== newAlertId) { this.props.viewAlert(newAlertId); }
+    if (currentAlertId !== newAlertId) { this.fetchAlert(newAlertId); }
   }
 
   /**
    * Removes the current alerts information from the redux store when
    * the component unmounts.
    */
-  public componentWillUnmount() {
-    this.props.closeAlert();
+  componentWillUnmount() {
+    this.closeAlert();
   }
+
+  /**
+   * Clears the currently selected alert from the redux store.
+   */
+  closeAlert = (): void => {
+    this.props.dispatch(actions.closeAlert());
+  };
+
+  /**
+   * Fetches the current alert to view.
+   * @param {number} alertId
+   */
+  fetchAlert = (alertId: number): void => {
+    this.props.dispatch(actions.fetchAlert(alertId));
+  };
+
+  /**
+   * Adds a comment to the currently selected alert.
+   * @param {string} comment
+   */
+  addComment = (comment: string): void => {
+    this.props.dispatch(actions.addAlertDetailComment(this.getAlertId(), comment));
+  };
+
+  /**
+   * Closes the alert detail data modal.
+   */
+  closeDataModal = (): void => {
+    this.props.dispatch(actions.closeDataModal());
+  };
+
+  /**
+   * Performs an action on the currently selected alert detail.
+   * @param {number} actionId
+   */
+  performAction = (actionId: number) => {
+    this.props.dispatch(actions.performAlertDetailAction(this.getAlertId(), actionId));
+  };
+
+  /**
+   * Closes the error messages related to the alert detail.
+   */
+  closeErrorMessage = () => {
+    this.props.dispatch(actions.closeErrorMessage());
+  };
+
+  /**
+   * Updates the currently selected alert detail.
+   * @param {AlertUpdateRequest} update
+   */
+  updateAlert = (update: AlertUpdateRequest): void => {
+    if (!this.props.alert) return;
+
+    this.props.dispatch(actions.updateAlert(this.props.alert, update));
+  };
 
   /**
    * Gets the alert ID based on the current route parameters.
    */
-  public getAlertId = (): number => {
-    return parseInt(this.props.routeParams.alertId, 10);
+  getAlertId = (): number => {
+    return parseInt(this.props.routeParams!.alertId, 10);
   };
 
   /**
    * Changes the url to the base alerts list url with the current
    * alerts search parameters in the url.
    */
-  public dismissAlert = (): void => {
+  dismissAlert = (): void => {
     this.props.router.push({
       pathname: '/alerts/',
-      query: this.props.location.query,
+      query: this.props.location!.query,
     });
   };
 
   /**
-   * Updates the notes property on the alert with new notes.
-   * @param notes
+   * Render a map that shows the alert detail locations.
+   * @returns {JSX.Element | null}
    */
-  public updateNotes = (notes: string): void => {
-    if (this.props.alert) {
-      this.props.updateAlert(this.props.alert, { notes });
-    }
-  };
-
-  /**
-   * Changes the alert outcome and notes.
-   * @param outcome Alert outcome to change to.
-   * @param notes Notes describing the reason behind the outcome.
-   */
-  public selectOutcome = (
-    outcome: AlertOutcomeChoices,
-    notes: string,
-  ): void => {
-    if (this.props.alert) {
-      this.props.updateAlert(this.props.alert, { outcome, notes });
-    }
-  };
-
-  /**
-   * Renders an HTML element based on the current properties.
-   */
-  public render() {
-    const {
-      addComment,
-      alert,
-      loading,
-      openDataModal,
-      performAction,
-      markers,
-      users,
-      locations,
-      ipAddresses,
-      closeDataModal,
-      modalActive,
-      actions,
-      error,
-    } = this.props;
-    const { updateNotes } = this;
-    const popupGenerator = AlertDetail.popupGenerator;
-
-    const map = markers ? (
+  renderMap = (): JSX.Element | null => {
+    return this.props.markers ? (
       <SpacedSection>
         <SubTitle>
           Locations
-          <span className="text--base"> {markers.features.length}</span>
+          <span className="text--base"> {this.props.markers.features.length}</span>
         </SubTitle>
         <Map
           controls={true}
-          markers={markers}
+          markers={this.props.markers}
           options={{ scrollZoom: false }}
-          popupGenerator={popupGenerator}
+          popupGenerator={AlertDetail.popupGenerator}
         />
       </SpacedSection>
     ) : null;
-    const alertHeaderElement = alert ? (
-      <AlertDetailHeader
-        alertContainer={alert.distillery ? alert.distillery.container : undefined}
-        alertId={alert.id}
-        alertLevel={alert.level}
-        closeAlert={this.dismissAlert}
-        alertData={alert.data}
-        openDataModal={openDataModal}
+  };
+
+  /**
+   * Renders the alert detail comments.
+   * @returns {JSX.Element | null}
+   */
+  renderComments = (): JSX.Element | null => {
+    return this.props.alert && currentUserIsStaff() ? (
+      <AlertDetailComments
+        comments={this.props.alert.comments}
+        onSubmit={this.addComment}
       />
     ) : null;
-    const alertDetailErrorClasses = classnames(
+  };
+
+  /**
+   * Gets the container from the alert detail.
+   * @returns {ContainerNested | undefined}
+   */
+  getAlertContainer = (): ContainerNested | undefined => {
+    if (!this.props.alert) return;
+
+    return this.props.alert.distillery
+      ? this.props.alert.distillery.container
+      : undefined;
+  };
+
+  /**
+   * Opens the alert detail data modal.
+   */
+  openDataModal = (): void => {
+    if (!this.props.alert) return;
+
+    const container = this.getAlertContainer();
+
+    if (!container) return;
+
+    this.props.dispatch(actions.openDataModal(this.props.alert.data, container));
+  };
+
+  /**
+   * Renders the alert detail header.
+   * @returns {JSX.Element | null}
+   */
+  renderHeader = (): JSX.Element | null => {
+    if (!this.props.alert) return null;
+
+    const container = this.getAlertContainer();
+
+    return this.props.alert ? (
+      <AlertDetailHeader
+        alertId={this.props.alert.id}
+        disableAnalyzeButton={!container}
+        level={this.props.alert.level}
+        onClose={this.dismissAlert}
+        onAnalyze={this.openDataModal}
+      />
+    ) : null;
+  };
+
+  /**
+   * Renders the main alert detail content.
+   * @returns {JSX.Element | null}
+   */
+  renderContent = (): JSX.Element | null => {
+    return this.props.alert ? (
+      <div className="flex-item content">
+        <div className="spacing-section">
+          <h3 className="sub-title">Title</h3>
+          <div>{this.props.alert.title}</div>
+        </div>
+
+        <AlertDetailOverview
+          alert={this.props.alert}
+          onUpdate={this.updateAlert}
+          users={this.props.users}
+        />
+
+        {this.renderMap()}
+
+        <AlertDetailOutcome alert={this.props.alert} />
+
+        {this.renderComments()}
+
+        <AlertDetailActions
+          actions={this.props.actions}
+          dispatches={this.props.alert.dispatches}
+          onSubmit={this.performAction}
+        />
+
+        <SpacedSection>
+          <SubTitle>Data</SubTitle>
+          <JSONFormatter json={this.props.alert.data} open={5} />
+        </SpacedSection>
+
+        <AlertDataModal
+          alert={this.props.alert}
+          active={this.props.modalActive}
+          locations={this.props.locations}
+          ipAddresses={this.props.ipAddresses}
+          markers={this.props.markers}
+          onClose={this.closeDataModal}
+        />
+
+      </div>
+    ) : null;
+  };
+
+  /**
+   * Renders any alert detail specific errors.
+   * @returns {JSX.Element | null}
+   */
+  renderErrors = (): JSX.Element | null => {
+    if (!this.props.error.length) return null;
+
+    const classes = classnames(
       'flex-item',
       'flex--shrink',
       'alert-detail__errors',
-      `alert-detail__errors--${alert ? alert.level.toLowerCase() : ''}`,
+      `alert-detail__errors--${this.props.alert ? this.props.alert.level.toLowerCase() : ''}`,
       { 'alert-detail__errors--open': !!this.props.error.length },
     );
     const errors = this.props.error.map((detailError, index) => (
       <p key={index}>{detailError}</p>
     ));
-    const errorsTitle = this.props.error.length
-      ? (
+
+    return this.props.error.length ? (
+      <div className={classes}>
         <h3>
           Errors
-          <button
-            className="btn-close"
-            onClick={this.props.closeErrorMessage}
-          >
+          <button className="btn-close" onClick={this.closeErrorMessage}>
             <i className="fa fa-close " />
           </button>
         </h3>
-      ) : null;
-    const alertDetailErrors = alert
-      ? (
-        <div className={alertDetailErrorClasses}>
-          {errorsTitle}
-          {errors}
-        </div>
-      ) : null;
-    const comments = alert && getConfig().CURRENT_USER.is_staff
-      ? (
-        <AlertDetailComments
-          alertId={alert.id}
-          comments={alert.comments}
-          addComment={addComment}
-        />
-      ) : null;
-    const alertDetailElement = alert ? (
-      <div className="flex-item content">
-        <div className="spacing-section">
-          <h3 className="sub-title">Title</h3>
-          <div>{alert.title}</div>
-        </div>
-
-        <AlertDetailOverview
-          alert={alert}
-          updateAlert={this.props.updateAlert}
-          users={users}
-        />
-
-        {map}
-
-        <AlertDetailOutcomeContainer alert={alert} />
-
-        {comments}
-
-        <AlertDetailActions
-          alertId={alert.id}
-          actions={actions}
-          dispatches={alert.dispatches}
-          performAction={performAction}
-        />
-
-        <SpacedSection>
-          <SubTitle>Data</SubTitle>
-          <JSONFormatter json={alert.data} open={5} />
-        </SpacedSection>
-
-        <AlertDataModal
-          alert={alert}
-          active={modalActive}
-          locations={locations}
-          ipAddresses={ipAddresses}
-          markers={markers}
-          closeModal={closeDataModal}
-        />
-
+        {errors}
       </div>
     ) : null;
+  };
 
+  render() {
     return (
       <section className="alert-detail flex-box flex-box--column flex--shrink">
-        {alertHeaderElement}
-        {alertDetailErrors}
-        {alertDetailElement}
-        {loading ? <Loading /> : null}
+        {this.renderHeader()}
+        {this.renderErrors()}
+        {this.renderContent()}
+        {this.props.loading ? <Loading /> : null}
       </section>
     );
   }
 }
+
+// Container
+// --------------------------------------------------------------------------
+
+interface Container extends RouteComponentProps<{}, RouteParams> {
+  // React router object.
+  router: Router.InjectedRouter;
+}
+
+const mapStateToProps: MapStateToProps<Props, Container> = (state, props) => ({
+  actions: state.alertList.actions,
+  alert: state.alertDetail.alert,
+  error: state.alertDetail.error,
+  ipAddresses: state.alertDetail.ipAddresses,
+  loading: state.alertDetail.loading,
+  location: props.location,
+  locations: state.alertDetail.locations,
+  markers: state.alertDetail.markers,
+  modalActive: state.alertDetail.modalActive,
+  users: state.alertList.users,
+});
+
+export default withRouter(connect(mapStateToProps)(AlertDetail));
+

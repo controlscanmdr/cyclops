@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import * as test from './monitorUtils';
@@ -38,20 +38,20 @@ describe('Monitor Utilities', () => {
 
   describe('normalizeMonitors()', () => {
     it('should normalize a list of monitors', () => {
-      chai.expect(test.normalizeMonitors(monitors)).to.deep.equal(normalized);
+      expect(test.normalizeMonitors(monitors)).toEqual(normalized);
     });
   });
 
   describe('denormalizeMonitors()', () => {
     it('should denormalize a list of monitors', () => {
-      chai.expect(test.denormalizeMonitors(normalized)).to.deep.equal(monitors);
+      expect(test.denormalizeMonitors(normalized)).toEqual(monitors);
     });
   });
 
   describe('denormalizeMonitor()', () => {
     it('should return a monitor object matching the name', () => {
       const monitor = test.denormalizeMonitor(monitor1.name, normalized);
-      chai.expect(monitor).to.deep.equal(monitor1);
+      expect(monitor).toEqual(monitor1);
     });
   });
 
@@ -59,7 +59,7 @@ describe('Monitor Utilities', () => {
     it('should sort monitors by up and down', () => {
       const sorted = test.sortMonitorsByStatus(monitors);
 
-      chai.expect(sorted).to.deep.equal({
+      expect(sorted).toEqual({
         up: [monitor1.name],
         down: [monitor2.name],
       });

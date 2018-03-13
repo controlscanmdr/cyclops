@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import {
@@ -49,7 +49,7 @@ describe('AlertDatatContextSearchReducer', () => {
       const action = actions.selectContext(context);
       const state = alertDataContextSearch({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         selectedContext: context,
       });
     });
@@ -60,7 +60,7 @@ describe('AlertDatatContextSearchReducer', () => {
       const action = actions.searchContextPending({} as any);
       const state = alertDataContextSearch({} as any, action);
 
-      chai.expect(state).to.deep.equal({ loading: true });
+      expect(state).toEqual({ loading: true });
     });
 
     it('should cancel any active request', () => {
@@ -68,8 +68,8 @@ describe('AlertDatatContextSearchReducer', () => {
 
       alertDataContextSearch({} as any, action);
 
-      chai.expect(cancel.called).to.be.true;
-      chai.expect(cancel.args[0][0]).to.equal(REQUEST_ID);
+      expect(cancel.called).toBe(true);
+      expect(cancel.args[0][0]).toEqual(REQUEST_ID);
     });
 
     it('should set the cancel function for a new request', () => {
@@ -78,9 +78,9 @@ describe('AlertDatatContextSearchReducer', () => {
 
       alertDataContextSearch({} as any, action);
 
-      chai.expect(set.called).to.be.true;
-      chai.expect(set.args[0][0]).to.equal(REQUEST_ID);
-      chai.expect(set.args[0][1]).to.equal(canceler);
+      expect(set.called).toBe(true);
+      expect(set.args[0][0]).toEqual(REQUEST_ID);
+      expect(set.args[0][1]).toEqual(canceler);
     });
   });
 
@@ -98,7 +98,7 @@ describe('AlertDatatContextSearchReducer', () => {
       });
       const state = alertDataContextSearch({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         loading: false,
         page,
         pageSize,

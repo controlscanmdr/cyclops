@@ -113,3 +113,13 @@ export function patch<T>(
 ): Promise<T> {
   return request<T>({ ...config, url, data, method: 'patch' });
 }
+
+/**
+ * Makes a DELETE request to the CyphonAPI.
+ * @param url Request url.
+ * @param config Request configuration.
+ * @returns {Promise<T>}
+ */
+export function del<T>(url: string, config: AxiosRequestConfig = {}): Promise<T> {
+  return request<T>({ ...config, url, method: 'delete' });
+}

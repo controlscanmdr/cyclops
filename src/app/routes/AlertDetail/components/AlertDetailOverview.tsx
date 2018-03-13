@@ -26,7 +26,6 @@ import {
   AlertUpdateRequest,
   AlertDetail,
   AlertLevelChoices,
-  Alert,
 } from '~/services/alerts/types';
 import { User } from '~/services/users/types';
 import { getConfig } from '~/config';
@@ -35,70 +34,67 @@ import { AlertStatusIcon } from '~/services/alerts/components/AlertStatusIcon';
 import { STATUS_OPTIONS } from '../../AlertList/constants';
 import { AlertDetailUnassignButton } from './AlertDetailUnassignButton';
 import { AlertDetailSelfAssignButton } from './AlertDetailSelfAssignButton';
-import { TagLabel } from '~/services/tags/components/TagLabel';
+import { Tag } from '~/services/tags/components/Tag';
+import AlertDetailTags from '~/routes/AlertDetail/components/AlertDetailTags';
 
 interface Props {
-  /** Alert to display the details of. */
+  // Alert to display the details of.
   alert: AlertDetail;
-  /** List of current users. */
+
+  // List of current users.
   users: User[];
+
   /**
    * Updates the fields of an alert.
-   * @param alert Alert object to update.
    * @param fields Fields to change.
    */
-  updateAlert(alert: Alert, fields: AlertUpdateRequest): any;
+  onUpdate(fields: AlertUpdateRequest): any;
 }
 
-/**
- * List of details about a given alerts.
- */
+// List of details about a given alerts.
 export class AlertDetailOverview extends React.Component<Props, {}> {
   /**
    * Changes the alerts level.
    * @param level
    */
-  public selectLevel = (level: AlertLevelChoices): void => {
-    this.props.updateAlert(this.props.alert, { level });
+  selectLevel = (level: AlertLevelChoices): void => {
+    this.props.onUpdate({ level });
   };
 
   /**
    * Changes the user assigned to the alerts.
    * @param assignedUser
    */
-  public selectUser = (assignedUser: User): void => {
-    this.props.updateAlert(
-      this.props.alert,
-      { assigned_user: assignedUser },
-    );
+  selectUser = (assignedUser: User): void => {
+    this.props.onUpdate({ assigned_user: assignedUser });
   };
 
   /**
    * Assigns the alerts to the current user.
    */
-  public assignToSelf = (): void => {
-    this.props.updateAlert(
-      this.props.alert,
-      { assigned_user: getConfig().CURRENT_USER },
-    );
+  assignToSelf = (): void => {
+    this.props.onUpdate({ assigned_user: getConfig().CURRENT_USER });
   };
 
   /**
    * Unassigns the current alerts.
    */
-  public unassign = (): void => {
-    this.props.updateAlert(this.props.alert, { assigned_user: null });
+  unassign = (): void => {
+    this.props.onUpdate({ assigned_user: null });
   };
 
-  public render(): JSX.Element {
+  renderTags = (): JSX.Element[] | string => {
+    return this.props.alert.tags.length
+      ? this.props.alert.tags.map(tag => <Tag key={tag.id} tag={tag}/>)
+      : 'None';
+  };
+
+  render(): JSX.Element {
     const contentDate = this.props.alert.content_date
       ? formatDate(this.props.alert.content_date)
       : 'Unknown';
     const distilleryName = this.props.alert.distillery
       ? this.props.alert.distillery.name
-      : 'None';
-    const tags = this.props.alert.tags.length
-      ? this.props.alert.tags.map((tag) => <TagLabel tag={tag}/>)
       : 'None';
 
     return (
@@ -153,8 +149,7 @@ export class AlertDetailOverview extends React.Component<Props, {}> {
           <dt>Incidents:</dt>
           <dd><span className="badge">{this.props.alert.incidents}</span></dd>
 
-          <dt>Tags:</dt>
-          <dd>{tags}</dd>
+          <AlertDetailTags alert={this.props.alert} />
         </dl>
       </div>
     );

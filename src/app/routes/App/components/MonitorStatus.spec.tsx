@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -51,32 +51,32 @@ describe('<MonitorStatus />', () => {
   it('should call fetchMonitors when created', () => {
     component();
 
-    chai.expect(fetchMonitors.called).to.be.true;
-    chai.expect(fetchMonitors.args[0][0]).to.equal(false);
-    chai.expect(fetchMonitors.args[0][1]).to.equal(MonitorStatus.POLLING_DELAY);
-    chai.expect(fetchMonitors.args[0][2]).to.equal(undefined);
+    expect(fetchMonitors.called).toBe(true);
+    expect(fetchMonitors.args[0][0]).toEqual(false);
+    expect(fetchMonitors.args[0][1]).toEqual(MonitorStatus.POLLING_DELAY);
+    expect(fetchMonitors.args[0][2]).toEqual(undefined);
   });
 
   it('should open the modal when the link is clicked', () => {
     const link = component().find('a');
 
-    chai.expect(link.length).to.equal(1);
+    expect(link.length).toEqual(1);
 
     link.first().simulate('click');
 
-    chai.expect(openModal.called).to.be.true;
+    expect(openModal.called).toBe(true);
   });
 
   it('should fetch monitors when the link is clicked', () => {
     const pollTimeoutID = 4;
     const link = component({ pollTimeoutID }).find('a');
 
-    chai.expect(link.length).to.equal(1);
+    expect(link.length).toEqual(1);
 
     link.first().simulate('click');
 
-    chai.expect(fetchMonitors.args[1][0]).to.equal(true);
-    chai.expect(fetchMonitors.args[1][1]).to.equal(MonitorStatus.POLLING_DELAY);
-    chai.expect(fetchMonitors.args[1][2]).to.equal(pollTimeoutID);
+    expect(fetchMonitors.args[1][0]).toEqual(true);
+    expect(fetchMonitors.args[1][1]).toEqual(MonitorStatus.POLLING_DELAY);
+    expect(fetchMonitors.args[1][2]).toEqual(pollTimeoutID);
   });
 });

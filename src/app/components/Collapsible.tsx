@@ -21,7 +21,7 @@ import * as classnames from 'classnames';
 
 import { FontAwesome } from '~/components/FontAwesome';
 import './Collapsible.scss';
-import { Button, ButtonType } from '~/components/Button';
+import { Button } from '~/components/Button';
 
 interface Props {
   descriptor: JSX.Element | string;
@@ -65,7 +65,7 @@ export class Collapsible extends React.Component<Props, State> {
     return (
       <div>
         <div>
-          <Button type={ButtonType.Plain} onClick={this.toggle}>
+          <Button type="plain" onClick={this.toggle}>
             {this.props.descriptor}
             <FontAwesome
               icon={this.state.open ? 'caret-down' : 'caret-right'}

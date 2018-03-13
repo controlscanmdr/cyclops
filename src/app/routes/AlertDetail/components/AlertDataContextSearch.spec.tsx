@@ -70,8 +70,8 @@ describe('<AlertDataContextSearch />', () => {
     });
     const formatter = wrapper.find('JSONFormatter');
 
-    chai.expect(formatter).to.have.length(1);
-    chai.expect(formatter.props()).to.deep.equal({
+    expect(formatter).toHaveLength(1);
+    expect(formatter.props()).toEqual({
       json: result,
       open: AlertDataContextSearch.JSON_OPEN_LEVEL,
     });
@@ -83,8 +83,8 @@ describe('<AlertDataContextSearch />', () => {
     });
     const button = wrapper.find('Button');
 
-    chai.expect(button).to.have.length(1);
-    chai.expect(button.find('.fa .fa-spinner .fa-spin')).to.have.length(1);
+    expect(button).toHaveLength(1);
+    expect(button.find('.fa .fa-spinner .fa-spin')).toHaveLength(1);
   });
 
   it('should show the current pagination range', () => {
@@ -97,8 +97,8 @@ describe('<AlertDataContextSearch />', () => {
       .find('.result-context-search__header')
       .find('span');
 
-    chai.expect(paginationContainer).to.have.length(1);
-    chai.expect(paginationContainer.text()).to.equal('Showing 1 - 25 of 30');
+    expect(paginationContainer).toHaveLength(1);
+    expect(paginationContainer.text()).toEqual('Showing 1 - 25 of 30');
 
     wrapper = createWrapper({
       results: createResults(30),
@@ -109,8 +109,8 @@ describe('<AlertDataContextSearch />', () => {
       .find('.result-context-search__header')
       .find('span');
 
-    chai.expect(paginationContainer).to.have.length(1);
-    chai.expect(paginationContainer.text()).to.equal('Showing 26 - 30 of 30');
+    expect(paginationContainer).toHaveLength(1);
+    expect(paginationContainer.text()).toEqual('Showing 26 - 30 of 30');
   });
 
   it('should not show the current pagination range if there are no results', () => {
@@ -120,6 +120,6 @@ describe('<AlertDataContextSearch />', () => {
       .find('.result-context-search__header')
       .find('span');
 
-    chai.expect(paginationContainer).to.have.length(0);
+    expect(paginationContainer).toHaveLength(0);
   });
 });

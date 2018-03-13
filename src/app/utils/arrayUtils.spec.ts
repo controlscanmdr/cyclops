@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import * as arrayUtils from './arrayUtils';
@@ -29,7 +29,7 @@ describe('arrayUtils', () => {
       const target = undefined;
       const toggled = arrayUtils.toggleValue(target, value);
 
-      chai.expect(toggled).to.equal(value);
+      expect(toggled).toEqual(value);
     });
 
     it('should return undefined if the value and target match', () => {
@@ -37,7 +37,7 @@ describe('arrayUtils', () => {
       const target = 4;
       const toggled = arrayUtils.toggleValue(target, value);
 
-      chai.expect(toggled).to.be.undefined;
+      expect(toggled).toBeUndefined();
     });
 
     it('should create an array of two values if the values don\'t match', () => {
@@ -45,7 +45,7 @@ describe('arrayUtils', () => {
       const target = 5;
       const toggled = arrayUtils.toggleValue(target, value);
 
-      chai.expect(toggled).to.deep.equal([target, value]);
+      expect(toggled).toEqual([target, value]);
     });
 
     it('should return a single value if there are two values in the array ' +
@@ -54,7 +54,7 @@ describe('arrayUtils', () => {
       const target = [4, 5];
       const toggled = arrayUtils.toggleValue(target, value);
 
-      chai.expect(toggled).to.equal(4);
+      expect(toggled).toEqual(4);
     });
 
     it('should add a value to an array that doesn\'t contain that value', () => {
@@ -62,7 +62,7 @@ describe('arrayUtils', () => {
       const target = [4, 5];
       const toggled = arrayUtils.toggleValue(target, value);
 
-      chai.expect(toggled).to.deep.equal([4, 5, 6]);
+      expect(toggled).toEqual([4, 5, 6]);
     });
 
     it('should remove a value from an array', () => {
@@ -70,7 +70,7 @@ describe('arrayUtils', () => {
       const target = [4, 5, 6];
       const toggled = arrayUtils.toggleValue(target, value);
 
-      chai.expect(toggled).to.deep.equal([4, 5]);
+      expect(toggled).toEqual([4, 5]);
     });
   });
 
@@ -80,7 +80,7 @@ describe('arrayUtils', () => {
       const value = 5;
       const contains = arrayUtils.includesOrEquals(target, value);
 
-      chai.expect(contains).to.be.true;
+      expect(contains).toBe(true);
     });
 
     it('should return true if the target equals the value', () => {
@@ -88,7 +88,7 @@ describe('arrayUtils', () => {
       const value = 5;
       const contains = arrayUtils.includesOrEquals(target, value);
 
-      chai.expect(contains).to.be.true;
+      expect(contains).toBe(true);
     });
 
     it('should return false if the target does not include the value', () => {
@@ -96,7 +96,7 @@ describe('arrayUtils', () => {
       const value = 3;
       const contains = arrayUtils.includesOrEquals(target, value);
 
-      chai.expect(contains).to.be.false;
+      expect(contains).toBe(false);
     });
 
     it('should return false if the target does not equal the value', () => {
@@ -104,7 +104,7 @@ describe('arrayUtils', () => {
       const value = 5;
       const contains = arrayUtils.includesOrEquals(target, value);
 
-      chai.expect(contains).to.be.false;
+      expect(contains).toBe(false);
     });
   });
 });

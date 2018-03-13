@@ -16,22 +16,29 @@
  * are made]
  */
 
+// Vendor
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ForkTSCheckerPlugin = require('fork-ts-checker-webpack-plugin');
 
-/** Current running environment. */
+/**
+ * Current running environment.
+ * @type {string}
+ */
 const ENV = process.env.NODE_ENV || 'development';
 
-/** If webpack is being run in a production environment. */
+/**
+ * If webpack is being run in a production environment.
+ * @type {boolean}
+ */
 const PRODUCTION = ENV === 'production';
 
-/** If webpack is being run in a test environment. */
-const TESTING = ENV === 'test';
-
-/** If webpack is being run in a development environment. */
-const DEVELOPMENT = ENV === 'development';
-
+/**
+ * Banner placed at the top of the compiled code.
+ * @type {string}
+ */
 const BANNER =
 `The contents of this file are subject to the CYPHON Proprietary Non-
 Commercial Registered User Use License Agreement (the "Agreement”). You
@@ -52,6 +59,7 @@ are made]`;
 const CSS_LOADER = {
   loader: 'css-loader',
   options: {
+    // Use minimize and source map in production.
     minimize: PRODUCTION,
     sourceMap: PRODUCTION,
   },
@@ -69,24 +77,21 @@ const TS_SOURCEMAP_RULE = {
   loader: 'source-map-loader',
 };
 
-const TSLINT_RULE = {
-  test: /\.tsx?$/,
-  enforce: 'pre',
-  loader: 'tslint-loader',
-};
-
 const CSS_RULE = {
   test: /\.css$/,
   use: [
     'style-loader',
-    'css-loader',
+    CSS_LOADER,
   ],
 };
 
 const TYPESCRIPT_RULE = {
   test: /\.tsx?$/,
   include: path.resolve(__dirname, 'src'),
-  use: ['awesome-typescript-loader'],
+  loader: 'ts-loader',
+  options: {
+    transpileOnly: true
+  }
 };
 
 const SCSS_RULE = {
@@ -101,16 +106,7 @@ const SCSS_RULE = {
   }),
 };
 
-const COVERAGE_RULE = {
-  test: /\.tsx?$/,
-  enforce: 'post',
-  include: path.resolve(__dirname, 'src/app'),
-  exclude: /\.spec\.tsx?$/,
-  loader: 'istanbul-instrumenter-loader',
-};
-
-const BASE_RULES = [
-  TSLINT_RULE,
+const RULES = [
   JS_SOURCEMAP_RULE,
   TS_SOURCEMAP_RULE,
   CSS_RULE,
@@ -118,45 +114,33 @@ const BASE_RULES = [
   SCSS_RULE,
 ];
 
-const TEST_RULES = [
-  COVERAGE_RULE,
-];
-
-const RULES = TESTING ? BASE_RULES.concat(TEST_RULES) : BASE_RULES;
-
 const BASE_PLUGINS = [
   new ExtractTextPlugin('cyclops.css'),
+  new ForkTSCheckerPlugin(),
   new webpack.BannerPlugin(BANNER),
 ];
 
-const TEST_PLUGINS = [
-  new webpack.SourceMapDevToolPlugin({
-    filename: null, // if no value is provided the sourcemap is inlined
-    test: /\.(tsx?|js)($|\?)/i, // process .js and .ts files only
-  }),
-];
-
 const PRODUCTION_PLUGINS = [
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-    },
+  new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true,
   }),
-  new webpack.optimize.UglifyJsPlugin({ sourceMap: true }),
+  new CleanWebpackPlugin(['dist']),
 ];
 
 const PLUGINS = {
   development: () => BASE_PLUGINS,
   production: () => BASE_PLUGINS.concat(PRODUCTION_PLUGINS),
-  test: () => BASE_PLUGINS.concat(TEST_PLUGINS),
 }[ENV]();
 
 module.exports = {
   context: __dirname,
 
-  entry: './src/main.ts',
+  entry: [
+    'core-js/shim',
+    './src/main.ts'
+  ],
 
-  output: TESTING ? undefined : {
+  output: {
     filename: 'cyclops.js',
     path: path.resolve(__dirname, 'dist'),
   },
@@ -173,7 +157,12 @@ module.exports = {
     },
   },
 
-  devtool: TESTING || DEVELOPMENT ? 'inline-source-map' : 'source-map',
+  devServer: {
+    stats: "minimal",
+    compress: true,
+  },
+
+  devtool: PRODUCTION ? 'source-map' : 'inline-source-map',
 
   module: {
     rules: RULES,
@@ -184,7 +173,7 @@ module.exports = {
     'react/lib/ReactContext': 'window',
     'react/lib/ExecutionEnvironment': true,
     'react/addons': true,
-    mapboxgl: 'mapboxgl',
+    'mapboxgl': 'mapboxgl',
   },
 
   plugins: PLUGINS,

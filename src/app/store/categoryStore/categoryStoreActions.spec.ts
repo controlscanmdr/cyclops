@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as actions from './categoryStoreActions';
@@ -49,7 +49,7 @@ describe('categoryActions', () => {
       'category list as the payload', () => {
       const action = actions.fetchCategoriesSuccess(list);
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: actions.FETCH_CATEGORIES_SUCCESS,
         payload: normalized,
         error: undefined,
@@ -76,14 +76,14 @@ describe('categoryActions', () => {
 
     it('should call the cyphon api', () => {
       return action().then(() => {
-        chai.expect(fetchAllCategories.called).to.be.true;
+        expect(fetchAllCategories.called).toBe(true);
       });
     });
 
     it('should dispatch a successful request', () => {
       return action().then(() => {
-        chai.expect(dispatch.called).to.be.true;
-        chai.expect(dispatch.args[0][0]).to.deep.equal({
+        expect(dispatch.called).toBe(true);
+        expect(dispatch.args[0][0]).toEqual({
           type: actions.FETCH_CATEGORIES_SUCCESS,
           payload: normalized,
           error: undefined,
@@ -97,10 +97,10 @@ describe('categoryActions', () => {
       fetchAllCategories.rejects(error);
 
       return action().then(() => {
-        chai.expect(addError.called).to.be.true;
-        chai.expect(addError.args[0][0]).to.equal(error);
-        chai.expect(dispatch.called).to.be.true;
-        chai.expect(dispatch.args[0][0]).to.equal(addErrorAction);
+        expect(addError.called).toBe(true);
+        expect(addError.args[0][0]).toEqual(error);
+        expect(dispatch.called).toBe(true);
+        expect(dispatch.args[0][0]).toEqual(addErrorAction);
       });
     });
   });

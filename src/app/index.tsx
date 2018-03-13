@@ -29,6 +29,7 @@ import { Provider } from 'react-redux';
 import { getConfig } from './config';
 import { store } from './store';
 import * as routes from './routes';
+import AlertDetail from '~/routes/AlertDetail/components/AlertDetail';
 
 const browserHistory = useRouterHistory(createHistory)({
   // Use base URL given by the parent template.
@@ -42,7 +43,7 @@ export const App = (
       <Route path="/" component={routes.AppRouteComponent}>
         <IndexRoute component={routes.DashboardRouteComponent}/>
         <Route path="alerts" component={routes.AlertListRouteComponent}>
-          <Route path=":alertId" component={routes.AlertDetailRouteComponent}/>
+          <Route path=":alertId" component={AlertDetail}/>
         </Route>
         <Route path="search" component={routes.SearchRouteComponent}/>
       </Route>

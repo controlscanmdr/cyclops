@@ -38,8 +38,8 @@ describe('actionsAPI', () => {
     it('should call api.getAll with the correct url', () => {
       actionAPI.fetchAllActions();
 
-      chai.expect(getAll.called).to.be.true;
-      chai.expect(getAll.args[0][0]).to.equal(actionAPI.ACTIONS_URL);
+      expect(getAll.called).toBe(true);
+      expect(getAll.args[0][0]).toEqual(actionAPI.ACTIONS_URL);
     });
   });
 });

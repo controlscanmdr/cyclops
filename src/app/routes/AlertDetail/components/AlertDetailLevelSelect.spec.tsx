@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -49,11 +49,11 @@ describe('<AlertDetailLevelSelect />', () => {
 
   it('should show a SubtleSelect if the current user is staff', () => {
     getConfig.returns({ CURRENT_USER: { is_staff: true } });
-    chai.expect(component().find('SubtleSelect')).to.have.length(1);
+    expect(component().find('SubtleSelect')).toHaveLength(1);
   });
 
   it('should not show a SubtleSelect if the current user is not staff', () => {
     getConfig.returns({ CURRENT_USER: { is_staff: false } });
-    chai.expect(component().find('SubtleSelect')).to.have.length(0);
+    expect(component().find('SubtleSelect')).toHaveLength(0);
   });
 });

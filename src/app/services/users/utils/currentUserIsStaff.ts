@@ -26,3 +26,11 @@ import { getConfig } from '~/config';
 export function currentUserIsStaff(): boolean {
   return getConfig().CURRENT_USER.is_staff;
 }
+
+/**
+ * Returns the current user id.
+ * @returns {number}
+ */
+export function getCurrentUserId(): number {
+  return getConfig().CURRENT_USER.id;
+}

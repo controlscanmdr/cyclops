@@ -18,7 +18,6 @@
 
 // Vendor
 import * as React from 'react';
-import { Popover, OverlayTrigger } from 'react-bootstrap';
 
 // Local
 import { Distillery } from '~/services/distilleries/types';
@@ -36,19 +35,17 @@ import { AlertParamsDateCalendars } from './AlertParamsDateCalendars';
 import { AlertParamsDateTimeSelect } from '~/routes/AlertList/components/AlertParamsDateTimeSelect';
 import { AlertParamsCategorySelect } from '~/routes/AlertList/components/AlertParamsCategorySelect';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Properties of the AlertParams component. */
 interface Props {
-  /** List of all the distilleries that have alerts associated with them. */
+  // List of all the distilleries that have alerts associated with them.
   distilleries: Distillery[];
-  /** Currently selected alerts list search parameters. */
+  // Currently selected alerts list search parameters.
   params: AlertSearchParams;
-  /** Current list of all users. */
+  // Current list of all users.
   users: User[];
-  /** Current list of categories. */
+  // Current list of categories.
   categories: NormalizedCategoryList;
   /**
    * Changes the current alerts list search parameters.
@@ -57,13 +54,11 @@ interface Props {
   changeParams(params: AlertSearchParams): any;
 }
 
-/** Internal state of the AlertParams component. */
 interface State {
-  /** If a panel that allows users to filter alerts by time is shown. */
+  // If a panel that allows users to filter alerts by time is shown.
   timePanelActive: boolean;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 

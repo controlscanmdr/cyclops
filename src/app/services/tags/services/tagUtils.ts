@@ -16,33 +16,14 @@
  * are made]
  */
 
-// Vendor
-import { combineReducers } from 'redux';
-
 // Local
-import {
-  NotificationsState as NotificationsState,
-  NotificationsReducer as NotificationsReducer,
-} from './notifications/reducers/notificationReducer';
-import {
-  UsersReducer,
-  UsersState,
-} from '~/services/users/reducer';
-import {
-  AlertServiceReducerState,
-  alertServiceReducer,
-} from './alerts';
+import { Tag } from '~/services/tags/types';
 
-/** Redux state shape for services. */
-export interface ServicesReducerState {
-  alerts: AlertServiceReducerState;
-  notifications: NotificationsState;
-  users: UsersState;
+/**
+ * Returns the display name of a tag object.
+ * @param {Tag} tag
+ * @returns {string}
+ */
+export function getTagDisplayName(tag: Tag): string {
+  return `${tag.topic.name}: ${tag.name}`;
 }
-
-/** Redux reducer for services. */
-export const servicesReducer = combineReducers<ServicesReducerState>({
-  alerts: alertServiceReducer,
-  notifications: NotificationsReducer,
-  users: UsersReducer,
-});

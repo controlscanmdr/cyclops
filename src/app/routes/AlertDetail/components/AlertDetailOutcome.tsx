@@ -20,67 +20,31 @@
 import * as React from 'react';
 
 // Local
-import {
-  Alert,
-  AlertDetail,
-  AlertOutcomeChoices,
-} from '../../../services/alerts/types';
+import { AlertDetail, AlertOutcomeChoices } from '~/services/alerts/types';
 import { AlertDetailOutcomeForm } from './AlertDetailOutcomeForm';
 import { AlertDetailOutcomeDisplay } from './AlertDetailOutcomeDisplay';
 import { AlertDetailOutcomeRemove } from './AlertDetailOutcomeRemove';
+import * as actions from '~/store/alertDetailOutcome/alertDetailOutcomeActions';
+import { connect, Dispatch } from 'react-redux';
+import { MapStateToProps } from '~/types/MapStateToProps';
+import { MapDispatchToProps } from '~/types/MapDispatchToProps';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Value properties of the AlertDetailOutcome component. */
-export interface ValueProps {
+export interface Props {
+  // If the form to change the outcome should be shown.
+  showEditPanel: boolean;
+
+  // Currently selected alert detail.
   alert: AlertDetail;
-  /** If the form to change the outcome should be shown. */
-  active: boolean;
-  /** Current alert notes. */
-  notes: string;
-  /** Current alert outcome. */
-  outcome: AlertOutcomeChoices;
-  /** If a panel warning the user about removing an outcome should be shown. */
+
+  // If a panel warning the user about removing an outcome should be shown.
   showRemovePanel: boolean;
+
+  dispatch: Dispatch<any>;
 }
 
-/** Function properties of the AlertDetailOutcome component. */
-export interface FunctionProps {
-  /**
-   * Function that runs whenever the outcome is changed.
-   * @param outcome Selected outcome.
-   */
-  changeOutcome(outcome: AlertOutcomeChoices): any;
-  /**
-   * Function that runs whenever the alert analysis changes.
-   * @param notes Written notes.
-   */
-  changeNotes(notes: string): any;
-  /** Closes the alert detail outcome form. */
-  close(): any;
-  /**
-   * Submits the changes to the alert outcome and notes.
-   * @param alert Alert to change.
-   * @param outcome Outcome to change to.
-   * @param notes Notes to change to.
-   */
-  submit(alert: Alert, outcome: AlertOutcomeChoices, notes: string): any;
-  /**
-   * Removes the outcome from an alert.
-   * @param alert Alert to remove the outcome from.
-   */
-  removeOutcome(alert: Alert): any;
-  open(outcome: AlertOutcomeChoices, notes: string): any;
-  openRemovePanel(): any;
-  closeRemovePanel(): any;
-}
-
-/** All properties of the AlertDetailOutcome component. */
-export type Props = ValueProps & FunctionProps;
-
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
@@ -89,65 +53,84 @@ export type Props = ValueProps & FunctionProps;
  * of an alert.
  */
 export class AlertDetailOutcome extends React.Component<Props, {}> {
-
-  public submit = (): void => {
-    this.props.submit(this.props.alert, this.props.outcome, this.props.notes);
+  openEditPanel = (): void => {
+    this.props.dispatch(actions.openEditPanel());
   };
 
-  /**
-   * Selects the new outcome whenever it's changed in the SubtleSelect.
-   * @param outcome Select onChange event.
-   */
-  public handleSelect = (outcome: string): void => {
-    this.props.changeOutcome(outcome as AlertOutcomeChoices);
+  openRemovePanel = (): void => {
+    this.props.dispatch(actions.openRemovePanel());
   };
 
-  public open = (): void => {
-    this.props.open(this.props.alert.outcome, this.props.alert.notes);
+  cancelOutcomeRemoval = (): void => {
+    this.props.dispatch(actions.closeRemovePanel());
   };
 
-  public remove = (): void => {
-    this.props.removeOutcome(this.props.alert);
+  removeOutcome = (): void => {
+    this.props.dispatch(actions.removeOutcome(this.props.alert));
   };
 
-  public render(): JSX.Element {
-    let display = (
-      <AlertDetailOutcomeDisplay
-        notes={this.props.alert.notes}
-        outcome={this.props.alert.outcome}
-        editOutcome={this.open}
-        showRemovePanel={this.props.openRemovePanel}
-      />
-    );
+  changeOutcome = (outcome: AlertOutcomeChoices, notes: string): void => {
+    this.props.dispatch(actions.submitOutcomeChange(this.props.alert, outcome, notes));
+  };
 
-    if (this.props.showRemovePanel) {
-      display = (
-        <AlertDetailOutcomeRemove
-          remove={this.remove}
-          close={this.props.closeRemovePanel}
-        />
-      );
-    }
+  cancelOutcomeEdit = (): void => {
+    this.props.dispatch(actions.closeEditPanel());
+  };
 
-    if (this.props.active) {
-      display = (
-        <AlertDetailOutcomeForm
-          alert={this.props.alert}
-          outcome={String(this.props.outcome)}
-          notes={this.props.notes}
-          changeOutcome={this.handleSelect}
-          changeNotes={this.props.changeNotes}
-          submit={this.submit}
-          cancel={this.props.close}
-        />
-      );
-    }
+  renderOutcomeDisplay = (): JSX.Element => (
+    <AlertDetailOutcomeDisplay
+      notes={this.props.alert.notes}
+      outcome={this.props.alert.outcome}
+      onEditClick={this.openEditPanel}
+      onRemoveClick={this.openRemovePanel}
+    />
+  );
 
+  renderOutcomeRemove = (): JSX.Element => (
+    <AlertDetailOutcomeRemove
+      onRemoveClick={this.removeOutcome}
+      onCancelClick={this.cancelOutcomeRemoval}
+    />
+  );
+
+  renderOutcomeForm = (): JSX.Element => (
+    <AlertDetailOutcomeForm
+      outcome={this.props.alert.outcome}
+      notes={this.props.alert.notes}
+      onSubmit={this.changeOutcome}
+      onCancelClick={this.cancelOutcomeEdit}
+    />
+  );
+
+  renderContent = (): JSX.Element => {
+    if (this.props.showRemovePanel) return this.renderOutcomeRemove();
+    if (this.props.showEditPanel) return this.renderOutcomeForm();
+
+    return this.renderOutcomeDisplay();
+  };
+
+  render(): JSX.Element {
     return (
       <div className="spacing-section">
         <h3 className="sub-title">Outcome</h3>
-        {display}
+        {this.renderContent()}
       </div>
     );
   }
 }
+
+// Container
+// --------------------------------------------------------------------------
+
+interface Container {
+  // Alert to modify.
+  alert: AlertDetail;
+}
+
+const mapStateToProps: MapStateToProps<Props, Container> = state => ({
+  showEditPanel: state.alertDetailOutcome.active,
+  showRemovePanel: state.alertDetailOutcome.showRemovePanel,
+});
+
+export default connect(mapStateToProps)(AlertDetailOutcome);
+

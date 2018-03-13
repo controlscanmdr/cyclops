@@ -23,7 +23,7 @@ describe('<SubtleSelect />', () => {
   it('should display a SubtleButton on render', () => {
     const wrapper = render();
 
-    expect(wrapper.find('SubtleButton')).to.have.length(1);
+    expect(wrapper.find('SubtleButton')).toHaveLength(1);
   });
 
   it('should display a select option when the state is active', () => {
@@ -31,7 +31,7 @@ describe('<SubtleSelect />', () => {
 
     wrapper.setState({ active: true });
 
-    expect(wrapper.find('select')).to.have.length(1);
+    expect(wrapper.find('select')).toHaveLength(1);
   });
 
   it('should display a list of options when active', () => {
@@ -45,9 +45,9 @@ describe('<SubtleSelect />', () => {
 
     const elements = wrapper.find('option');
 
-    expect(elements).to.have.length(1);
-    expect(elements.at(0).prop('value')).to.equal(1);
-    expect(elements.at(0).text()).to.equal('value');
+    expect(elements).toHaveLength(1);
+    expect(elements.at(0).prop('value')).toEqual(1);
+    expect(elements.at(0).text()).toEqual('value');
   });
 
   it('should render with the current selected value', () => {
@@ -62,7 +62,7 @@ describe('<SubtleSelect />', () => {
 
     const select = wrapper.find('select');
 
-    expect(select).to.have.length(1);
-    expect(select.at(0).prop('value')).to.equal(1);
+    expect(select).toHaveLength(1);
+    expect(select.at(0).prop('value')).toEqual(1);
   });
 });

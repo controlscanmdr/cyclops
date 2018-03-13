@@ -77,7 +77,7 @@ export class MultiAutocomplete extends React.Component<Props, {}> {
           value={''}
           placeholder={this.props.placeholder}
           onSelect={this.props.onSelect}
-          filter={this.filter}
+          shouldItemDisplay={this.filter}
         />
       </div>
     );

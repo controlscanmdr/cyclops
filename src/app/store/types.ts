@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import { Dispatch, Action, ThunkAction } from 'redux';
+import { Dispatch, Action as OriginalAction, ThunkAction } from 'redux';
 
 // Local
 import { StoreState } from './index';
@@ -41,7 +41,7 @@ export type DispatchToProps<R, P> = (
 ) => R;
 
 /** Flux standard action with specified paylaod type. */
-export interface ReduxAction<Payload> extends Action {
+export interface ReduxAction<Payload> extends OriginalAction {
   /** Type of action. */
   type: string;
   /** Data passed with the action. */
@@ -50,11 +50,23 @@ export interface ReduxAction<Payload> extends Action {
   error?: boolean;
 }
 
+/**
+ * Flux standard action with specified action type and payload type.
+ * Used for payload type inference in reducers.
+ */
+export interface Action<T extends string, P = undefined> extends OriginalAction {
+  /** Type of action. */
+  type: T;
+
+  /** Data passed with the action. */
+  payload: P;
+}
+
 /** Thunk action that returns a promise that returns undefined. */
 export type ThunkActionPromise = ThunkAction<
   Promise<void>,
   StoreState,
-  undefined
+  void
 >;
 
 /** Thunk action that returns undefined. */

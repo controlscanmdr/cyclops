@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import { addHoverPopup } from './popupUtils';
@@ -66,6 +66,6 @@ describe('addHoverPopup()', () => {
 
     mousemove(event);
 
-    chai.expect(popup.setLngLat.called).to.be.true;
+    expect(popup.setLngLat.called).toBe(true);
   });
 });

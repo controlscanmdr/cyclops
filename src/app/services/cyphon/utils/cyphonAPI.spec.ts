@@ -46,11 +46,11 @@ describe('cyphonAPI', () => {
       });
 
       return cyphonAPI.getAll('/monitors/enabled/').then((response) => {
-        expect(response).to.deep.equal([1, 2, 3]);
-        expect(request.callCount).to.equal(3);
-        expect(request.args[0][0].url).to.equal('/monitors/enabled/');
-        expect(request.args[1][0].url).to.equal('http://cyphon.io/api/v1/monitors/enabled/?page=2');
-        expect(request.args[2][0].url).to.equal('http://cyphon.io/api/v1/monitors/enabled/?page=3');
+        expect(response).toEqual([1, 2, 3]);
+        expect(request.callCount).toEqual(3);
+        expect(request.args[0][0].url).toEqual('/monitors/enabled/');
+        expect(request.args[1][0].url).toEqual('http://cyphon.io/api/v1/monitors/enabled/?page=2');
+        expect(request.args[2][0].url).toEqual('http://cyphon.io/api/v1/monitors/enabled/?page=3');
       });
     });
   });

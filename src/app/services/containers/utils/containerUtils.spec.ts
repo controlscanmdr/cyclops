@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as utils from './containerUtils';
@@ -44,8 +44,8 @@ describe('containerUtils', () => {
         result,
       );
 
-      expect(fields.length).to.equal(1);
-      expect(fields[0]).to.deep.equal({
+      expect(fields.length).toEqual(1);
+      expect(fields[0]).toEqual({
         field: 'coordinates',
         value: [4, 5],
       });

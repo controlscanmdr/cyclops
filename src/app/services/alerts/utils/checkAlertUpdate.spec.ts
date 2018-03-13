@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import * as update from './checkAlertUpdate';
@@ -26,11 +26,11 @@ describe('checkAlertUpdate()', () => {
   const check = update.checkAlertUpdate;
 
   it('should return true if there is no update status', () => {
-    chai.expect(check({} as any, {}).valid).to.be.true;
+    expect(check({} as any, {}).valid).toBe(true);
   });
 
   it('should return true if the update status does not include BUSY or DONE', () => {
-    chai.expect(check({} as any, { status: 'NEW' }).valid).to.be.true;
+    expect(check({} as any, { status: 'NEW' }).valid).toBe(true);
   });
 
   it('should return true if there is an assigned user', () => {
@@ -39,7 +39,7 @@ describe('checkAlertUpdate()', () => {
       { status: 'BUSY' },
     ).valid;
 
-    chai.expect(passed).to.be.true;
+    expect(passed).toBe(true);
   });
 
   it('should return false if there is no assigned user and the status ' +
@@ -47,12 +47,12 @@ describe('checkAlertUpdate()', () => {
     const message = 'Alert must be assigned before changing the status to Busy.';
     let request = check({} as any, { status: 'BUSY' });
 
-    chai.expect(request.valid).to.be.false;
-    chai.expect(request.errors).to.deep.equal([message]);
+    expect(request.valid).toBe(false);
+    expect(request.errors).toEqual([message]);
   });
 
   it('should return true if there is no assigned user', () => {
-    chai.expect(check({} as any, {}).valid).to.be.true;
+    expect(check({} as any, {}).valid).toBe(true);
   });
 
   it('should return false if the alert status is DONE and there is ' +
@@ -60,7 +60,7 @@ describe('checkAlertUpdate()', () => {
     const message = 'Alert cannot be reassigned once it has been resolved.';
     let request = check({ status: 'DONE' } as any, { assigned_user: { id: 1 } as any });
 
-    chai.expect(request.valid).to.be.false;
-    chai.expect(request.errors).to.deep.equal([message]);
+    expect(request.valid).toBe(false);
+    expect(request.errors).toEqual([message]);
   });
 });

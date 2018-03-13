@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -33,15 +33,14 @@ describe('<AlertDetailComments />', () => {
     { id: 4 },
   ];
   let component: (props?: any) => enzyme.ShallowWrapper<any, any>;
-  let addComment: sinon.SinonSpy;
+  let onSubmit: sinon.SinonSpy;
   let currentUserIsStaff: sinon.SinonStub;
 
   beforeEach(() => {
-    addComment = sinon.spy();
+    onSubmit = sinon.spy();
     currentUserIsStaff = sinon.stub(utils, 'currentUserIsStaff');
-
     component = (props) => {
-      const defaults = { alertId, comments, addComment };
+      const defaults = { comments, onSubmit };
       const passed = Object.assign({}, defaults, props);
 
       return enzyme.shallow(<AlertDetailComments {...passed} />);
@@ -56,10 +55,10 @@ describe('<AlertDetailComments />', () => {
     const wrapper = component();
     const commentElements = wrapper.find('AlertDetailComment');
 
-    chai.expect(commentElements).to.have.length(2);
+    expect(commentElements).toHaveLength(2);
 
     commentElements.forEach((comment, index) => {
-      chai.expect(comment.prop('comment')).to.equal(comments[index]);
+      expect(comment.prop('comment')).toEqual(comments[index]);
     });
   });
 
@@ -67,7 +66,7 @@ describe('<AlertDetailComments />', () => {
     const wrapper = component();
     const badge = wrapper.find('.badge');
 
-    chai.expect(badge.text()).to.equal(String(comments.length));
+    expect(badge.text()).toEqual(String(comments.length));
   });
 
   it('should show a button to add a comment if the user is staff', () => {
@@ -75,7 +74,7 @@ describe('<AlertDetailComments />', () => {
 
     const wrapper = component();
 
-    chai.expect(wrapper.find('HiddenTextArea')).to.have.length(1);
+    expect(wrapper.find('HiddenTextArea')).toHaveLength(1);
   });
 
   it('should show not show a button to add a comment if the user is not staff', () => {
@@ -83,7 +82,7 @@ describe('<AlertDetailComments />', () => {
 
     const wrapper = component();
 
-    chai.expect(wrapper.find('HiddenTextArea')).to.have.length(0);
+    expect(wrapper.find('HiddenTextArea')).toHaveLength(0);
   });
 
   it('should call addComment with the passed in alertId', () => {
@@ -92,7 +91,7 @@ describe('<AlertDetailComments />', () => {
 
     instance.handleSubmit(value);
 
-    chai.expect(addComment.called).to.be.true;
-    chai.expect(addComment.args[0]).to.deep.equal([alertId, value]);
+    expect(onSubmit.called).toBe(true);
+    expect(onSubmit.args[0]).toEqual([value]);
   });
 });

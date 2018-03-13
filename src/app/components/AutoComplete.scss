@@ -18,8 +18,13 @@
 
 @import '../../styles/base/variables';
 
-.AutoComplete {
+.Autocomplete {
+  &__Wrapper {
+    position: relative;
+  }
+
   &__Menu {
+    //position: absolute;
     margin-top: $padding-small-vertical;
     background-color: $input-bg;
     border: 1px solid $input-border-focus;

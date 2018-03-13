@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import { alertList } from './alertListReducer';
@@ -34,7 +34,7 @@ describe('alertList', () => {
       const action = actions.searchAlertsPending(params, true, promiseId);
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         loading: true,
         params,
         polling: false,
@@ -50,8 +50,8 @@ describe('alertList', () => {
 
       alertList(state, action);
 
-      chai.expect(clearTimeout.called).to.be.true;
-      chai.expect(clearTimeout.args[0][0]).to.equal(state.timeout);
+      expect(clearTimeout.called).toBe(true);
+      expect(clearTimeout.args[0][0]).toEqual(state.timeout);
 
       clearTimeout.restore();
     });
@@ -65,7 +65,7 @@ describe('alertList', () => {
       const action = actions.searchAlertsSuccess(alerts, count, polling);
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         alerts,
         count,
         loading: false,
@@ -79,7 +79,7 @@ describe('alertList', () => {
       const action = actions.searchAlertsFailure();
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         loading: false,
         polling: false,
       });
@@ -92,7 +92,7 @@ describe('alertList', () => {
       const action = actions.pollAlertsPending({} as any, promiseId);
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         promiseId,
         polling: true,
         pollingEnabled: true,
@@ -107,7 +107,7 @@ describe('alertList', () => {
       const action = actions.pollAlertsSuccess(alerts, count);
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         alerts,
         count,
       });
@@ -119,7 +119,7 @@ describe('alertList', () => {
       const action = actions.pollAlertsFailure();
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         polling: false,
       });
     });
@@ -132,7 +132,7 @@ describe('alertList', () => {
       const action = actions.pollAlertsWait(timeout, interval);
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         interval,
         timeout,
       });
@@ -144,7 +144,7 @@ describe('alertList', () => {
       const action = actions.stopPolling();
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         polling: false,
         timeout: null,
       });
@@ -158,8 +158,8 @@ describe('alertList', () => {
 
       alertList(state as any, action);
 
-      chai.expect(clearTimeout.called).to.be.true;
-      chai.expect(clearTimeout.args[0][0]).to.equal(timeout);
+      expect(clearTimeout.called).toBe(true);
+      expect(clearTimeout.args[0][0]).toEqual(timeout);
 
       clearTimeout.restore();
     });
@@ -170,7 +170,7 @@ describe('alertList', () => {
       const action = actions.disablePolling();
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         polling: false,
         pollingEnabled: false,
         timeout: null,
@@ -185,8 +185,8 @@ describe('alertList', () => {
 
       alertList(state as any, action);
 
-      chai.expect(clearTimeout.called).to.be.true;
-      chai.expect(clearTimeout.args[0][0]).to.equal(timeout);
+      expect(clearTimeout.called).toBe(true);
+      expect(clearTimeout.args[0][0]).toEqual(timeout);
 
       clearTimeout.restore();
     });
@@ -200,7 +200,7 @@ describe('alertList', () => {
       const action = updateAlertSuccess(alert);
       const update = alertList(state, action);
 
-      chai.expect(update).to.equal(state);
+      expect(update).toEqual(state);
     });
 
     it('should update the alert in the list based on the updated alert', () => {
@@ -211,7 +211,7 @@ describe('alertList', () => {
       const state: any = { alerts: [alert1, alert2] };
       const update = alertList(state, action);
 
-      chai.expect(update).to.deep.equal({
+      expect(update).toEqual({
         alerts: [alert1, alert2Updated],
       });
     });
@@ -225,7 +225,7 @@ describe('alertList', () => {
       const action = actions.fetchViewResourcesSuccess(users, distilleries, actionList);
       const state = alertList({} as any, action);
 
-      chai.expect(state).to.deep.equal({
+      expect(state).toEqual({
         actions: actionList,
         distilleries,
         users,

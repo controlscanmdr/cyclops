@@ -11,7 +11,7 @@ describe('createClusterLayers', () => {
     const expectedLength = CLUSTER_LAYERS.length + 1;
     const layersLength = createClusterLayers('test').length;
 
-    chai.expect(layersLength).to.equal(expectedLength);
+    expect(layersLength).toEqual(expectedLength);
   });
 
   it('should name each layer id by it\'s index and the last one should be ' +
@@ -21,9 +21,9 @@ describe('createClusterLayers', () => {
 
     layers.forEach((layer, index) => {
       if (index + 1 === layers.length) {
-        chai.expect(layer.id).to.equal(`${sourceId}-cluster-count`);
+        expect(layer.id).toEqual(`${sourceId}-cluster-count`);
       } else {
-        chai.expect(layer.id).to.equal(`${sourceId}-cluster-${index}`);
+        expect(layer.id).toEqual(`${sourceId}-cluster-${index}`);
       }
     });
   });
@@ -32,7 +32,7 @@ describe('createClusterLayers', () => {
     const layers = createClusterLayers('test');
 
     layers.forEach((layer) => {
-      chai.expect(layer.source).to.equal('test');
+      expect(layer.source).toEqual('test');
     });
   });
 
@@ -41,12 +41,12 @@ describe('createClusterLayers', () => {
 
     layers.forEach((layer, index) => {
       if (index + 1 === layers.length) {
-        chai.expect(layer.paint).to.be.undefined;
+        expect(layer.paint).toBeUndefined();
       } else {
         const paint = layer.paint;
         const color = paint ? _.get(paint, 'circle-color') : undefined;
 
-        chai.expect(color).to.equal(CLUSTER_LAYERS[index].color);
+        expect(color).toEqual(CLUSTER_LAYERS[index].color);
       }
     });
   });

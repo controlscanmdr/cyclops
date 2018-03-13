@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -53,10 +53,10 @@ describe('<AlertDetailUnassignButton />', () => {
 
   it('should not display a button if the user is not staff', () => {
     currentUserIsStaff.returns(false);
-    chai.expect(component().find('button')).to.have.length(0);
+    expect(component().find('button')).toHaveLength(0);
   });
 
   it('should display a button if the user is staff', () => {
-    chai.expect(component().find('button')).to.have.length(1);
+    expect(component().find('button')).toHaveLength(1);
   });
 });

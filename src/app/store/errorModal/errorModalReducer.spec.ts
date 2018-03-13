@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 import * as sinon from 'sinon';
 
 // Local
@@ -41,7 +41,7 @@ describe('ErrorPopup reducer', () => {
   //     const action = actions.addError(error);
   //     const updatedState = reducer(state, action);
   //
-  //     chai.expect(updatedState).to.deep.equal({
+  //     expect(updatedState).toEqual({
   //       current: 0,
   //       errors: [error],
   //     });
@@ -52,7 +52,7 @@ describe('ErrorPopup reducer', () => {
   //     const action1 = actions.addError(error1);
   //     const updatedState1 = reducer(state, action1);
   //
-  //     chai.expect(updatedState1).to.deep.equal({
+  //     expect(updatedState1).toEqual({
   //       current: 0,
   //       errors: [error1],
   //     });
@@ -61,7 +61,7 @@ describe('ErrorPopup reducer', () => {
   //     const action2 = actions.addError(error2);
   //     const updatedState2 = reducer(updatedState1, action2);
   //
-  //     chai.expect(updatedState2).to.deep.equal({
+  //     expect(updatedState2).toEqual({
   //       current: 0,
   //       errors: [error1, error2],
   //     });
@@ -75,10 +75,10 @@ describe('ErrorPopup reducer', () => {
   //
   //     reducer(state, action);
   //
-  //     chai.expect(assign.called).to.be.true;
-  //     chai.expect(assign.args[0][0]).to.deep.equal({});
-  //     chai.expect(assign.args[0][1]).to.deep.equal(state);
-  //     chai.expect(assign.args[0][2]).to.deep.equal({
+  //     expect(assign.called).toBe(true);
+  //     expect(assign.args[0][0]).toEqual({});
+  //     expect(assign.args[0][1]).toEqual(state);
+  //     expect(assign.args[0][2]).toEqual({
   //       errors: [error],
   //     });
   //     assign.restore();
@@ -91,7 +91,7 @@ describe('ErrorPopup reducer', () => {
       const action = actions.viewError(index);
       const updatedState = errorModal(state, action);
 
-      chai.expect(updatedState.current).to.equal(index);
+      expect(updatedState.current).toEqual(index);
     });
   });
 
@@ -102,12 +102,12 @@ describe('ErrorPopup reducer', () => {
         errors: [{} as any, {} as any],
       };
 
-      chai.expect(state.errors.length).to.equal(2);
+      expect(state.errors.length).toEqual(2);
 
       const action = actions.clearErrors();
       const updatedState = errorModal(state, action);
 
-      chai.expect(updatedState.errors.length).to.equal(0);
+      expect(updatedState.errors.length).toEqual(0);
     });
   });
 });

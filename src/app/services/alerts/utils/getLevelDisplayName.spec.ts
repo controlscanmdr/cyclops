@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import { getLevelDisplayName } from './getLevelDisplayName';
@@ -28,6 +28,6 @@ describe('getLevelDisplayName()', () => {
     const level: AlertLevelChoices = 'HIGH';
     const displayName = getLevelDisplayName(level);
 
-    chai.expect(displayName).to.equal('High');
+    expect(displayName).toEqual('High');
   });
 });

@@ -27,13 +27,13 @@ describe('api.users.utils', () => {
         last_name: 'Saget',
       };
 
-      expect(utils.getUserFullName(user)).to.equal('Bob Saget');
+      expect(utils.getUserFullName(user)).toEqual('Bob Saget');
     });
 
     it('should return None if there is no user', () => {
       const user: any = undefined;
 
-      expect(utils.getUserFullName(user)).to.equal('None');
+      expect(utils.getUserFullName(user)).toEqual('None');
     });
   });
 });

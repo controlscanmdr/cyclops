@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as actions from './notificationActions';
@@ -31,7 +31,7 @@ describe('notificationActions', () => {
       const enabled = false;
       const action = actions.notificationsEnabled(enabled);
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: actions.NOTIFICATIONS_ENABLED,
         error: undefined,
         payload: enabled,
@@ -43,7 +43,7 @@ describe('notificationActions', () => {
     it('should create an action with the correct type and payload', () => {
       const action = actions.notificationsNotSupported();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: actions.NOTIFICATIONS_NOT_SUPPORTED,
         error: undefined,
         payload: undefined,
@@ -56,7 +56,7 @@ describe('notificationActions', () => {
       const allowed = true;
       const action = actions.notificationsAllowed(allowed);
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: actions.NOTIFICATIONS_ALLOWED,
         error: undefined,
         payload: allowed,
@@ -68,7 +68,7 @@ describe('notificationActions', () => {
     it('should create an action with the correct type and payload', () => {
       const action = actions.pushMessagingNotSupported();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: actions.PUSH_MESSAGING_NOT_SUPPORTED,
         error: undefined,
         payload: undefined,
@@ -80,7 +80,7 @@ describe('notificationActions', () => {
     it('should create an action with the correct type and payload', () => {
       const action = actions.serviceWorkersNotSupported();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: actions.SERVICE_WORKERS_NOT_SUPPORTED,
         error: undefined,
         payload: undefined,
@@ -92,7 +92,7 @@ describe('notificationActions', () => {
     it('should create an action with the correct type and payload', () => {
       const action = actions.serviceWorkerRegistered();
 
-      chai.expect(action).to.deep.equal({
+      expect(action).toEqual({
         type: actions.SERVICE_WORKER_REGISTERED,
         error: undefined,
         payload: undefined,
@@ -182,7 +182,7 @@ describe('notificationActions', () => {
         return thunk().then(() => {
           const action = actions.serviceWorkersNotSupported();
 
-          chai.expect(dispatch.args[0][0]).to.deep.equal(action);
+          expect(dispatch.args[0][0]).toEqual(action);
         });
       });
 
@@ -190,8 +190,8 @@ describe('notificationActions', () => {
         return thunk().then(() => {
           const action = actions.serviceWorkerRegistered();
 
-          chai.expect(registerServiceWorker.called).to.be.true;
-          chai.expect(dispatch.args[0][0]).to.deep.equal(action);
+          expect(registerServiceWorker.called).toBe(true);
+          expect(dispatch.args[0][0]).toEqual(action);
         });
       });
 
@@ -202,8 +202,8 @@ describe('notificationActions', () => {
           const supported = actions.notificationsNotSupported();
           const enabled = actions.notificationsEnabled(false);
 
-          chai.expect(dispatch.args[1][0]).to.deep.equal(supported);
-          chai.expect(dispatch.args[2][0]).to.deep.equal(enabled);
+          expect(dispatch.args[1][0]).toEqual(supported);
+          expect(dispatch.args[2][0]).toEqual(enabled);
         });
       });
 
@@ -214,8 +214,8 @@ describe('notificationActions', () => {
           const allowed = actions.notificationsAllowed(false);
           const enabled = actions.notificationsEnabled(false);
 
-          chai.expect(dispatch.args[1][0]).to.deep.equal(allowed);
-          chai.expect(dispatch.args[2][0]).to.deep.equal(enabled);
+          expect(dispatch.args[1][0]).toEqual(allowed);
+          expect(dispatch.args[2][0]).toEqual(enabled);
         });
       });
 
@@ -226,21 +226,21 @@ describe('notificationActions', () => {
           const supported = actions.pushMessagingNotSupported();
           const enabled = actions.notificationsEnabled(false);
 
-          chai.expect(dispatch.args[1][0]).to.deep.equal(supported);
-          chai.expect(dispatch.args[2][0]).to.deep.equal(enabled);
+          expect(dispatch.args[1][0]).toEqual(supported);
+          expect(dispatch.args[2][0]).toEqual(enabled);
         });
       });
 
       it('should get the service worker registration', () => {
         return thunk().then(() => {
-          chai.expect(getServiceWorkerRegistration.called).to.be.true;
+          expect(getServiceWorkerRegistration.called).toBe(true);
         });
       });
 
       it('should subscribe the registration to the push manager', () => {
         return thunk().then(() => {
-          chai.expect(subscribeToPushManager.called).to.be.true;
-          chai.expect(subscribeToPushManager.args[0][0]).to.equal(
+          expect(subscribeToPushManager.called).toBe(true);
+          expect(subscribeToPushManager.args[0][0]).toEqual(
             serviceWorkerRegistration,
           );
         });
@@ -250,14 +250,14 @@ describe('notificationActions', () => {
         subscribeToPushManager.resolves();
 
         return thunk().then(() => {
-          chai.expect(sendSubscriptionToServer.called).to.be.false;
+          expect(sendSubscriptionToServer.called).toBe(false);
         });
       });
 
       it('should send the subscription to server', () => {
         return thunk().then(() => {
-          chai.expect(sendSubscriptionToServer.called).to.be.true;
-          chai.expect(sendSubscriptionToServer.args[0][0]).to.equal(
+          expect(sendSubscriptionToServer.called).toBe(true);
+          expect(sendSubscriptionToServer.args[0][0]).toEqual(
             subscription,
           );
         });
@@ -265,8 +265,8 @@ describe('notificationActions', () => {
 
       it('should set the worker variables of the subscription', () => {
         return thunk().then(() => {
-          chai.expect(setWorkerVariables.called).to.be.true;
-          chai.expect(setWorkerVariables.args[0][0]).to.equal(
+          expect(setWorkerVariables.called).toBe(true);
+          expect(setWorkerVariables.args[0][0]).toEqual(
             subscription,
           );
         });
@@ -276,7 +276,7 @@ describe('notificationActions', () => {
         return thunk().then(() => {
           const action = actions.notificationsEnabled(true);
 
-          chai.expect(dispatch.args[1][0]).to.deep.equal(action);
+          expect(dispatch.args[1][0]).toEqual(action);
         });
       });
 
@@ -291,8 +291,8 @@ describe('notificationActions', () => {
           const enabled = actions.notificationsEnabled(false);
           const errorAction = addError(error);
 
-          chai.expect(dispatch.args[1][0]).to.deep.equal(enabled);
-          chai.expect(dispatch.args[2][0]).to.deep.equal(errorAction);
+          expect(dispatch.args[1][0]).toEqual(enabled);
+          expect(dispatch.args[2][0]).toEqual(errorAction);
         });
       });
     });

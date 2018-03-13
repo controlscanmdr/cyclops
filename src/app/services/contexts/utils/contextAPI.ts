@@ -21,8 +21,8 @@ import { CancelToken } from 'axios';
 
 // Local
 import * as cyphonAPI from '../../cyphon/utils/cyphonAPI';
-import { Context, ContextSearchParams, ContextFilter } from '../types';
-import { Result } from '../../../types/result';
+import { ContextSearchParams } from '../types';
+import { Result } from '~/types/result';
 import { APIList } from '../../cyphon/types';
 
 /**

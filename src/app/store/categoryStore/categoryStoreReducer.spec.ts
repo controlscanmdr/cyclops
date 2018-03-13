@@ -16,7 +16,7 @@
  * are made]
  */
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import {
@@ -44,7 +44,7 @@ describe('categoryStore', () => {
       const action = actions.fetchCategoriesSuccess(list);
       const state = categoryStore(INITIAL_STATE, action);
 
-      chai.expect(state).to.deep.equal(normalized);
+      expect(state).toEqual(normalized);
     });
   });
 });

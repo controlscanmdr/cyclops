@@ -18,7 +18,6 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
 
 // Local
 import * as test from './notifications';
@@ -43,45 +42,14 @@ describe('notifications', () => {
     it('should reach out to the correct url', () => {
       test.sendSubscriptionToServer(subscription);
 
-      chai.expect(post.args[0][0]).to.equal('/notifications/subscribe/');
+      expect(post.args[0][0]).toEqual('/notifications/subscribe/');
     });
 
     it('should pass the registration id from the subscription', () => {
       test.sendSubscriptionToServer(subscription);
 
-      chai.expect(post.args[0][1]).to.deep.equal({
+      expect(post.args[0][1]).toEqual({
         registration_id: registrationId,
-      });
-    });
-  });
-
-  describe('setWorkerVariables()', () => {
-    const API_URL = '/api';
-    let postMessage: sinon.SinonSpy;
-    let getConfig: sinon.SinonStub;
-    let hold: any;
-
-    beforeEach(() => {
-      hold = navigator;
-      postMessage = sinon.spy();
-      navigator = ({
-        serviceWorker: {
-          controller: { postMessage },
-        },
-      } as any);
-      getConfig = sinon.stub(config, 'getConfig').returns({ API_URL });
-    });
-
-    afterEach(() => {
-      getConfig.restore();
-      navigator = hold;
-    });
-
-    it('should push the correct notification url', () => {
-      test.setWorkerVariables(subscription);
-
-      chai.expect(postMessage.args[0][0]).to.deep.equal({
-        notificationUrl: '/api/notifications/?registration_id=12345',
       });
     });
   });

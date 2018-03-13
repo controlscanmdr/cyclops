@@ -25,7 +25,7 @@ import { ReduxAction } from '../types';
 import * as actions from './alertListActions';
 import {
   UPDATE_ALERT_SUCCESS,
-  UpdateAlertSuccessPayload,
+  UpdateAlertSuccessAction,
 } from '../alertDetail/alertDetailActions';
 import {
   AlertListItem,
@@ -199,12 +199,10 @@ reducers[actions.POLL_ALERTS_SUCCESS] = (
 /**
  * Updates the AlertList reducer based on a(n) POLL_ALERTS_FAILURE action.
  * @param state Current AlertList reducer state.
- * @param action POLL_ALERTS_FAILURE action.
  * @returns {State} Updated AlertList reducer state.
  */
 reducers[actions.POLL_ALERTS_FAILURE] = (
   state: AlertListState,
-  action: ReduxAction<actions.PollAlertsFailurePayload>,
 ): AlertListState => {
   const update: Partial<AlertListState> = {
     polling: false,
@@ -280,7 +278,7 @@ reducers[actions.DISABLE_POLLING] = (
  */
 reducers[UPDATE_ALERT_SUCCESS] = (
   state: AlertListState,
-  action: ReduxAction<UpdateAlertSuccessPayload>,
+  action: UpdateAlertSuccessAction,
 ): AlertListState => {
   // Find array index of alert.
   const alertIndex = _.findIndex(

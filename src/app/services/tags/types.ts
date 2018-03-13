@@ -31,9 +31,6 @@ export interface Topic {
 export interface Tag {
   id: number;
   name: string;
-}
-
-export interface TagWithTopic extends Tag {
   topic: Topic;
 }
 

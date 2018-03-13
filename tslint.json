@@ -1,5 +1,6 @@
 {
-  "extends": ["tslint:recommended", "tslint-react"],
+  "extends": ["tslint-config-airbnb", "tslint-react"],
+  "defaultSeverity": "warning",
   "rules": {
     "quotemark": [true, "single", "jsx-double"],
     "ordered-imports": false,
@@ -9,6 +10,7 @@
     "one-line": [true, "check-catch"],
     "semicolon": [true, "always", "ignore-bound-class-methods"],
     "object-literal-sort-keys": false,
-    "no-string-literal": false
+    "no-string-literal": false,
+    "curly": [true, "ignore-same-line"]
   }
 }

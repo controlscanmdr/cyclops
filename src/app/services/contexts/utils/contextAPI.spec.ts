@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as api from '../../cyphon/utils/cyphonAPI';
@@ -39,8 +39,8 @@ describe('api.contexts.api', () => {
     it('should call the correct url', () => {
       contextAPI.searchContext(4, {} as any);
 
-      chai.expect(get.called).to.be.true;
-      chai.expect(get.args[0][0]).to.equal('/contexts/4/related-data-by-id/');
+      expect(get.called).toBe(true);
+      expect(get.args[0][0]).toEqual('/contexts/4/related-data-by-id/');
     });
 
     it('should pass the params to the get options', () => {
@@ -48,8 +48,8 @@ describe('api.contexts.api', () => {
 
       contextAPI.searchContext(4, params);
 
-      chai.expect(get.called).to.be.true;
-      chai.expect(get.args[0][1]).to.deep.equal({
+      expect(get.called).toBe(true);
+      expect(get.args[0][1]).toEqual({
         params,
         cancelToken: undefined,
       });
@@ -61,8 +61,8 @@ describe('api.contexts.api', () => {
 
       contextAPI.searchContext(4, params, cancelToken);
 
-      chai.expect(get.called).to.be.true;
-      chai.expect(get.args[0][1]).to.deep.equal({
+      expect(get.called).toBe(true);
+      expect(get.args[0][1]).toEqual({
         params,
         cancelToken,
       });

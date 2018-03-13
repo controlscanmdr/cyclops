@@ -42,7 +42,7 @@ describe('<SearchBar />', () => {
     const initialValue = 'test';
     const component = render({ initialValue });
 
-    expect(component.state('query')).to.equal(initialValue);
+    expect(component.state('query')).toEqual(initialValue);
   });
 
   it('should update the state when the input value changes', () => {
@@ -51,7 +51,7 @@ describe('<SearchBar />', () => {
 
     input.simulate('change', { currentTarget: { value: 'test' } });
 
-    expect(component.state('query')).to.equal('test');
+    expect(component.state('query')).toEqual('test');
   });
 
   it('should submit the query when the user presses enter', () => {
@@ -61,8 +61,8 @@ describe('<SearchBar />', () => {
     component.setState({ query: 'test' });
     input.simulate('keypress', { key: 'Enter' });
 
-    expect(onSubmit.called).to.be.true;
-    expect(onSubmit.args[0][0]).to.equal('test');
+    expect(onSubmit.called).toBe(true);
+    expect(onSubmit.args[0][0]).toEqual('test');
   });
 
   it('should submit the query when the user presses the submit button', () => {
@@ -72,7 +72,7 @@ describe('<SearchBar />', () => {
     component.setState({ query: 'test' });
     button.simulate('click');
 
-    expect(onSubmit.called).to.be.true;
-    expect(onSubmit.args[0][0]).to.equal('test');
+    expect(onSubmit.called).toBe(true);
+    expect(onSubmit.args[0][0]).toEqual('test');
   });
 });

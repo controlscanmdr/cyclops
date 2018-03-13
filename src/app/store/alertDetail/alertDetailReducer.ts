@@ -22,33 +22,29 @@ import { AlertDetail } from '~/services/alerts/types';
 import * as actions from './alertDetailActions';
 import { ResultIPAdresses } from '~/types/result';
 import * as requests from '~/services/cyphon/utils/requests';
-import { createReducer } from '~/store/utils';
-import { ReducerMap } from '~/store/types';
+import * as alertDetailTagActions from '~/store/alertDetailTag/alertDetailTagActions';
 
-/** State shape of the AlertDetail reducer. */
+// State shape of the alert detail reducer.
 export interface AlertDetailState {
-  /** ID of the currently selected alerts. */
+  // ID of the currently selected alerts.
   alertId: number | null;
-  /** Locations from the alerts data with their addresses. */
+  // Locations from the alerts data with their addresses.
   locations: LocationFieldAddress[] | null;
-  /** GeoJSON markers of the currently selected alerts. */
+  // GeoJSON markers of the currently selected alerts.
   markers: Markers | null;
-  /** Currently selected alerts. */
+  // Currently selected alert.
   alert: AlertDetail | null;
-  /** If a loading icon should be shown. */
+  // If a loading icon should be shown.
   loading: boolean;
-  /** IP address fields related to the alert. */
+  // IP address fields related to the alert.
   ipAddresses: ResultIPAdresses | null;
-  /** If the data modal is active. */
+  // If the data modal is active.
   modalActive: boolean;
-  /** Error message that doesn't require the error popup. */
+  // Error message that doesn't require the error popup.
   error: string[];
 }
 
-/**
- * Initial state of the AlertDetail reducer.
- * @type {State}
- */
+// Initial state of the reducer.
 export const INITIAL_STATE: AlertDetailState = {
   alert: null,
   alertId: null,
@@ -60,196 +56,106 @@ export const INITIAL_STATE: AlertDetailState = {
   error: [],
 };
 
-const reducers: ReducerMap<AlertDetailState> = {};
-
-/**
- * Unique identifier of the canceler function on the requests store.
- * @type {string}
- */
+// Unique identifier of the canceler function on the requests store.
 export const REQUEST_ID = 'ALERT_DETAIL';
 
-/**
- * Updates the AlertDetail reducer based on a(n) CLOSE_ALERT action.
- * @param state Current AlertDetail reducer state.
- * @param action CLOSE_ALERT action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.CLOSE_ALERT] = (
-  state: AlertDetailState,
-  action: actions.CloseAlertAction,
-): AlertDetailState => {
-  requests.cancel(REQUEST_ID);
+type Actions =
+  actions.CloseAlertAction |
+  actions.FetchAlertAction |
+  actions.FetchAlertSuccessAction |
+  actions.RequestPendingAction |
+  actions.RequestFailedAction |
+  actions.UpdateAlertAction |
+  actions.UpdateAlertSuccessAction |
+  actions.UpdateAlertFailedAction |
+  actions.OpenDataModalAction |
+  actions.CloseDataModalAction |
+  actions.AddErrorMessageAction |
+  actions.CloseErrorMessageAction |
+  alertDetailTagActions.AddTagAction |
+  alertDetailTagActions.AddTagSuccessAction |
+  alertDetailTagActions.AddTagFailureAction |
+  alertDetailTagActions.RemoveTagAction |
+  alertDetailTagActions.RemoveTagSuccessAction |
+  alertDetailTagActions.RemoveTagFailedAction;
 
-  return Object.assign({}, state, INITIAL_STATE);
-};
+// Reducer for the alert detail view.
+export function alertDetail(
+  state: AlertDetailState = INITIAL_STATE,
+  action: Actions,
+): AlertDetailState {
+  switch (action.type) {
 
-/**
- * Updates the AlertDetail reducer based on a(n) FETCH_ALERT_PENDING action.
- * @param state Current AlertDetail reducer state.
- * @param action FETCH_ALERT_PENDING action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.FETCH_ALERT_PENDING] = (
-  state: AlertDetailState,
-  action: actions.FetchAlertPendingAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    alertId: action.payload.alertId,
-    loading: true,
-  };
+    case actions.CLOSE_ALERT:
+      requests.cancel(REQUEST_ID);
 
-  requests.cancel(REQUEST_ID);
-  requests.set(REQUEST_ID, action.payload.canceler);
+      return { ...state, ...INITIAL_STATE };
 
-  return Object.assign({}, state, update);
-};
+    case actions.FETCH_ALERT:
+      requests.cancel(REQUEST_ID);
+      requests.set(REQUEST_ID, action.payload.canceler!);
 
-/**
- * Updates the AlertDetail reducer based on a(n) FETCH_ALERT_SUCCESS action.
- * @param state Current AlertDetail reducer state.
- * @param action FETCH_ALERT_SUCCESS action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.FETCH_ALERT_SUCCESS] = (
-  state: AlertDetailState,
-  action: actions.FetchAlertSuccessAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    alert: action.payload.alert,
-    loading: false,
-    locations: action.payload.locations,
-    markers: action.payload.markers,
-  };
+      return {
+        ...state,
+        alertId: action.payload.alertID,
+        loading: true,
+      };
 
-  return Object.assign({}, state, update);
-};
+    case actions.FETCH_ALERT_SUCCESS:
+      return {
+        ...state,
+        alert: action.payload.alert,
+        loading: false,
+        locations: action.payload.locations,
+        markers: action.payload.markers,
+      };
 
-/**
- * Updates the AlertDetail reducer based on a(n) REQUEST_PENDING action.
- * @param state Current AlertDetail reducer state.
- * @param action REQUEST_PENDING action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.REQUEST_PENDING] = (
-  state: AlertDetailState,
-  action: actions.RequestPendingAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    loading: true,
-  };
+    case actions.REQUEST_PENDING:
+      requests.cancel(REQUEST_ID);
+      requests.set(REQUEST_ID, action.payload);
 
-  requests.cancel(REQUEST_ID);
-  requests.set(REQUEST_ID, action.payload);
+      return { ...state, loading: true };
 
-  return Object.assign({}, state, update);
-};
+    case actions.REQUEST_FAILED:
+    case actions.UPDATE_ALERT_FAILED:
+    case alertDetailTagActions.ADD_TAG_SUCCESS:
+    case alertDetailTagActions.ADD_TAG_FAILURE:
+    case alertDetailTagActions.REMOVE_TAG_SUCCESS:
+    case alertDetailTagActions.REMOVE_TAG_FAILED:
+      return { ...state, loading: false };
 
-/**
- * Updates the AlertDetail reducer based on a(n) REQUEST_FAILED action.
- * @param state Current AlertDetail reducer state.
- * @param action REQUEST_FAILED action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.REQUEST_FAILED] = (
-  state: AlertDetailState,
-  action: actions.RequestFailedAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    loading: false,
-  };
+    case actions.UPDATE_ALERT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        alert: {
+          ...state.alert,
+          ...action.payload,
+        },
+      };
 
-  return Object.assign({}, state, update);
-};
+    case actions.OPEN_DATA_MODAL:
+      return {
+        ...state,
+        ipAddresses: action.payload,
+        modalActive: true,
+      };
 
-/**
- * Updates the AlertDetail reducer based on a(n) UPDATE_ALERT_SUCCESS action.
- * @param state Current AlertDetail reducer state.
- * @param action UPDATE_ALERT_SUCCESS action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.UPDATE_ALERT_SUCCESS] = (
-  state: AlertDetailState,
-  action: actions.UpdateAlertSuccessAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    alert: Object.assign({}, state.alert, action.payload),
-    loading: false,
-  };
+    case actions.CLOSE_DATA_MODAL:
+      return { ...state, modalActive: false };
 
-  return Object.assign({}, state, update);
-};
+    case actions.ADD_ERROR_MESSAGE:
+      return { ...state, error: action.payload };
 
-/**
- * Updates the AlertDetail reducer based on a(n) OPEN_DATA_MODAL action.
- * @param state Current AlertDetail reducer state.
- * @param action OPEN_DATA_MODAL action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.OPEN_DATA_MODAL] = (
-  state: AlertDetailState,
-  action: actions.OpenDataModalAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    ipAddresses: action.payload,
-    modalActive: true,
-  };
+    case actions.CLOSE_ERROR_MESSAGE:
+      return { ...state, error: [] };
 
-  return Object.assign({}, state, update);
-};
+    case actions.UPDATE_ALERT:
+    case alertDetailTagActions.ADD_TAG:
+    case alertDetailTagActions.REMOVE_TAG:
+      return { ...state, loading: true };
 
-/**
- * Updates the AlertDetail reducer based on a(n) CLOSE_DATA_MODAL action.
- * @param state Current AlertDetail reducer state.
- * @param action CLOSE_DATA_MODAL action.
- * @returns {State} Updated AlertDetail reducer state.
- */
-reducers[actions.CLOSE_DATA_MODAL] = (
-  state: AlertDetailState,
-  action: actions.CloseDataModalAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    modalActive: false,
-  };
-
-  return Object.assign({}, state, update);
-};
-
-/**
- * Updates the AlertDetailReducer based on a(n) ADD_ERROR_MESSAGE action.
- * @param state Current AlertDetailReducer state.
- * @param action ADD_ERROR_MESSAGE action.
- * @returns {State} Updated AlertDetailReducer state.
- */
-reducers[actions.ADD_ERROR_MESSAGE] = (
-  state: AlertDetailState,
-  action: actions.AddErrorMessageAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    error: action.payload,
-  };
-
-  return Object.assign({}, state, update);
-};
-
-/**
- * Updates the AlertDetailReducer based on a(n) CLOSE_ERROR_MESSAGE action.
- * @param state Current AlertDetailReducer state.
- * @param action CLOSE_ERROR_MESSAGE action.
- * @returns {State} Updated AlertDetailReducer state.
- */
-reducers[actions.CLOSE_ERROR_MESSAGE] = (
-  state: AlertDetailState,
-  action: actions.CloseErrorMessageAction,
-): AlertDetailState => {
-  const update: Partial<AlertDetailState> = {
-    error: [],
-  };
-
-  return Object.assign({}, state, update);
-};
-
-/**
- * Reducer for the alert detail view.
- * @type {Reducer<State, any>}
- */
-export const alertDetail = createReducer<AlertDetailState>(INITIAL_STATE, reducers);
+    default:
+      return state;
+  }
+}

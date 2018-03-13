@@ -17,7 +17,7 @@
  */
 
 // Vendor
-import * as chai from 'chai';
+
 
 // Local
 import { updateNormalizedList } from './normalizrUtils';
@@ -61,6 +61,6 @@ describe('updateNormalizedData()', () => {
   it('should update a normalized list with another normalized list', () => {
     const update = updateNormalizedList(normalized1, normalized2);
 
-    chai.expect(update).to.deep.equal(correctUpdate);
+    expect(update).toEqual(correctUpdate);
   });
 });

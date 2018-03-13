@@ -19,25 +19,20 @@
 // Vendor
 import * as React from 'react';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Properties of the AlertDetailOutcomeRemove component. */
 interface Props {
-  /** Cancels removing the alert outcome. */
-  close(): any;
-  /** Removes the alert outcome. */
-  remove(): void;
+  // Function run when the close button is clicked.
+  onCancelClick(): any;
+  // Function run when the remove button is clicked.
+  onRemoveClick(): void;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
-/**
- * Displays a button that removes the current outcome for an alert.
- */
+// Displays a button that removes the current outcome for an alert.
 export class AlertDetailOutcomeRemove extends React.Component<Props, {}> {
   public render() {
     return (
@@ -52,12 +47,12 @@ export class AlertDetailOutcomeRemove extends React.Component<Props, {}> {
 
         <div className="btn-group btn-group-justified">
           <div className="btn-group">
-            <button className="btn btn-default" onClick={this.props.remove}>
+            <button className="btn btn-default" onClick={this.props.onRemoveClick}>
               Remove
             </button>
           </div>
           <div className="btn-group">
-            <button className="btn btn-danger" onClick={this.props.close}>
+            <button className="btn btn-danger" onClick={this.props.onCancelClick}>
               Cancel
             </button>
           </div>

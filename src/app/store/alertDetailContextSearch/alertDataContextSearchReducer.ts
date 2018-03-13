@@ -17,7 +17,6 @@
  */
 
 // Vendor
-import { Canceler } from 'axios';
 import {
   ReducerMap,
   handleActions,

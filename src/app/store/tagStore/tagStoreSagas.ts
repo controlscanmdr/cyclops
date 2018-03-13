@@ -17,34 +17,30 @@
  */
 
 // Vendor
-import * as React from 'react';
+import { SagaIterator } from 'redux-saga';
+import { put, takeEvery, call, all } from 'redux-saga/effects';
 
 // Local
-import { TagWithTopic } from '~/services/tags/types';
-
-// --------------------------------------------------------------------------
-// Interfaces/Types
-// --------------------------------------------------------------------------
-
-interface Props {
-  tag: TagWithTopic;
-}
-
-// --------------------------------------------------------------------------
-// Component
-// --------------------------------------------------------------------------
+import * as actions from './tagStoreActions';
+import { fetchAllTags } from '~/services/tags/services/tagAPI';
+import { addError } from '~/store/errorModal';
 
 /**
- * Name of a tag object in a label.
+ * Saga that fetches the current list of all tags.
+ * @returns {SagaIterator}
  */
-export class TagLabel extends React.Component<Props, {}> {
-  public render() {
-    return (
-      <div className="tag">
-        <b>{this.props.tag.topic.name}:</b>
-        {' '}
-        {this.props.tag.name}
-      </div>
-    );
+export function * fetchTagListSaga(): SagaIterator {
+  try {
+    const tags = yield call(fetchAllTags);
+    yield put(actions.fetchTagsSuccess(tags));
+  } catch (error) {
+    yield put(actions.fetchTagsFailure());
+    yield put(addError(error));
   }
+}
+
+export function * tagStoreSagas(): SagaIterator {
+  yield all([
+    takeEvery(actions.FETCH_TAGS, fetchTagListSaga),
+  ]);
 }

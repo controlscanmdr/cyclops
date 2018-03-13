@@ -22,44 +22,72 @@ import * as _ from 'lodash';
 
 import './JSONTableRow.scss';
 
+// Types
+// --------------------------------------------------------------------------
+
 interface Props {
+  // Data to display.
   data: any;
+
+  // Field name of the data.
   field: string;
 }
 
 interface State {
+  // If the data is too big for the data limiter element.
   isOverflowing: boolean;
+
+  // If the data limiter is currently extended to view all the data.
   isOpen: boolean;
 }
 
+// Regex that can check if a string is a url.
 const URL_MATCH_REGEX = /^https?:\/\//;
+
+// Maximum height of a limited data container.
 const MAX_DATA_HEIGHT = 250;
 
+/**
+ * Determines if data is a url.
+ * @param data
+ * @returns {boolean}
+ */
 function isURL(data: any): boolean {
   return _.isString(data) && URL_MATCH_REGEX.test(data);
 }
 
+// Component
+// --------------------------------------------------------------------------
+
 export class JSONTableRow extends React.Component<Props, State> {
-  public state: State = {
+  state: State = {
     isOverflowing: false,
     isOpen: false,
   };
 
-  public dataContainer: HTMLDivElement;
+  // Reference to the data limiter element.
+  dataContainer: HTMLDivElement;
 
-  public setDataContainer = (ref: HTMLDivElement) => this.dataContainer = ref;
+  /**
+   * Sets the data container variable to the element reference.
+   * @param {HTMLDivElement} ref
+   * @returns {HTMLDivElement}
+   */
+  setDataContainer = (ref: HTMLDivElement) => this.dataContainer = ref;
 
-  public handleDropdownClick = () => {
+  // Handles the dropdown click action
+  handleDropdownClick = () => {
     this.setState({ isOpen: !this.state.isOpen });
   };
 
-  public componentDidMount() {
+  componentDidMount() {
     this.setState({
       isOverflowing: this.dataContainer.offsetHeight >= MAX_DATA_HEIGHT,
     });
   }
 
-  public getOverflowVisibilityButton = (): JSX.Element | null => {
+  // Creates the button that allows any overflow content to be viewable.
+  getOverflowVisibilityButton = (): JSX.Element | null => {
     if (!this.state.isOverflowing) { return null; }
 
     const classes = classnames('fa', {
@@ -77,7 +105,8 @@ export class JSONTableRow extends React.Component<Props, State> {
     );
   };
 
-  public getDataLimiterStyles = (): React.CSSProperties => {
+  // Returns the CSS styles of the parent container that limits the data view.
+  getDataLimiterStyles = (): React.CSSProperties => {
     const styles: React.CSSProperties = {};
 
     if (!this.state.isOpen) { styles.maxHeight = MAX_DATA_HEIGHT; }
@@ -85,7 +114,8 @@ export class JSONTableRow extends React.Component<Props, State> {
     return styles;
   };
 
-  public formatData = (): JSX.Element => {
+  // Formats a row of data if it's a link.
+  formatData = (): JSX.Element => {
     return isURL(this.props.data)
       ? (
         <a
@@ -99,9 +129,10 @@ export class JSONTableRow extends React.Component<Props, State> {
       : this.props.data;
   };
 
-  public getRowContent = (): JSX.Element | JSX.Element[] => {
-    return this.state.isOpen
-      ? (
+  // Returns the main content of the table row.
+  getRowContent = (): JSX.Element | JSX.Element[] => {
+    if (this.state.isOpen) {
+      return (
         <td colSpan={2}>
           <div className="JSONTableRow__Field JSONTableRow__FieldTitle">
             {this.props.field}
@@ -109,23 +140,29 @@ export class JSONTableRow extends React.Component<Props, State> {
           <div className="JSONTableRow__Data">{this.formatData()}</div>
           {this.getOverflowVisibilityButton()}
         </td>
-      ) : [(
-        <td className="JSONTableRow__Field">{this.props.field}</td>
-      ), (
-        <td className="JSONTableRow__Data">
-          <div
-            className="JSONTableRow__DataLimiter"
-            style={this.getDataLimiterStyles()}
-            ref={this.setDataContainer}
-          >
-            {this.formatData()}
-          </div>
-          {this.getOverflowVisibilityButton()}
-        </td>
-      )];
+      );
+    }
+
+    const cells: JSX.Element[] = [];
+
+    cells.push(<td className="JSONTableRow__Field">{this.props.field}</td>);
+    cells.push((
+      <td className="JSONTableRow__Data">
+        <div
+          className="JSONTableRow__DataLimiter"
+          style={this.getDataLimiterStyles()}
+          ref={this.setDataContainer}
+        >
+          {this.formatData()}
+        </div>
+        {this.getOverflowVisibilityButton()}
+      </td>
+    ));
+
+    return cells;
   };
 
-  public render() {
+  render() {
     return (
       <tr className="JSONTableRow">
         {this.getRowContent()}

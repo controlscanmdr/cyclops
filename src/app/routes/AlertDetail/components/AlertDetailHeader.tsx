@@ -27,36 +27,28 @@ import {
 } from 'react-bootstrap';
 
 // Local
-import { Result } from '../../../types/result';
-import { ContainerNested } from '../../../services/containers/types';
+import { AlertLevelChoices } from '~/services/alerts/types';
 
-// --------------------------------------------------------------------------
-// Interfaces/Types
+// Types
 // --------------------------------------------------------------------------
 
-/**
- * Properties of the AlertDetailHeader component.
- */
 interface Props {
-  /** The selected alerts level. */
-  alertLevel: string;
-  /** The selected alerts ID. */
+  // The selected alerts level.
+  level: AlertLevelChoices;
+
+  // The selected alert ID.
   alertId: number;
-  /** The selected alerts data. */
-  alertData: Result;
-  /** Container associated with the alert. */
-  alertContainer?: ContainerNested;
-  /**
-   * Opens a modal to analyze the alert data.
-   * @param data Data of the alert to analyze.
-   * @param container Container related to the alert data.
-   */
-  openDataModal(data: Result, container: ContainerNested): any;
-  /** Closes the alert detail. */
-  closeAlert(): any;
+
+  // If the analyze button should be disabled.
+  disableAnalyzeButton: boolean;
+
+  // Function run when the analyze button is clicked.
+  onAnalyze(): any;
+
+  // Function run when the close button is clicked
+  onClose(): any;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
@@ -69,7 +61,7 @@ export class AlertDetailHeader extends React.Component<Props, {}> {
    * Popover element that displays a tooltip for analyzing alerts data.
    * @type {JSX.Element}
    */
-  public static analyzePopover: JSX.Element = (
+  static analyzePopover: JSX.Element = (
     <Popover id="alert-detail-header-analyze">Analyze</Popover>
   );
 
@@ -77,36 +69,17 @@ export class AlertDetailHeader extends React.Component<Props, {}> {
    * Popover element that displays a tooltop for close the alerts.
    * @type {JSX.Element}
    */
-  public static closeAlertPopover: JSX.Element = (
+  static closeAlertPopover: JSX.Element = (
     <Popover id="alert-detail-header-close">Close</Popover>
   );
 
-  /**
-   * Analyzes the current alerts data.
-   */
-  public analyzeAlert = (): void => {
-    if (this.props.alertContainer) {
-      this.props.openDataModal(
-        this.props.alertData,
-        this.props.alertContainer,
-      );
-    }
-  };
-
-  /**
-   * Closes the current alerts detail.
-   */
-  public closeAlert = (): void => {
-    this.props.closeAlert();
-  };
-
-  public render(): JSX.Element {
+  render(): JSX.Element {
     const headerClasses = classNames(
       'flex-item',
       'flex--shrink',
       'clearfix',
       'alert-detail-header',
-      `alert-detail-header--${this.props.alertLevel.toLowerCase()}`,
+      `alert-detail-header--${this.props.level.toLowerCase()}`,
     );
 
     return (
@@ -124,8 +97,8 @@ export class AlertDetailHeader extends React.Component<Props, {}> {
               >
                 <button
                   className="btn btn-alt"
-                  disabled={!this.props.alertContainer}
-                  onClick={this.analyzeAlert}
+                  disabled={this.props.disableAnalyzeButton}
+                  onClick={this.props.onAnalyze}
                 >
                   <i className="fa fa-flask" />
                 </button>
@@ -135,7 +108,7 @@ export class AlertDetailHeader extends React.Component<Props, {}> {
                 placement="bottom"
                 animation={false}
               >
-                <Button onClick={this.closeAlert}>
+                <Button onClick={this.props.onClose}>
                   <i className="fa fa-close"/>
                 </Button>
               </OverlayTrigger>

@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import { isCurrentUser } from './isCurrentUser';
@@ -38,10 +38,10 @@ describe('isCurrentUser()', () => {
   });
 
   it('should return true if it is the current user', () => {
-    chai.expect(isCurrentUser({ id: 1 } as any)).to.be.true;
+    expect(isCurrentUser({ id: 1 } as any)).toBe(true);
   });
 
   it('should return false if it is not the current user', () => {
-    chai.expect(isCurrentUser({ id: 2 } as any)).to.be.false;
+    expect(isCurrentUser({ id: 2 } as any)).toBe(false);
   });
 });

@@ -17,7 +17,6 @@
  */
 
 export { AlertListRouteComponent } from './AlertList';
-export { AlertDetailRouteComponent } from './AlertDetail'
 export { AppRouteComponent } from './App';
 export { DashboardRouteComponent } from './Dashboard';
 export { SearchRouteComponent } from './Search';

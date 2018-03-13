@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import { shallow, ShallowWrapper } from 'enzyme';
 
@@ -38,21 +38,21 @@ describe('<Close />', () => {
   it('should create an overlay trigger', () => {
     const overlayTriggers = wrapper.find(OverlayTrigger);
 
-    chai.expect(overlayTriggers).to.have.length(1);
+    expect(overlayTriggers).toHaveLength(1);
 
     const props = overlayTriggers.first().props();
 
-    chai.expect(props.overlay.type).to.equal(Popover);
-    chai.expect(props.placement).to.equal('bottom');
-    chai.expect(props.animation).to.equal(false);
+    expect(props.overlay.type).toEqual(Popover);
+    expect(props.placement).toEqual('bottom');
+    expect(props.animation).toEqual(false);
   });
 
   it('should attach the close function to the button', () => {
-    chai.expect(wrapper.find('button').first().prop('onClick')).to.equal(close);
+    expect(wrapper.find('button').first().prop('onClick')).toEqual(close);
   });
 
   it('should run the close function on click', () => {
     wrapper.find('button').simulate('click');
-    chai.expect(close.called).to.be.true;
+    expect(close.called).toBe(true);
   });
 });

@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import * as monitorsAPI from './monitorAPI';
@@ -38,7 +38,7 @@ describe('monitorsAPI', () => {
   describe('fetchMonitorList()', () => {
     it('should call the correct url', () => {
       monitorsAPI.fetchMonitorList();
-      chai.expect(get.args[0][0]).to.equal('/monitors/enabled/');
+      expect(get.args[0][0]).toEqual('/monitors/enabled/');
     });
   });
 });

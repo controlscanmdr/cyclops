@@ -19,11 +19,12 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
 import * as enzyme from 'enzyme';
 
 // Local
 import { User } from '~/services/users/types';
+import * as config from '~/config';
+import { AlertDetailUserSelect } from './AlertDetailUserSelect';
 
 describe('<AlertDetailUserSelect />', () => {
   let wrapper: enzyme.ShallowWrapper<any, any>;
@@ -43,25 +44,27 @@ describe('<AlertDetailUserSelect />', () => {
   });
 
   describe('render', () => {
-    // it('should not show a SubtleSelect if the current user is not staff', () => {
-    //   CONFIG.CURRENT_USER.is_staff = false;
-    //
-    //   wrapper = enzyme.shallow((
-    //     <AlertDetailUserSelect
-    //       currentUser={user}
-    //       users={[]}
-    //       selectUser={selectUser}
-    //     />
-    //   ));
-    //
-    //   chai.expect(wrapper.find('SubtleSelect').length).to.equal(0);
-    //
-    //   const span = wrapper.find('span');
-    //
-    //   chai.expect(span.length).to.equal(1);
-    //   chai.expect(span.text()).to.equal('Bob Saget');
-    //
-    //   CONFIG.CURRENT_USER.is_staff = true;
-    // });
+    it('should not show a SubtleSelect if the current user is not staff', () => {
+      const getConfig = sinon
+        .stub(config, 'getConfig')
+        .returns({ CURRENT_USER: { is_staff: false } });
+
+      wrapper = enzyme.shallow((
+        <AlertDetailUserSelect
+          currentUser={user}
+          users={[]}
+          selectUser={selectUser}
+        />
+      ));
+
+      expect(wrapper.find('SubtleSelect').length).toEqual(0);
+
+      const span = wrapper.find('span');
+
+      expect(span.length).toEqual(1);
+      expect(span.text()).toEqual('Bob Saget');
+
+      getConfig.restore();
+    });
   });
 });

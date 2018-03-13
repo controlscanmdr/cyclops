@@ -19,7 +19,7 @@
 // Vendor
 import * as React from 'react';
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 import * as enzyme from 'enzyme';
 
 // Local
@@ -45,7 +45,7 @@ describe('<Header />', () => {
 
     const adminLink = wrapper.find('#admin-link');
 
-    chai.expect(adminLink).to.have.length(0);
+    expect(adminLink).toHaveLength(0);
   });
 
   it('should display an admin link if ADMIN_URL is present in the config', () => {
@@ -56,7 +56,7 @@ describe('<Header />', () => {
 
     const adminLink = wrapper.find('#admin-link');
 
-    chai.expect(adminLink).to.have.length(1);
-    chai.expect(adminLink.first().prop('href')).to.equal(adminUrl);
+    expect(adminLink).toHaveLength(1);
+    expect(adminLink.first().prop('href')).toEqual(adminUrl);
   });
 });

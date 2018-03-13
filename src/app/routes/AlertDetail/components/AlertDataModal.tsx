@@ -57,10 +57,8 @@ interface Props {
   /** GeoJSON markers generated from the alert data. */
   markers: Markers | null;
   /** Close the AlertDataModal. */
-  closeModal: CloseModal;
+  onClose(): any;
 }
-
-export type CloseModal = () => any;
 
 // --------------------------------------------------------------------------
 // Component
@@ -85,11 +83,11 @@ export class AlertDataModal extends React.Component<Props, {}> {
    * Close the modal when it unmounts and moves to a different route.
    */
   public componentWillUnmount() {
-    this.props.closeModal();
+    this.props.onClose();
   }
 
   public closeModalButton = (): void => {
-    this.props.closeModal();
+    this.props.onClose();
   };
 
   public render() {

@@ -18,7 +18,7 @@
 
 // Vendor
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+
 
 // Local
 import { currentUserIsStaff } from './currentUserIsStaff';
@@ -37,11 +37,11 @@ describe('currentUserIsStaff()', () => {
 
   it('should return true if the current user is staff', () => {
     getConfig.returns({ CURRENT_USER: { is_staff: true } });
-    chai.expect(currentUserIsStaff()).to.be.true;
+    expect(currentUserIsStaff()).toBe(true);
   });
 
   it('should return false if the current user is not staff', () => {
     getConfig.returns({ CURRENT_USER: { is_staff: false } });
-    chai.expect(currentUserIsStaff()).to.be.false;
+    expect(currentUserIsStaff()).toBe(false);
   });
 });
