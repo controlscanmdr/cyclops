@@ -16,9 +16,6 @@
  * are made]
  */
 
-// Vendor
-
-
 // Local
 import * as utils from './getUserFullName';
 
@@ -31,6 +28,12 @@ describe('api.users.utils', () => {
       };
 
       expect(utils.getUserFullName(user)).toEqual('Bob Saget');
+    });
+
+    it('should return None if there is no user', () => {
+      const user: any = undefined;
+
+      expect(utils.getUserFullName(user)).toEqual('None');
     });
   });
 });
