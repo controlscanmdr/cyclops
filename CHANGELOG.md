@@ -9,7 +9,7 @@
 ### Changed
 
 - Test suite from Karma/Webpack/Mocha/Chai to Jest. ([24271f4](https://github.com/dunbarcyber/cyclops/commit/24271f4a50813b89d22369df0e00496eb5401067))
-- Updated enzyme to version 3.3.0
+- Updated enzyme to version 3.3.0 ([cabcb5c](https://github.com/dunbarcyber/cyclops/commit/cabcb5c3dd5f8adbdd35f2a4a74f249329867ecf))
 
 ### Removed
 

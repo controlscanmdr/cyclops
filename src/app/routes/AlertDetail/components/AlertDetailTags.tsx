@@ -30,7 +30,6 @@ import { getCurrentUserId } from '~/services/users/utils/currentUserIsStaff';
 import { connect, Dispatch } from 'react-redux';
 import * as alertDetailTagActions from '~/store/alertDetailTag/alertDetailTagActions';
 import FontAwesome = require('react-fontawesome');
-import { TagRemove } from '~/services/tags/components/TagRemove';
 import { AlertDetailTagEdit } from '~/routes/AlertDetail/components/AlertDetailTagEdit';
 import { AlertDetailTagRemove } from '~/routes/AlertDetail/components/AlertDetailTagRemove';
 
@@ -38,14 +37,31 @@ import { AlertDetailTagRemove } from '~/routes/AlertDetail/components/AlertDetai
 // --------------------------------------------------------------------------
 
 export interface Props {
+  // Id of the alert containing the tags.
   alertId: number;
+
+  // Id of the currently authenticated user.
   currentUserId: number;
+
+  // List of tags associated with the alert.
   alertTags: TagType[];
+
+  // List of all the current tags.
   tagList: TagType[];
+
+  // If the edit tag panel should be shown.
   showTagPanel: boolean;
+
+  // If the current tag list is loading
   isLoadingTags: boolean;
+
+  // If a removal confirmation box should be shown.
   showRemovalConfirmation: boolean;
+
+  // Tag that is being requested for removal.
   tagToRemove?: TagType;
+
+  // Redux dispatch function.
   dispatch: Dispatch<any>;
 }
 
@@ -55,37 +71,54 @@ export interface State {}
 // --------------------------------------------------------------------------
 
 export class AlertDetailTags extends React.Component<Props, State> {
+  // Popover hinting that the button opens the edit panel.
   static EDIT_POPOVER = <Popover id="alert-detail-edit-tags">Edit</Popover>;
-  static renderTagName = (tag: TagType): JSX.Element => (
-    <span><b>{tag.topic.name}:</b> {tag.name}</span>
-  );
 
+  // Popover hinting that  the button closes the edit panel.
+  static CLOSE_POPOVER = <Popover id="alert-detail-close-tags">Close</Popover>;
+
+  // Renders the current tag list.
   renderAlertTagList = (): JSX.Element[] => {
     return this.props.alertTags.map(tag => <Tag key={tag.id} tag={tag}/>);
   };
 
+  // Opens the edit tag panel.
   openTagPanel = (): void => {
     this.props.dispatch(alertDetailTagActions.openTagPanel());
   };
 
+  // Closes the edit tag panel.
   closeTagPanel = (): void => {
     this.props.dispatch(alertDetailTagActions.closeTagPanel());
   };
 
+  /**
+   * Shows a removal confirmation for a certain tag.
+   * @param {Tag} tag Tag to remove.
+   */
   showRemovalConfirmation = (tag: TagType): void => {
     this.props.dispatch(alertDetailTagActions.showRemovalConfirmation(tag));
   };
 
+  // Cancels the tag removal.
   cancelTagRemoval = (): void => {
     this.props.dispatch(alertDetailTagActions.cancelTagRemoval());
   };
 
+  /**
+   * Removes the selected tag from the alert.
+   * @param {Tag} tag
+   */
   removeTag = (tag: TagType): void => {
     const action = alertDetailTagActions.removeTag(this.props.alertId, tag.id);
 
     this.props.dispatch(action);
   };
 
+  /**
+   * Adds the selected tag to the alert.
+   * @param {Tag} tag
+   */
   addTag = (tag: TagType): void => {
     const action = alertDetailTagActions.addTag(
       this.props.alertId,
@@ -96,12 +129,10 @@ export class AlertDetailTags extends React.Component<Props, State> {
     this.props.dispatch(action);
   };
 
+  // Opens the tag information modal.
   openTagModal = (): void => {};
 
-  renderRemovalTagList = () => {
-    return this.props.alertTags.map(tag => <TagRemove key={tag.id} tag={tag}/>);
-  };
-
+  // Renders the edit tag panel.
   renderTagPanel = (): JSX.Element => {
     return (
       <AlertDetailTagEdit
@@ -114,12 +145,14 @@ export class AlertDetailTags extends React.Component<Props, State> {
     );
   };
 
+  // Renders the current tag list.
   renderTagList = (): JSX.Element => {
     return (
       <div>{this.renderAlertTagList()}</div>
     );
   };
 
+  // Renders the removal confirmation box.
   renderRemovalConfirmation = (): JSX.Element | null => {
     if (!this.props.tagToRemove) return null;
 
@@ -132,6 +165,7 @@ export class AlertDetailTags extends React.Component<Props, State> {
     );
   };
 
+  // Renders the main content of the alert tag list.
   renderContent() {
     if (this.props.showRemovalConfirmation) return this.renderRemovalConfirmation();
     if (this.props.showTagPanel) return this.renderTagPanel();
@@ -139,8 +173,22 @@ export class AlertDetailTags extends React.Component<Props, State> {
     return this.renderTagList();
   }
 
+  // Renders the edit button next to the section title.
   renderEditButton() {
-    if (this.props.showTagPanel || this.props.showRemovalConfirmation) return null;
+    if (this.props.showRemovalConfirmation) return null;
+    if (this.props.showTagPanel) {
+      return (
+        <OverlayTrigger
+          overlay={AlertDetailTags.CLOSE_POPOVER}
+          placement="top"
+          animation={false}
+        >
+          <Button type="unstyled" onClick={this.closeTagPanel}>
+            <FontAwesome name="close" />
+          </Button>
+        </OverlayTrigger>
+      );
+    }
 
     return (
       <OverlayTrigger
