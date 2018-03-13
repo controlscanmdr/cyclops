@@ -53,14 +53,16 @@ export interface State {
 export class TagAutocomplete extends React.Component<Props, State> {
   state = { value: '' };
   /**
-   * Filters the tags based on the tags included in the exclude property.
+   * Determines if a tag should be shown in the dropdown list.
    * @param {Tag} tag
    * @returns {boolean}
    */
-  filter = (tag: Tag): boolean => {
+  shouldTagDisplay = (tag: Tag): boolean => {
     if (!this.props.exclude || !this.props.exclude.length) return true;
 
-    return Boolean(_.find(this.props.exclude, item => item.id !== tag.id));
+    const isInExcluded = Boolean(_.find(this.props.exclude, item => item.id === tag.id));
+
+    return !isInExcluded;
   };
 
   /**
@@ -68,7 +70,6 @@ export class TagAutocomplete extends React.Component<Props, State> {
    * @param {Tag} tag
    */
   handleSelect = (tag: Tag): void => {
-    this.setState({ value: getTagDisplayName(tag) });
     this.props.onSelect(tag);
   };
 
@@ -78,7 +79,7 @@ export class TagAutocomplete extends React.Component<Props, State> {
         items={this.props.tags}
         value={this.state.value}
         getValue={getTagDisplayName}
-        filter={this.filter}
+        shouldItemDisplay={this.shouldTagDisplay}
         onSelect={this.handleSelect}
       />
     );

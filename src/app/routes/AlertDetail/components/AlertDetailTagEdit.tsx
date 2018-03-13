@@ -24,6 +24,7 @@ import { Button } from 'react-bootstrap';
 import { Tag } from '~/services/tags/types';
 import { TagAutocomplete } from '~/services/tags/components/TagAutocomplete';
 import { TagRemove } from '~/services/tags/components/TagRemove';
+import './AlertDetailTagEdit.scss';
 
 // Types
 // --------------------------------------------------------------------------
@@ -34,6 +35,9 @@ export interface Props {
 
   // List of all the current tags.
   tagList: Tag[];
+
+  // If the tag list is currently being fetched.
+  isFetchingTags: boolean;
 
   /**
    * Function run when a tag is selected for removal.
@@ -72,24 +76,30 @@ export class AlertDetailTagEdit extends React.Component<Props, State> {
    * @param {Tag} tag
    */
   handleSelect = (tag: Tag): void => {
-    this.setState({ selected: tag });
+    this.props.onAdd(tag);
   };
 
-  // Runs the onAdd property function if there's a selected tag.
-  addTag = (): void => {
-    if (this.state.selected) this.props.onAdd(this.state.selected);
+  renderAutoComplete = (): JSX.Element => {
+    if (this.props.isFetchingTags) {
+      return <input className="form-control" disabled={true} placeholder="Loading..." />
+    }
+
+    return (
+      <TagAutocomplete
+        tags={this.props.tagList}
+        exclude={this.props.alertTagList}
+        onSelect={this.handleSelect}
+      />
+    );
   };
 
   render() {
     return (
       <div>
-        <TagAutocomplete
-          tags={this.props.tagList}
-          exclude={this.props.alertTagList}
-          onSelect={this.handleSelect}
-        />
-        <Button block={true} onClick={this.addTag}>Add</Button>
-        {this.renderAlertTagList()}
+        <div className="AlertDetailTagEdit__list">
+          {this.renderAlertTagList()}
+        </div>
+        {this.renderAutoComplete()}
       </div>
     );
   }

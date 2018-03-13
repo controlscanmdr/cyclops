@@ -109,6 +109,7 @@ export class AlertDetailTags extends React.Component<Props, State> {
         tagList={this.props.tagList}
         onRemove={this.showRemovalConfirmation}
         onAdd={this.addTag}
+        isFetchingTags={this.props.isLoadingTags}
       />
     );
   };

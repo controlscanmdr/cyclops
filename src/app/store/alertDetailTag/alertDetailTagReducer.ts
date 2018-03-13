@@ -19,10 +19,7 @@
 // Local
 import * as actions from './alertDetailTagActions';
 import { Tag } from '~/services/tags/types';
-import {
-  CLOSE_ALERT, CloseAlertAction, FETCH_ALERT_SUCCESS,
-  FetchAlertSuccessAction,
-} from '~/store/alertDetail';
+import { CLOSE_ALERT, CloseAlertAction } from '~/store/alertDetail';
 
 export interface AlertDetailTagState {
   // If the modification panel for tags is currently active.
@@ -46,7 +43,6 @@ type Actions =
   actions.ShowRemovalConfirmationAction |
   actions.CancelTagRemovalAction |
   actions.RemoveTagSuccessAction |
-  FetchAlertSuccessAction |
   CloseAlertAction;
 
 export function alertDetailTagReducer(
@@ -58,7 +54,6 @@ export function alertDetailTagReducer(
       return { ...state, panelIsActive: true };
 
     case actions.CLOSE_TAG_PANEL:
-    case FETCH_ALERT_SUCCESS:
     case CLOSE_ALERT:
       return INITIAL_STATE;
 

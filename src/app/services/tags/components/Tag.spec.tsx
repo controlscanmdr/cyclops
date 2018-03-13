@@ -18,39 +18,33 @@
 
 // Vendor
 import * as React from 'react';
+import * as enzyme from 'enzyme';
+import { spy } from 'sinon';
 
 // Local
+import { Tag, Props, State } from './Tag';
 import { Tag as TagType } from '~/services/tags/types';
-import { Button } from '~/components/Button';
-import FontAwesome = require('react-fontawesome');
 
-// Types
-// --------------------------------------------------------------------------
-
-export interface Props {
-  // Tag object to display.
-  tag: TagType;
-
-  // Function to run on tag click.
-  onClick?(tag: TagType): void;
-}
-
-export interface State {}
-
-// Component
-// --------------------------------------------------------------------------
-
-/** Name of a tag object in a label. */
-export class Tag extends React.Component<Props, State> {
-  handleClick = () => {
-    if (this.props.onClick) this.props.onClick(this.props.tag);
+describe('<Tag />', () => {
+  const tag: TagType = {
+    id: 1,
+    name: 'Crackers',
+    topic: {
+      id: 1,
+      name: 'Animal',
+      url: '',
+    },
   };
+  const defaults: Props = { tag };
+  const render = (props?: Partial<Props>) => enzyme.shallow((
+    <Tag {...defaults} {...props} />
+  ));
 
-  render() {
-    return (
-      <Button type="unstyled" className="tag" onClick={this.handleClick}>
-        <span><b>{this.props.tag.topic.name}</b>: {this.props.tag.name}</span>
-      </Button>
-    );
-  }
-}
+  it('should handle the passed down tag to the onClick property', () => {
+    const onClick = spy();
+    const component = render({ onClick });
+
+    component.find('Button').simulate('click');
+    expect(onClick.args[0]).toEqual([tag]);
+  });
+});

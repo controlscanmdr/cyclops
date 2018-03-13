@@ -20,33 +20,24 @@
 import * as React from 'react';
 
 // Local
-import { JSONFormatter } from '../../../components/JSONFormatter';
-import { DispatchNested } from '../../../types/dispatches';
-import { getUserFullName } from '../../../services/users/utils/getUserFullName';
+import { JSONFormatter } from '~/components/JSONFormatter';
+import { DispatchNested } from '~/types/dispatches';
+import { getUserFullName } from '~/services/users/utils/getUserFullName';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Properties of the AlertDetailDispatch component. */
 interface Props {
-  /** Dispatch object to display. */
+  // Dispatch object to display.
   dispatch: DispatchNested;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
-/**
- * Displays an alert dispatch.
- */
+// Alert dispatch display
 export class AlertDetailDispatch extends React.Component<Props, {}> {
-  /**
-   * Renders the component.
-   * @returns {JSX.Element}
-   */
-  public render(): JSX.Element {
+  render(): JSX.Element {
     return (
       <div key={this.props.dispatch.id} className="well">
         <div className="clearfix well__header">

@@ -20,27 +20,23 @@
 import * as React from 'react';
 import { ButtonGroup, Button } from 'react-bootstrap';
 
-// --------------------------------------------------------------------------
 // Interfaces/Types
 // --------------------------------------------------------------------------
 
-/** Properties of the TextArea component. */
-interface TextAreaProps {
-  /** Text to fill the text area with. */
+interface Props {
+  // Text to fill the text area with.
   text?: string;
-  /** Function to run when the submit button is clicked. */
+  // Function to run when the submit button is clicked.
   onSubmit(value: string): any;
-  /** Function to run when the cancel button is clicked. */
+  // Function to run when the cancel button is clicked.
   onCancel?(): any;
 }
 
-/** Internal state of the TextArea component. */
-interface TextAreaState {
-  /** Current text of the text area. */
+interface State {
+  // Current text of the text area.
   text: string;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
@@ -48,42 +44,32 @@ interface TextAreaState {
  * Creates a textarea that tracks changes to the content and allows the
  * user to perform an action with the content or cancel.
  */
-export class TextArea extends React.Component<TextAreaProps, TextAreaState> {
-  constructor(props: TextAreaProps) {
-    super(props);
-
-    this.state = { text: this.props.text || '' };
-  }
+export class TextArea extends React.Component<Props, State> {
+  state = { text: this.props.text || '' };
 
   /**
    * Handles the text change of the textarea onChange event.
    * @param e React onChange event.
    */
-  public handleTextChange = (
-    e: React.SyntheticEvent<HTMLTextAreaElement>,
-  ): void => {
+  handleTextChange = (e: React.SyntheticEvent<HTMLTextAreaElement>): void => {
     this.setState({ text: e.currentTarget.value });
   };
 
   /**
    * Submits the current text.
    */
-  public handleSubmit = (): void => {
+  handleSubmit = (): void => {
     this.props.onSubmit(this.state.text);
   };
 
   /**
    * Performs the passed in cancel function.
    */
-  public handleCancel = (): void => {
-    const { onCancel } = this.props;
-
-    if (onCancel) { onCancel(); }
+  handleCancel = (): void => {
+    if (this.props.onCancel) { this.props.onCancel(); }
   };
 
-  public render(): JSX.Element {
-    const { handleCancel, handleSubmit } = this;
-
+  render(): JSX.Element {
     return (
       <div>
         <textarea
@@ -94,20 +80,10 @@ export class TextArea extends React.Component<TextAreaProps, TextAreaState> {
         <div>
           <ButtonGroup justified={true}>
             <ButtonGroup>
-              <Button
-                bsStyle="default"
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
+              <Button bsStyle="default" onClick={this.handleSubmit}>Submit</Button>
             </ButtonGroup>
             <ButtonGroup>
-              <Button
-                bsStyle="danger"
-                onClick={handleCancel}
-              >
-                Cancel
-              </Button>
+              <Button bsStyle="danger" onClick={this.handleCancel}>Cancel</Button>
             </ButtonGroup>
           </ButtonGroup>
         </div>

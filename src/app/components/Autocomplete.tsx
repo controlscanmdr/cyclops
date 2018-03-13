@@ -52,11 +52,11 @@ export interface Props {
   onSelect?(item: any): void;
 
   /**
-   * Function that determines if a particular item should be displayed in the list.
+   * Function that determines if a particular item should be displayed.
    * @param item
    * @returns {boolean}
    */
-  filter?(item: any): boolean;
+  shouldItemDisplay?(item: any): boolean;
 }
 
 export interface State {
@@ -82,7 +82,7 @@ export class Autocomplete extends React.Component<Props, Partial<State>> {
 
   // Base component properties for the react-autocomplete wrapper element.
   static WRAPPER_PROPS = {
-    className: 'Autocomplete__Wrapper form-group',
+    className: 'Autocomplete__Wrapper',
   };
 
   static WRAPPER_STYLE = {
@@ -101,16 +101,18 @@ export class Autocomplete extends React.Component<Props, Partial<State>> {
       ? items
       : <div className="Autocomplete__MenuItem"><i>Empty</i></div>;
 
-    return (
-      <div className="Autocomplete__Menu" style={styles} children={list}/>
-    );
+    return <div className="Autocomplete__Menu" style={styles} children={list} />;
   };
 
-  state = {
-    selected: this.props.value || '',
-    value: '',
-    filtered: this.props.items || [],
-  };
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      selected: this.props.value,
+      value: '',
+      filtered: this.filterItems(this.props.items, this.props.value),
+    };
+  }
 
   componentWillReceiveProps(nextProps: Props): void {
     const filtered = this.filterItems(nextProps.items, this.state.value || '');
@@ -123,7 +125,7 @@ export class Autocomplete extends React.Component<Props, Partial<State>> {
   }
 
   /**
-   * Functoin that runs when the visibility of the autocomplete menu changes.
+   * Function that runs when the visibility of the autocomplete menu changes.
    * @param {boolean} open
    */
   onMenuVisibilityChange = (open: boolean): void => {
@@ -154,11 +156,11 @@ export class Autocomplete extends React.Component<Props, Partial<State>> {
     items.forEach((item) => {
       const text = this.props.getValue(item);
       const includesText = _.includes(text.toLowerCase(), value.toLowerCase());
-      const passesCustomFilter = this.props.filter
-        ? this.props.filter(item)
+      const passesFilter = this.props.shouldItemDisplay
+        ? this.props.shouldItemDisplay(item)
         : true;
 
-      if (includesText && passesCustomFilter) { filtered.push({ ...item }); }
+      if (includesText && passesFilter) filtered.push({ ...item });
     });
 
     return filtered;

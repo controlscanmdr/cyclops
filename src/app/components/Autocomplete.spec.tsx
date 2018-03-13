@@ -25,7 +25,7 @@ import { Autocomplete, Props, State } from './Autocomplete';
 
 describe('Autocomplete', () => {
   const items = [{ id: 1, name: 'George' }, { id: 2, name: 'Susan' }];
-  const value = 'George';
+  const value = '';
   const getValue = (item: any) => item.name;
   const defaults: Props = { items, value, getValue };
   const render = (props: Partial<Props> = {}) => shallow(<Autocomplete {...defaults} {...props} />);
