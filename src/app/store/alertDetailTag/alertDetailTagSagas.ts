@@ -65,7 +65,6 @@ export function * removeTagSaga(action: actions.RemoveTagAction): SagaIterator {
 
 /**
  * Fetches the necessary resources for the tag panel.
- * @param {OpenTagPanelAction} action
  * @returns {SagaIterator}
  */
 export function * openTagPanelSaga(): SagaIterator {

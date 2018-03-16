@@ -24,6 +24,7 @@ import * as classnames from 'classnames';
 
 // Local
 import './AutoComplete.scss';
+import { LoadingLine } from '~/components/LoadingLine';
 
 // Types
 // --------------------------------------------------------------------------
@@ -37,6 +38,9 @@ export interface Props {
 
   // Placeholder value of the input element.
   placeholder?: string;
+
+  // If a loading icon should be shown.
+  isLoading?: boolean;
 
   /**
    * Returns the display value of an item.
@@ -202,19 +206,22 @@ export class Autocomplete extends React.Component<Props, Partial<State>> {
 
   render() {
     return (
-      <Complete
-        items={this.state.filtered || []}
-        getItemValue={this.props.getValue}
-        renderItem={this.renderItem}
-        inputProps={this.getInputProps()}
-        onMenuVisibilityChange={this.onMenuVisibilityChange}
-        onChange={this.handleChange}
-        onSelect={this.handleSelect}
-        value={this.state.value}
-        renderMenu={this.renderMenu}
-        wrapperProps={Autocomplete.WRAPPER_PROPS}
-        wrapperStyle={Autocomplete.WRAPPER_STYLE}
-      />
+      <div className="Autocomplete">
+        <Complete
+          items={this.state.filtered || []}
+          getItemValue={this.props.getValue}
+          renderItem={this.renderItem}
+          inputProps={this.getInputProps()}
+          onMenuVisibilityChange={this.onMenuVisibilityChange}
+          onChange={this.handleChange}
+          onSelect={this.handleSelect}
+          value={this.state.value}
+          renderMenu={this.renderMenu}
+          wrapperProps={Autocomplete.WRAPPER_PROPS}
+          wrapperStyle={Autocomplete.WRAPPER_STYLE}
+        />
+        <LoadingLine show={Boolean(this.props.isLoading)} overlay={true} />
+      </div>
     );
   }
 }

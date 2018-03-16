@@ -1,0 +1,68 @@
+/**
+ * The contents of this file are subject to the CYPHON Proprietary Non-
+ * Commercial Registered User Use License Agreement (the "Agreement”). You
+ * may not use this file except in compliance with the Agreement, a copy
+ * of which may be found at https://github.com/dunbarcyber/cyclops/. The
+ * developer of the CYPHON technology and platform is Dunbar Security
+ * Systems, Inc.
+ *
+ * The CYPHON technology or platform are distributed under the Agreement on
+ * an “AS IS” basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the Agreement for specific terms.
+ *
+ * Copyright (C) 2017 Dunbar Security Solutions, Inc. All Rights Reserved.
+ *
+ * Contributor/Change Made By: ________________. [Only apply if changes
+ * are made]
+ */
+
+.LoadingLine {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  &--overlay {
+    background-color: rgba(#000, 0.15);
+  }
+
+  &__Circle {
+    width: 15px;
+    height: 15px;
+    margin: 0 2.5px;
+    background-color: #CCCCCC;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: LoadingLine__BounceDelay 1.4s infinite ease-in-out both;
+    animation: LoadingLine__BounceDelay 1.4s infinite ease-in-out both;
+  }
+
+  &__Circle1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+
+  &__Circle2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+}
+
+@-webkit-keyframes LoadingLine__BounceDelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes LoadingLine__BounceDelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+    }
+}

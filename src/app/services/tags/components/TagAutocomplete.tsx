@@ -35,6 +35,10 @@ export interface Props {
   // Tags to exclude from the autocomplete list.
   exclude?: Tag[];
 
+  placeholder?: string;
+
+  isLoading?: boolean;
+
   /**
    * Function run when the autocomplete selects a tag.
    * @param {Tag} tag
@@ -76,8 +80,10 @@ export class TagAutocomplete extends React.Component<Props, State> {
   render() {
     return (
       <Autocomplete
+        placeholder={this.props.placeholder}
         items={this.props.tags}
         value={this.state.value}
+        isLoading={this.props.isLoading}
         getValue={getTagDisplayName}
         shouldItemDisplay={this.shouldTagDisplay}
         onSelect={this.handleSelect}

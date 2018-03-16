@@ -18,7 +18,7 @@
 
 // Local
 import { Action } from '~/store/types';
-import { Tag } from '~/services/tags/types';
+import { Tag, TagDetail } from '~/services/tags/types';
 
 // ADD_TAG
 // --------------------------------------------------------------------------
@@ -121,5 +121,55 @@ export const REMOVE_TAG_FAILED = 'ALERT_DETAIL_TAG:REMOVE_TAG_FAILED';
 export type RemoveTagFailedAction = Action<typeof REMOVE_TAG_FAILED, undefined>;
 export const removeTagFailed = (): RemoveTagFailedAction => ({
   type: REMOVE_TAG_FAILED,
+  payload: undefined,
+});
+
+// OPEN_TAG_DETAIL
+// --------------------------------------------------------------------------
+
+export const OPEN_TAG_DETAIL = 'ALERT_DETAIL_TAG:OPEN_TAG_DETAIL';
+export type OpenTagDetailAction = Action<typeof OPEN_TAG_DETAIL, number>;
+export const openTagDetail = (tagId: number): OpenTagDetailAction => ({
+  type: OPEN_TAG_DETAIL,
+  payload: tagId,
+});
+
+// OPEN_TAG_CREATE
+// --------------------------------------------------------------------------
+
+export const OPEN_TAG_CREATE = 'ALERT_DETAIL_TAG:OPEN_TAG_CREATE';
+export type OpenTagCreateAction = Action<typeof OPEN_TAG_CREATE, undefined>;
+export const openTagCreate = (): OpenTagCreateAction => ({
+  type: OPEN_TAG_CREATE,
+  payload: undefined,
+});
+
+// FETCH_TAG_DETAIL
+// --------------------------------------------------------------------------
+
+export const FETCH_TAG_DETAIL = 'ALERT_DETAIL_TAG:FETCH_TAG_DETAIL';
+export type FetchTagDetailAction = Action<typeof FETCH_TAG_DETAIL, number>;
+export const fetchTagDetail = (tagId: number): FetchTagDetailAction => ({
+  type: FETCH_TAG_DETAIL,
+  payload: tagId,
+});
+
+// FETCH_TAG_DETAIL_SUCCESS
+// --------------------------------------------------------------------------
+
+export const FETCH_TAG_DETAIL_SUCCESS = 'ALERT_DETAIL_TAG:FETCH_TAG_DETAIL_SUCCESS';
+export type FetchTagDetailSuccessAction = Action<typeof FETCH_TAG_DETAIL_SUCCESS, TagDetail>;
+export const fetchTagDetailSuccess = (tag: TagDetail): FetchTagDetailSuccessAction => ({
+  type: FETCH_TAG_DETAIL_SUCCESS,
+  payload: tag,
+});
+
+// FETCH_TAG_DETAIL_FAILURE
+// --------------------------------------------------------------------------
+
+export const FETCH_TAG_DETAIL_FAILURE = 'ALERT_DETAIL_TAG:FETCH_TAG_DETAIL_FAILURE';
+export type FetchTagDetailFailureAction = Action<typeof FETCH_TAG_DETAIL_FAILURE, undefined>;
+export const fetchTagDetailFailure = (): FetchTagDetailFailureAction => ({
+  type: FETCH_TAG_DETAIL_FAILURE,
   payload: undefined,
 });

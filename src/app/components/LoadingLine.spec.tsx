@@ -17,15 +17,28 @@
  */
 
 // Vendor
-import { render } from 'react-dom';
+import * as React from 'react';
+import * as enzyme from 'enzyme';
 
 // Local
-import { getConfig } from '~/config';
-import { App } from './app';
+import { LoadingLine, Props, State } from './LoadingLine';
 
-// CSS
-import '../node_modules/nvd3/build/nv.d3.css';
-import './styles/app.scss';
-import '../node_modules/draft-js/dist/Draft.css';
+describe('<LoadingLine />', () => {
+  const defaults: Props = { show: true };
+  const render = (props: Partial<Props> = {}) => enzyme.shallow((
+    <LoadingLine {...defaults} {...props} />
+  ));
 
-render(App, document.getElementById(getConfig().APP_CONTAINER_ID));
+  it('should return null if show is false', () => {
+    const component = render({ show: false });
+
+    expect(component.get(0)).toBeNull();
+  });
+
+  it('should display an overlay if overlay property is true', () => {
+    const component = render({ overlay: true });
+    const overlay = component.find('LoadingLine--overlay');
+
+    expect(overlay.exists()).toBe(true);
+  });
+});

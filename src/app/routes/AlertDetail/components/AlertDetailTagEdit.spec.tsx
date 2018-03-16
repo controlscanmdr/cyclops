@@ -25,7 +25,7 @@ import { spy } from 'sinon';
 import { AlertDetailTagEdit, Props, State } from './AlertDetailTagEdit';
 import { Tag } from '~/services/tags/types';
 
-describe('<AlertDetailTadEdit />', () => {
+describe('<AlertDetailTagEdit />', () => {
   const tag1: Tag = {
     id: 1,
     name: 'Crackers',
@@ -78,19 +78,21 @@ describe('<AlertDetailTadEdit />', () => {
       tags: tagList,
       exclude: alertTagList,
       onSelect: instance.handleSelect,
+      isLoading: false,
     });
-
   });
 
-  it('should render an input with a loading signal when the tags are fetching', () => {
+  it('should render a TagAutocomplete with a loading icon when tags are fetching', () => {
     const component = render({ isFetchingTags: true });
-    const input = component.find('input');
+    const autocomplete = component.find('TagAutocomplete');
+    const instance = component.instance() as AlertDetailTagEdit;
 
-    expect(input.exists()).toBe(true);
-    expect(input.props()).toEqual({
-      className: 'form-control',
-      disabled: true,
-      placeholder: 'Loading...',
+    expect(autocomplete.exists()).toBe(true);
+    expect(autocomplete.props()).toEqual({
+      tags: tagList,
+      exclude: alertTagList,
+      onSelect: instance.handleSelect,
+      isLoading: true,
     });
   });
 

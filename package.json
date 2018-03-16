@@ -37,6 +37,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@types/draft-js": "0.10.20",
     "axios": "0.16.1",
     "bootstrap-sass": "3.3.7",
     "classnames": "2.2.5",
@@ -45,6 +46,7 @@
     "cross-env": "4.0.0",
     "d3": "3.5.17",
     "dotenv": "2.0.0",
+    "draft-js": "0.10.5",
     "font-awesome": "4.6.3",
     "geojson": "0.4.0",
     "humps": "1.1.0",

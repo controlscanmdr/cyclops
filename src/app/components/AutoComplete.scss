@@ -19,6 +19,8 @@
 @import '../../styles/base/variables';
 
 .Autocomplete {
+  position: relative;
+
   &__Wrapper {
     position: relative;
   }

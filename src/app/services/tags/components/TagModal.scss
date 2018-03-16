@@ -16,16 +16,30 @@
  * are made]
  */
 
-// Vendor
-import { render } from 'react-dom';
+@import '../../../../styles/base/variables';
 
-// Local
-import { getConfig } from '~/config';
-import { App } from './app';
+.TagModal {
+  &__Header {
+    display: flex;
+    align-items: center;
+  }
 
-// CSS
-import '../node_modules/nvd3/build/nv.d3.css';
-import './styles/app.scss';
-import '../node_modules/draft-js/dist/Draft.css';
+  &__Title {
+    font-size: 1em;
+    flex: 0 0 auto;
+    margin: 0 $padding-base-horizontal 0 0;
+  }
 
-render(App, document.getElementById(getConfig().APP_CONTAINER_ID));
+  &__Nav {
+    flex: 1 1 auto;
+  }
+
+  &__Close {
+    flex: 0 0 auto;
+  }
+
+  &__Well {
+    margin-top: $padding-large-vertical;
+    position: relative;
+  }
+}

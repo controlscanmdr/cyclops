@@ -27,16 +27,16 @@ import {
 } from '../../../services/contexts/types';
 import { denormalizeContexts } from '../../../services/contexts/utils/contextNormalizr';
 
-// --------------------------------------------------------------------------
-// Interfaces/Types
+// Types
 // --------------------------------------------------------------------------
 
-/** Properties for the AlertDataContextSelect component. */
 interface Props {
-  /** Normalized list of context associated with the alert data. */
+  // Normalized list of context associated with the alert data.
   contexts: NormalizedContextList;
-  /** ID of the currently selected context. */
+
+  // ID of the currently selected context.
   selectedContext: number | null;
+
   /**
    * Selects a context from a list of contexts.
    * @param contextId ID of the context to select.
@@ -44,33 +44,23 @@ interface Props {
   selectContext(contextId: number): any;
 }
 
-// --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 
-/**
- * Displays a select dropdown that allows the user to select a new context
- * to view information on.
- */
+// Select dropdown that allows the user to select a new context to view information on.
 export class AlertDataContextSelect extends React.Component<Props, {}> {
-  constructor(props: Props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
   /**
    * Handles the change event from the select element containing the list
    * of contexts.
    * @param event Event from the select element.
    */
-  public handleChange(event: React.FormEvent<HTMLSelectElement>) {
-    const { selectContext } = this.props;
+  handleChange = (event: React.FormEvent<HTMLSelectElement>) => {
     const contextId = _.toNumber(event.currentTarget.value);
 
-    if (contextId > 0) { selectContext(contextId); }
-  }
+    if (contextId > 0) this.props.selectContext(contextId);
+  };
 
-  public render(): JSX.Element {
+  render(): JSX.Element {
     const contextList: ContextNested[] = this.props.contexts
       ? denormalizeContexts(this.props.contexts)
       : [];

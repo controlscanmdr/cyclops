@@ -124,4 +124,14 @@ describe('tagAPI', () => {
       expect(results).toEqual([tag1, tag2, tag3]);
     });
   });
+
+  describe('fetchTag()', () => {
+    const tag: any = { id: 1 };
+
+    it('should send a GET request to the correct url', async () => {
+      mockAPI.onGet('/tags/3/').reply(200, tag);
+
+      expect(await api.fetchTag(3)).toEqual(tag);
+    });
+  });
 });

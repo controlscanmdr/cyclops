@@ -16,16 +16,8 @@
  * are made]
  */
 
-// Vendor
-import { render } from 'react-dom';
-
-// Local
-import { getConfig } from '~/config';
-import { App } from './app';
-
-// CSS
-import '../node_modules/nvd3/build/nv.d3.css';
-import './styles/app.scss';
-import '../node_modules/draft-js/dist/Draft.css';
-
-render(App, document.getElementById(getConfig().APP_CONTAINER_ID));
+// Views of the tag modal component.
+export enum TagModalView {
+  Detail = 'detail',
+  Create = 'create',
+}

@@ -46,6 +46,8 @@ import {
   alertDetailTagReducer,
   AlertDetailTagState
 } from '~/store/alertDetailTag/alertDetailTagReducer';
+import { tagModalReducer, TagModalState } from '~/store/tagModal/tagModalReducer';
+import { tagModalSagas } from '~/store/tagModal/tagModalSagas';
 
 /** Shape of the redux store state. */
 export interface StoreState {
@@ -62,9 +64,11 @@ export interface StoreState {
   monitorModal: MonitorModalState;
   searchQuery: SearchQueryState;
   searchResults: SearchResultsState;
+  tagModal: TagModalState;
   tagStore: TagStoreState;
   userStore: UserStoreState;
 }
+
 // Main redux store reducer. Tie all other reducers back into this one.
 const reducer = combineReducers<StoreState>({
   alertDetail,
@@ -81,6 +85,7 @@ const reducer = combineReducers<StoreState>({
   searchResults,
   userStore,
   alertDetailTag: alertDetailTagReducer,
+  tagModal: tagModalReducer,
   tagStore: tagStoreReducer,
 });
 
@@ -89,6 +94,7 @@ function * sagas(): SagaIterator {
     fork(alertDetailSagas),
     fork(alertDetailOutcomeSagas),
     fork(alertDetailTagSagas),
+    fork(tagModalSagas),
     fork(tagStoreSagas),
   ]);
 }

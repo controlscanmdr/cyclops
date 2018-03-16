@@ -29,9 +29,11 @@ import { MapStateToProps } from '~/types/MapStateToProps';
 import { getCurrentUserId } from '~/services/users/utils/currentUserIsStaff';
 import { connect, Dispatch } from 'react-redux';
 import * as alertDetailTagActions from '~/store/alertDetailTag/alertDetailTagActions';
+import { openTagDetail } from '~/store/tagModal/tagModalActions';
 import FontAwesome = require('react-fontawesome');
 import { AlertDetailTagEdit } from '~/routes/AlertDetail/components/AlertDetailTagEdit';
 import { AlertDetailTagRemove } from '~/routes/AlertDetail/components/AlertDetailTagRemove';
+import TagModal from '~/services/tags/components/TagModal';
 
 // Types
 // --------------------------------------------------------------------------
@@ -79,7 +81,9 @@ export class AlertDetailTags extends React.Component<Props, State> {
 
   // Renders the current tag list.
   renderAlertTagList = (): JSX.Element[] => {
-    return this.props.alertTags.map(tag => <Tag key={tag.id} tag={tag}/>);
+    return this.props.alertTags.map(tag => (
+      <Tag key={tag.id} tag={tag} onClick={this.openTagDetail} />
+    ));
   };
 
   // Opens the edit tag panel.
@@ -129,8 +133,13 @@ export class AlertDetailTags extends React.Component<Props, State> {
     this.props.dispatch(action);
   };
 
-  // Opens the tag information modal.
-  openTagModal = (): void => {};
+  /**
+   * Opens the tag modal detail view.
+   * @param {Tag} tag
+   */
+  openTagDetail = (tag: TagType): void => {
+    this.props.dispatch(openTagDetail(tag.id));
+  };
 
   // Renders the edit tag panel.
   renderTagPanel = (): JSX.Element => {
@@ -208,6 +217,7 @@ export class AlertDetailTags extends React.Component<Props, State> {
       <div className="spacing-section">
         <h3 className="sub-title">Tags {this.renderEditButton()}</h3>
         {this.renderContent()}
+        <TagModal />
       </div>
     );
   }

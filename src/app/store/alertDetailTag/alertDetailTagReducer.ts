@@ -18,7 +18,7 @@
 
 // Local
 import * as actions from './alertDetailTagActions';
-import { Tag } from '~/services/tags/types';
+import { Tag, TagDetail } from '~/services/tags/types';
 import { CLOSE_ALERT, CloseAlertAction } from '~/store/alertDetail';
 
 export interface AlertDetailTagState {
@@ -28,6 +28,21 @@ export interface AlertDetailTagState {
   // If a confirmation to remove a tag is currently active.
   confirmationIsActive: boolean;
 
+  // If the modal that displays tag information is active.
+  modalIsActive: boolean;
+
+  // If the current tag information is being fetched.
+  tagDetailIsLoading: boolean;
+
+  // Id of the tag detail
+  tagDetailId?: number;
+
+  // If there was an error fetching the tag detail.
+  tagDetailError: boolean;
+
+  // The currently displayed tag detail.
+  tagDetail?: TagDetail;
+
   // Tag the user wishes to remove.
   tagToRemove?: Tag;
 }
@@ -35,6 +50,9 @@ export interface AlertDetailTagState {
 export const INITIAL_STATE: AlertDetailTagState = {
   panelIsActive: false,
   confirmationIsActive: false,
+  tagDetailError: false,
+  tagDetailIsLoading: false,
+  modalIsActive: false,
 };
 
 type Actions =
@@ -43,6 +61,11 @@ type Actions =
   actions.ShowRemovalConfirmationAction |
   actions.CancelTagRemovalAction |
   actions.RemoveTagSuccessAction |
+  actions.OpenTagDetailAction |
+  actions.OpenTagCreateAction |
+  actions.FetchTagDetailAction |
+  actions.FetchTagDetailSuccessAction |
+  actions.FetchTagDetailFailureAction |
   CloseAlertAction;
 
 export function alertDetailTagReducer(
@@ -63,6 +86,18 @@ export function alertDetailTagReducer(
         confirmationIsActive: true,
         tagToRemove: action.payload,
       };
+
+    case actions.OPEN_TAG_DETAIL:
+      return { ...state, modalIsActive: true };
+
+    case actions.FETCH_TAG_DETAIL:
+      return { ...state, tagDetailIsLoading: true, tagDetailId: action.payload };
+
+    case actions.FETCH_TAG_DETAIL_SUCCESS:
+      return { ...state, tagDetailIsLoading: false, tagDetail: action.payload };
+
+    case actions.FETCH_TAG_DETAIL_FAILURE:
+      return { ...state, tagDetailIsLoading: false, tagDetailError: true };
 
     case actions.CANCEL_TAG_REMOVAL:
     case actions.REMOVE_TAG_SUCCESS:

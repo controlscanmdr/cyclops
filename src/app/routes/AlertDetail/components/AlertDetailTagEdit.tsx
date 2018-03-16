@@ -80,15 +80,13 @@ export class AlertDetailTagEdit extends React.Component<Props, State> {
   };
 
   renderAutoComplete = (): JSX.Element => {
-    if (this.props.isFetchingTags) {
-      return <input className="form-control" disabled={true} placeholder="Loading..." />
-    }
 
     return (
       <TagAutocomplete
         tags={this.props.tagList}
         exclude={this.props.alertTagList}
         onSelect={this.handleSelect}
+        isLoading={this.props.isFetchingTags}
       />
     );
   };

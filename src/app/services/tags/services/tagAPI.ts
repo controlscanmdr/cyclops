@@ -69,3 +69,12 @@ export function deleteTagRelation(tagRelationID: number): Promise<TagRelation> {
 export function fetchAllTags(): Promise<Tag[]> {
   return getAll('/tags/');
 }
+
+/**
+ * Returns a detailed description of a specific tag.
+ * @param {number} tagId Id of the tag to fetch.
+ * @returns {Promise<TagDetail>}
+ */
+export function fetchTag(tagId: number): Promise<TagDetail> {
+  return get(`/tags/${tagId}/`);
+}

@@ -83,11 +83,15 @@ describe('<AlertDetailTags />', () => {
   it('should render the alert tags if all flags are false', () => {
     const component = render();
     const tags = component.find('Tag');
+    const instance = component.instance() as AlertDetailTags;
 
     expect(tags).toHaveLength(alertTags.length);
 
     tags.forEach((tag, index) => {
-      expect(tag.props()).toEqual({ tag: alertTags[index] });
+      expect(tag.props()).toEqual({
+        tag: alertTags[index],
+        onClick: instance.openTagDetail,
+      });
     });
   });
 
