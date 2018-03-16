@@ -21,7 +21,7 @@ import * as React from 'react';
 import * as enzyme from 'enzyme';
 
 // Local
-import { LoadingLine, Props, State } from './LoadingLine';
+import { LoadingLine, Props } from './LoadingLine';
 
 describe('<LoadingLine />', () => {
   const defaults: Props = { show: true };
@@ -37,8 +37,7 @@ describe('<LoadingLine />', () => {
 
   it('should display an overlay if overlay property is true', () => {
     const component = render({ overlay: true });
-    const overlay = component.find('LoadingLine--overlay');
 
-    expect(overlay.exists()).toBe(true);
+    expect(component.prop('className')).toEqual('LoadingLine LoadingLine--overlay');
   });
 });
