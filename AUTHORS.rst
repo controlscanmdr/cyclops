@@ -1,4 +1,0 @@
-Original Author
-===============
-
-* Chase Brewer
