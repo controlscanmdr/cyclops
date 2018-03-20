@@ -32,7 +32,7 @@ Redux was chosen over mobx because of it's simple architecture, developer tools,
 
 [Webpack](https://webpack.js.org/) is the bundler used to create the compiled static assets.
 
-Webpack was chosen over grunt, gulp, or browserify because of it's ease of use, package tools, and large ecosystem. Instead of having to run gulp with browserify to run the minification and 
+Webpack was chosen over grunt, gulp, or browserify because of it's ease of use, package tools, and large ecosystem. Instead of having to run gulp with browserify to run the minification and compilation of assets, webpack takes care of all of it and outputs a simple javascript file.
 
 ### Package Management
 
@@ -354,3 +354,103 @@ These can be run at project root to perform common tasks for the project.
 * `npm run build`: Compiles a production ready bundle to the `dist` directory.
 * `npm start`: Starts webpack dev server which watches for changes in the source files, compiles them, and then serves them at `http://localhost:8080/`.
 * `npm run lint`: Runs `tslint` on the source directory.
+
+## Development
+
+In order to get a development environment setup on your machine, a couple of steps need to take place.
+
+### Setup Cyphon
+
+Cyphon is required in order to get Cyclops to work. Clone the repository into a local repo and copy the settings files:
+
+```
+$ git clone https://github.com/dunbarcyber/cyphon cyphon
+$ cd cyphon
+$ cp cyphon/cyphon/settings/base.example.py cyphon/cyphon/settings/base.py
+$ cp cyphon/cyphon/settings/dev.example.py cyphon/cyphon/settings/dev.py
+& cp cyphon/cyphon/settings/conf.example.py cyphon/cyphon/settings/conf.py
+```
+
+Then you'll need to change some settings in the created `conf.py` file in order to read from the `webpack-dev-server` when files are being compiled:
+
+```
+// cyphon/cyphon/cyphon/settings/conf.py
+
+CYCLOPS = {
+    'ENABLED': True,
+    'MAPBOX_ACCESS_TOKEN': '',
+    'DEVELOPMENT_ENABLED': True,
+    'DEVELOPMENT_URL': 'http://localhost:8080/',
+}
+```
+
+Now the Cyclops page should fetch from 'http://localhost:8080/' when retrieving the Cyclops assets.
+
+### Install Cyphon Dependencies
+
+Next you'll have to setup a python virtualenv and install the project dependencies. Cyphon only works with Python 3 and onward, so make sure your system default is python 3.
+
+```
+// Install virtualenv on your local machine.
+$ pip install virtualenv
+
+// Make a virtualenv directory in your home directory.
+$ mkdir -p ~/.virtualenvs
+
+// Create a virtualenv for cyphon and activate it.
+$ virtualenv ~/.virtualenvs/cyphon
+$ source ~/.virtualenvs/cyphon/bin/activate
+```
+
+Then navigate to the root Cyphon repository and install the python dependencies.
+
+```
+$ pip install -r requirements.txt
+```
+
+### Setup Docker Environment
+
+[Cyphondock](https://github.com/dunbarcyber/cyphondock) contains a configuration file for docker-compose in order to setup the backends the system uses. Make sure you have Docker installed, clone the repository, then run the backends configuration to setup postgres, elastic, and mongodb to run them in the backend. First, make sure you're not in the Cyphon repository, then run this command:
+
+```
+$ git clone https://github.com/dunbarcyber/cyphondock.git cyphondock
+$ cd cyphondock
+$ docker-compose -f docker-compose.backends.yml up -d
+```
+
+### Setup Cyphon Development Environment
+
+Now change back to the Cyphon repository and run:
+
+```
+$ cd cyphon
+
+// Setup the postgres database
+$ ./manage.py migrate --settings=cyphon.settings.dev
+
+// Create a super user for login purposes
+$ ./manage.py createsuperuser --settings=cyphon.settings.dev
+
+// Run the development server
+$ ./manage.py runserver --settings=cyphon.settings.dev
+```
+
+You should see some logs showing HTTP calls whenever you hit `http://localhost:8000/` now. You shouldn't be able to see the Cyclops application just yet.
+
+### Setup Cyclops
+
+First make sure you're using the latest LTS version of node, which at the time of writing this is `8.x`. Then, clone the Cyclops repository onto your local machine and install the dependencies:
+
+```
+$ git clone https://github.com/dunbarcyber/cyclops.git cyclops
+$ cd cyclops
+$ npm install
+```
+
+Then, start the development server by running:
+
+```
+$ npm start
+```
+
+The compiled assets should not be surfaced on `http://localhost:8080/` now and called from `http://localhost:8000/app/`.
