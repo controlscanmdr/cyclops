@@ -47,6 +47,7 @@ interface State {
  * specified content.
  */
 export class AlertListSearchBar extends React.Component<Props, State> {
+  state = { content: undefined };
   /**
    * Make sure the internal content and external content match when the
    * element is first loaded.
