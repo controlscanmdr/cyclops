@@ -9,11 +9,7 @@
     "target": "es5",
     "module": "commonjs",
     "jsx": "react",
-    "lib": ["es6", "dom"],
-    "baseUrl": "./src",
-    "paths": {
-      "~/*": ["./app/*"]
-    }
+    "lib": ["es6", "dom"]
   },
   "include": [
     "src/**/*"

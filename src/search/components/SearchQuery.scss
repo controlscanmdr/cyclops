@@ -1,0 +1,42 @@
+/**
+ * The contents of this file are subject to the CYPHON Proprietary Non-
+ * Commercial Registered User Use License Agreement (the "Agreement”). You
+ * may not use this file except in compliance with the Agreement, a copy
+ * of which may be found at https://github.com/dunbarcyber/cyclops/. The
+ * developer of the CYPHON technology and platform is Dunbar Security
+ * Systems, Inc.
+ *
+ * The CYPHON technology or platform are distributed under the Agreement on
+ * an “AS IS” basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the Agreement for specific terms.
+ *
+ * Copyright (C) 2017 Dunbar Security Solutions, Inc. All Rights Reserved.
+ *
+ * Contributor/Change Made By: ________________. [Only apply if changes
+ * are made]
+ */
+
+@import '../../styles/base/variables';
+
+.SearchQuery {
+  background-color: $color-darker;
+  padding: $padding-base-vertical $padding-base-horizontal;
+  border-radius: $border-radius-base;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  &__Table{
+    td {
+      vertical-align: top;
+    }
+  }
+  &__Title {
+    color: lighten($text-color, 5%);
+    font-weight: 700;
+    padding-top: $padding-small-vertical;
+    padding-bottom: $padding-small-vertical;
+  }
+  &__Content {
+    padding-top: $padding-small-vertical;
+    padding-bottom: $padding-small-vertical
+  }
+}

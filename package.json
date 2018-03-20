@@ -32,7 +32,7 @@
       "\\.scss$": "<rootDir>/test/scssMock.js"
     },
     "collectCoverageFrom": [
-      "src/app/**/*.{ts,tsx}"
+      "src/**/*.{ts,tsx}"
     ]
   },
   "license": "ISC",
