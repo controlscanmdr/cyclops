@@ -24,6 +24,10 @@
 
 - getUserFullName to render 'None' if there is no user object. ([3bc0bdd](https://github.com/dunbarcyber/cyclops/commit/3bc0bdd4fed4ffa67c47db87a941fd6795ae3c12))
 
+### Security
+
+- moment.js had a security vulnerable below 2.19. Upgraded to 2.21 ([03fc6ce](https://github.com/dunbarcyber/cyclops/commit/03fc6ce97642f266623d04de31df4447ea11bdca))
+
 ## [0.5.4](https://github.com/dunbarcyber/cyclops/compare/0.5.2...0.5.3) (2018-01-09)
 
 ### Changed
