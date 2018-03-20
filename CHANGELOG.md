@@ -5,16 +5,20 @@
 ### Added
 
 - Ability to add and remove tags from an alert detail. ([5626fd9](https://github.com/dunbarcyber/cyclops/commit/5626fd90ad8352ab6aab03808f3990a4ef9d6d72))
+- CONTRIBUTING.md file to help contributers. ([0d5c86b](https://github.com/dunbarcyber/cyclops/commit/0d5c86b63a2253147b34d84924e5ab0b6abc5755))
 
 ### Changed
 
 - Test suite from Karma/Webpack/Mocha/Chai to Jest. ([24271f4](https://github.com/dunbarcyber/cyclops/commit/24271f4a50813b89d22369df0e00496eb5401067))
 - Updated enzyme to version 3.3.0 ([cabcb5c](https://github.com/dunbarcyber/cyclops/commit/cabcb5c3dd5f8adbdd35f2a4a74f249329867ecf))
+- File structure to a modular structure outline in CONTRIBUTING.md. ([d351dd8](https://github.com/dunbarcyber/cyclops/commit/d351dd83648ff24bb201ae6e70a2706a5389d063))
 
 ### Removed
 
 - Removed test specs.ts file. ([03d5051](https://github.com/dunbarcyber/cyclops/commit/03d5051693fd47b47611a449ee0d0d454b965dfd))
 - Removed unused dependencies. ([30ff3f0](https://github.com/dunbarcyber/cyclops/commit/30ff3f0eb012818f37906e22fad9f2bc488fe4d3))
+- AUTHORS.rst. Sphinx docs are no longer used. ([0d5c86b](https://github.com/dunbarcyber/cyclops/commit/0d5c86b63a2253147b34d84924e5ab0b6abc5755))
+- _config.yml. Sphinx docs are no longer used. ([0d5c86b](https://github.com/dunbarcyber/cyclops/commit/0d5c86b63a2253147b34d84924e5ab0b6abc5755))
 
 ### Fixed
 
