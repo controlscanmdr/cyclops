@@ -29,7 +29,7 @@
     "json-formatter-js": "1.2.0",
     "lodash": "4.16.4",
     "memory-cache": "0.1.6",
-    "moment": "2.15.1",
+    "moment": "2.21.0",
     "normalizr": "3.2.1",
     "nvd3": "1.8.5",
     "qs": "6.2.1",

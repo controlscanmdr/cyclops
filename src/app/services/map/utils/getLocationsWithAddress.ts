@@ -23,14 +23,91 @@ import { CancelToken } from 'axios';
 // Local
 import { Result } from '~/types/result';
 import { ContainerNested } from '../../containers/types';
-import { getFieldsOfType } from '../../containers/utils/containerUtils';
+import { FieldValue, getFieldsOfType } from '../../containers/utils/containerUtils';
 import { CONTAINER_FIELDS } from '../../containers/constants';
 import {
   LocationFieldAddress,
   LocationField,
+  PointField,
   Coordinates,
+  ObjectCoordinates,
 } from '../types';
 import { reverseLookup } from './reverseLookup';
+
+/**
+ * Returns the point fields of a result
+ * @param {ContainerNested} container Container object related to the result.
+ * @param {Result} result Raw result data.
+ * @returns {PointField}
+ */
+export function getPointFields(
+  container: ContainerNested,
+  result: Result,
+): Array<FieldValue<PointField>> {
+  return getFieldsOfType<PointField>(CONTAINER_FIELDS.POINT_FIELD, container, result);
+}
+
+/**
+ * Determines if a PointField is an ObjectCoordinates
+ * @param {PointField} field
+ * @returns {boolean}
+ */
+export function isObjectCoordinates(field: FieldValue<PointField>): field is FieldValue<ObjectCoordinates> {
+  return _.isObjectLike(field.value);
+}
+
+/**
+ * Determines if a PointField is a Coordinates.
+ * @param {PointField} field
+ * @returns {boolean}
+ */
+export function isCoordinates(field: FieldValue<PointField>): field is FieldValue<Coordinates> {
+  return _.isArrayLike(field.value);
+}
+
+/**
+ * Createa a location field from an ObjectCoordinate.
+ * @param {FieldValue<ObjectCoordinates>} point
+ * @returns {LocationField}
+ */
+export const createLocationFieldFromObject = (
+  point: FieldValue<ObjectCoordinates>,
+): LocationField => ({
+  field: point.field,
+  coordinates: [point.value.lat, point.value.lng],
+});
+
+/**
+ * Creates a location field from a Coordinate.
+ * @param {FieldValue<Coordinates>} point
+ * @returns {LocationField}
+ */
+export const createLocationFieldFromArray = (point: FieldValue<Coordinates>): LocationField => ({
+  field: point.field,
+  coordinates: point.value,
+});
+
+/**
+ * Creates location fields from an array of PointField FieldValue's.
+ * @param {Array<FieldValue<PointField>>} fields
+ * @returns {LocationField[]}
+ */
+export function createLocationFields(fields: Array<FieldValue<PointField>>): LocationField[] {
+  return fields
+    .filter((field) => {
+      if (!field.value) return true;
+
+      if (isCoordinates(field)) return true;
+      if (isObjectCoordinates(field)) return true;
+
+      return false;
+    })
+    .map((field) => {
+      if (isCoordinates(field)) return createLocationFieldFromArray(field);
+
+      return createLocationFieldFromObject(field as FieldValue<ObjectCoordinates>);
+    });
+}
 
 /**
  * Creates a list of LocationFieldAddress by extracting the coordinate
@@ -46,21 +123,12 @@ export function getLocationsWithAddress(
   result: Result,
   cancelToken?: CancelToken,
 ): Promise<LocationFieldAddress[]> {
-  const pointFields = getFieldsOfType<Coordinates>(
-    CONTAINER_FIELDS.POINT_FIELD,
-    container,
-    result,
-  );
+  const pointFields = getPointFields(container, result);
 
   // If there aren't any location fields, return an empty array.
-  if (!pointFields.length) { return Promise.resolve([]); }
+  if (!pointFields.length) return Promise.resolve([]);
 
-  const locationFields: LocationField[] = pointFields
-    .filter((pointField) => pointField.value && pointField.value.length)
-    .map((pointField) => ({
-      field: pointField.field,
-      coordinates: pointField.value,
-    }));
+  const locationFields = createLocationFields(pointFields);
 
   // If the location coordinates were blank, return an empty array
   if (!locationFields.length) { return Promise.resolve([]); }
