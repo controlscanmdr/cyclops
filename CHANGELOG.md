@@ -1,13 +1,13 @@
 # Change log
 
-## Unreleased
+## [0.5.5](https://github.com/dunbarcyber/cyclops/compare/0.5.4...0.5.5) (2018-03-21)
 
 ### Fixed
 
 - Security vulnerability caused by moment versions less than 2.19.3 ([6e89413](https://github.com/dunbarcyber/cyclops/commit/6e89413853e1cef2d20902107be56f38c796844a))
 - Locations accept lat/lng object as well as lat/lng array ([1ae5557](https://github.com/dunbarcyber/cyclops/commit/1ae555799f33188dd600b81dc2daacdddba974fc))
 
-## [0.5.4](https://github.com/dunbarcyber/cyclops/compare/0.5.2...0.5.3) (2018-01-09)
+## [0.5.4](https://github.com/dunbarcyber/cyclops/compare/0.5.3...0.5.4) (2018-01-09)
 
 ### Changed
 
