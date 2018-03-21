@@ -1,5 +1,11 @@
 # Change log
 
+## Unreleased
+
+### Fixed
+
+- Security vulnerability caused by moment versions less than 2.19.3 ([6e89413](https://github.com/dunbarcyber/cyclops/commit/6e89413853e1cef2d20902107be56f38c796844a))
+
 ## [0.5.4](https://github.com/dunbarcyber/cyclops/compare/0.5.2...0.5.3) (2018-01-09)
 
 ### Changed

@@ -21,7 +21,14 @@ export interface ClusterLayer {
   color: string;
 }
 
+export interface ObjectCoordinates {
+  lng: number;
+  lat: number;
+}
+
 export type Coordinates = [number, number];
+
+export type PointField = Coordinates | ObjectCoordinates;
 
 export interface LocationField {
   field: string;
