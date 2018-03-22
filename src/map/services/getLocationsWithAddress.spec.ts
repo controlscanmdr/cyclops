@@ -36,9 +36,9 @@
 
 // Local
 import * as service from './getLocationsWithAddress';
-import { Coordinates, ObjectCoordinates, PointField } from '../types';
-import { CONTAINER_FIELDS } from '~/services/containers/constants';
-import { FieldValue } from '~/services/containers/utils/containerUtils';
+import { Coordinates, ObjectCoordinates, PointField } from '../types/Map';
+import { CONTAINER_FIELDS } from '../../containers/services/containerSchema';
+import { FieldValue } from '../../containers/services/containerUtils';
 
 describe('getLocationsWithAddress', () => {
   const container: any = {
@@ -54,7 +54,7 @@ describe('getLocationsWithAddress', () => {
       const coordinates: Coordinates = [4, 5];
       const result: any = { coordinates };
 
-      expect(service.getPointFields(container, result)).to.deep.equal([{
+      expect(service.getPointFields(container, result)).toEqual([{
         field: 'coordinates',
         value: coordinates,
       }]);
@@ -64,7 +64,7 @@ describe('getLocationsWithAddress', () => {
       const coordinates: ObjectCoordinates = { lat: 4, lng: 5 };
       const result: any = { coordinates };
 
-      expect(service.getPointFields(container, result)).to.deep.equal([{
+      expect(service.getPointFields(container, result)).toEqual([{
         field: 'coordinates',
         value: coordinates,
       }]);
@@ -76,7 +76,7 @@ describe('getLocationsWithAddress', () => {
       const coordinates: ObjectCoordinates = { lat: 4, lng: 5 };
       const field: FieldValue<ObjectCoordinates> = { field: 'coordinates', value: coordinates };
 
-      expect(service.isObjectCoordinates(field)).to.be.true;
+      expect(service.isObjectCoordinates(field)).toBe(true);
     });
   });
 
@@ -85,7 +85,7 @@ describe('getLocationsWithAddress', () => {
       const coordinates: Coordinates = [4, 5];
       const field: FieldValue<Coordinates> = { field: 'coordinates', value: coordinates };
 
-      expect(service.isCoordinates(field)).to.be.true;
+      expect(service.isCoordinates(field)).toBe(true);
     });
   });
 
@@ -103,7 +103,7 @@ describe('getLocationsWithAddress', () => {
       };
       const results = [arrayResult, objectResult];
 
-      expect(service.createLocationFields(results)).to.deep.equal([{
+      expect(service.createLocationFields(results)).toEqual([{
         field: 'coordinates',
         coordinates: array,
       }, {
