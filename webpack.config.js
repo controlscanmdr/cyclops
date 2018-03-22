@@ -137,7 +137,7 @@ module.exports = {
 
   entry: [
     'core-js/shim',
-    './src/main.ts'
+    './src/index.tsx'
   ],
 
   output: {

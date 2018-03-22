@@ -137,6 +137,7 @@ dd {
 .modal-header {
   background-color: $color-dark;
   color: #fff;
+  padding: $padding-large-vertical $padding-large-horizontal;
   border-top-left-radius: $border-radius-base;
   border-top-right-radius: $border-radius-base;
 }
