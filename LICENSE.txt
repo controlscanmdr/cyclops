@@ -3,10 +3,9 @@ CYCLOPS PROPRIETARY NON-COMMERCIAL REGISTERED USER USE LICENSE AGREEMENT
 IMPORTANT: PLEASE READ THIS AGREEMENT CAREFULLY.
 
 THIS PROPRIETARY NON-COMMERCIAL REGISTERED USER USE LICENSE AGREEMENT
-(“AGREEMENT”) IS A LEGAL AGREEMENT BETWEEN YOU AND DUNBAR SECURITY
-SOLUTIONS, INC. (“DSS”) AND SETS FORTH THE TERMS AND CONDITIONS UNDER
-WHICH YOU MAY USE CERTAIN FEATURES AND SOURCE CODE OF THE CYCLOPS
-TECHNOLOGY AND PLATFORM.
+(“AGREEMENT”) IS A LEGAL AGREEMENT BETWEEN YOU AND CONTROLSCAN, INC.
+AND SETS FORTH THE TERMS AND CONDITIONS UNDER WHICH YOU MAY USE CERTAIN
+FEATURES AND SOURCE CODE OF THE CYCLOPS TECHNOLOGY AND PLATFORM.
 
 BY DOWNLOADING, INSTALLING OR USING ANY COMPONENT OF CYCLOPS OR OTHERWISE
 ACCESSING THE CYCLOPS TECHNOLOGY OR CYPHON PLATFORM, YOU ARE BINDING
@@ -167,7 +166,7 @@ not entitled to receive support under this Agreement.
 the benefits available to Subscribers as described above and if You
 desire to use CYCLOPS for any other purpose, You must enter into a
 separate agreement with DSS.  Please contact DSS at
-www.dunbararmored.com if You would like additional information.
+www.controlscan.com if You would like additional information.
 
 2.7. Reproduction Obligations.  If You make any copies of all or any
 component of CYCLOPS, including to any Modifications or Improvements
@@ -182,13 +181,13 @@ Commercial Registered User Use License Agreement (the "Agreement”). You
 may not use this file except in compliance with the Agreement, a copy
 of which may be found at https://github.com/dunbarcyber/cyclops/. The
 developer of the CYCLOPS and CYPHON technology and platform is 
-Dunbar Security Systems, Inc.
+ControlScan, Inc.
 
 The CYCLOPS and CYPHON technology or platform are distributed under the 
 Agreement on an “AS IS” basis, WITHOUT WARRANTY OF ANY KIND, either express 
 or implied. See the Agreement for specific terms.
 
-Copyright (C) 2017 Dunbar Security Solutions, Inc. All Rights Reserved.
+Copyright (C) 2017 ControlScan, Inc. All Rights Reserved.
 
 3. Modifications.
 
