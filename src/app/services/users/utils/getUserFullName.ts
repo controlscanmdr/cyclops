@@ -11,8 +11,7 @@
  *
  * Copyright (C) 2017 ControlScan, Inc. All Rights Reserved.
  *
- * Contributor/Change Made By: ________________. [Only apply if changes
- * are made]
+ * Contributor/Change Made By: Adam Stauffer.
  */
 
 // Local
@@ -24,6 +23,9 @@ import { User } from '../types';
  * @returns {string}
  */
 export function getUserFullName(user: User): string {
+  if (!user) {
+    return 'None';
+  }
   if (!user.first_name || !user.last_name) { return user.email; }
   return `${user.first_name} ${user.last_name}`;
 }
