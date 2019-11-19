@@ -42,6 +42,6 @@ export function reverseLookup(
 
   return axios.get(url, { cancelToken })
     .then((data) => {
-      return _.get<string>(data, 'features[0].place_name');
+      return _.get<string>(data.data, 'features[0].place_name');
     });
 }
